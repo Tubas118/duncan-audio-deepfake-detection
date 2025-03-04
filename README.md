@@ -32,7 +32,7 @@ This README file was written based on an environment with the following versions
 The following commands can be used to save changes to dependencies in the environment:
 * Using Anaconda:
   ```
-  conda env export -n main-audio-deepfake-detection > environment.yml
+  conda env export -p ./.venv > environment.yml
   ```
 * Using PIP:
   ```
