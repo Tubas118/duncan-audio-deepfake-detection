@@ -7,4 +7,14 @@ jobs:
     training-data-path: LA/ASVspoof2019_LA_train/flac
     training-data-extension: .flac
     training-label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
-
+    num-classes: 2        # Number of classes (bonafide and spoof)
+    sample-rate: 16000
+    duration: 5
+    num-mels: 128
+    max-time-steps: 109
+    optimizer: adam
+    loss: categorical_crossentropy
+    metrics:
+      - accuracy
+    batch-size: 32
+    num-epochs: 10
