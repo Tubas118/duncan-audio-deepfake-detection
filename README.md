@@ -9,30 +9,43 @@ This README file was written based on an environment with the following versions
 ## Setup
 * Start Anaconda Navigator.
 * From the Home panel, launch Visual Studio Code (VSC).
-* Open the `main-audio-deepfake-detection` project in VSC.
+* Open the `audio-deepfake-detection` project in VSC.
 * Start a terminal in VSC.
 * Run:
   ```
-  conda env create -p ./.venv -f .\environment.yml
+  conda env create -f .\environment.yml
   ```
 * After the environment has finished loading, run:
   ```
-  conda activate main-audio-deepfake-detection
+  conda activate audio-deepfake-detection
   ```
 ## Configure
 ### Options
 * `jobs`: A list of jobs each with their own parameters.
   * `{{name}}`: name of job.
-    * `training-data-filename`: name of source data file to use for training.
-    * `persisted-model`: model name to save or load.
-    * `visualize-feature-names`: feature names to include on model visualization.
+    * `data-path`:
+    * `training-data-path`: 
+    * `training-data-extension`:
+    * `training-label-filename`: 
+    * `num-classes`:
+    * `sample-rate`:
+    * `duration`:
+    * `num-mels`:
+    * `max-time-steps`:
+    * `optimizer`:
+    * `loss`:
+    * `metrics`:
+      - <<one metric per line>>
+    * `batch-size`:
+    * `num-epochs`:
+
 
 
 ## Update `environment.yml` and `requirements.txt` for commit to source control.
 The following commands can be used to save changes to dependencies in the environment:
 * Using Anaconda:
   ```
-  conda env export -p ./.venv > environment.yml
+  conda env export -n audio-deepfake-detection > environment.yml
   ```
 * Using PIP:
   ```
