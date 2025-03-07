@@ -7,7 +7,7 @@
 #       format_version: '1.5'
 #       jupytext_version: 1.16.1
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: audio-deepfake-detection
 #     language: python
 #     name: python3
 # ---
@@ -120,8 +120,17 @@ job = config.getJobConfig(config.activeJobId)
 
 model = joblib.load(job.persistedModel)
 
-predictions = model.predict(X_train)
-predictions
+# y_pred=model.predict(X_test) 
+# y_pred=np.argmax(y_pred, axis=1)
+# y_test=np.argmax(y_test, axis=1)
+# cm = confusion_matrix(y_test, y_pred)
+# print(cm)
+y_pred = model.predict(X_test)
+y_pred = np.argmax(y_pred, axis=1)
+y_test = np.argmax(y_test, axis=1)
+y_pred
 
-score = accuracy_score(y_train, predictions)
+y_test
+
+score = accuracy_score(y_test, y_pred)
 score
