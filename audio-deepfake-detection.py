@@ -22,9 +22,9 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense,
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
 
-import configuration
+import configuration.configuration as configuration
 from notebook_utils import notebookToPython
-from label_reader import readLabels
+from readers.label_reader import readLabels
 
 # +
 config = configuration.ConfigLoader('config.yml')
@@ -107,9 +107,9 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense,
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
 
-import configuration
+import configuration.configuration as configuration
 from notebook_utils import notebookToPython
-from label_reader import readLabels
+from readers.label_reader import readLabels
 
 # +
 config = configuration.ConfigLoader('config.yml')
