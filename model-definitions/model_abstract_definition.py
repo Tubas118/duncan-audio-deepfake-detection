@@ -4,7 +4,7 @@ import copy
 class ModelAbstractDefinition(ABC):
 
     def __init__(self, job):
-        self.__job__ = job
+        self.__job__ = copy.deepcopy(job)
 
     @abstractmethod
     def buildModel(self):
