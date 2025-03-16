@@ -7,6 +7,7 @@ jobs:
     training-data-path-suffix: LA/ASVspoof2019_LA_train/flac
     training-data-extension: .flac
     training-label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    training-labels-execute-to-categorical: true
     num-classes: 2        # Number of classes (bonafide and spoof)
     sample-rate: 16000
     duration: 5
@@ -23,6 +24,7 @@ jobs:
     training-data-path-suffix: LA/ASVspoof2019_LA_train/flac
     training-data-extension: .flac
     training-label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    training-labels-execute-to-categorical: true
     num-classes: 2        # Number of classes (bonafide and spoof)
     sample-rate: 16000
     duration: 5

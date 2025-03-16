@@ -26,6 +26,7 @@ class Job:
         self.trainingDataPathSuffix: str = source['training-data-path-suffix']
         self.trainingDataExtension: str = source['training-data-extension']
         self.trainingLabelFilename: str = source['training-label-filename']
+        self.executeToCategoricalForTrainingLabels = source['training-labels-execute-to-categorical']
         self.numClasses: int = source['num-classes']
         self.sampleRate: int = source['sample-rate']
         self.duration: int = source['duration']

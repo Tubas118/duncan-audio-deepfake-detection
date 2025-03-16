@@ -1,6 +1,7 @@
 import sys
 import numpy as np
 import librosa
+from tensorflow.keras.utils import to_categorical
 
 from configuration.configuration import Job
 from readers.label_reader import readTrainingLabelsWithJob
@@ -21,6 +22,12 @@ class MelSpectrogramGenerator:
             _X, _y = self.generateMelSpectrogram(job, fullDataPath, filename, label)
             X.append(_X)
             y.append(_y)
+
+        X = np.array(X)
+        y = np.array(y)
+
+        if (job.executeToCategoricalForTrainingLabels):
+            y = to_categorical(y, job.numClasses)
 
         return X, y
 

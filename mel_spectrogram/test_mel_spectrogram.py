@@ -1,7 +1,7 @@
 import unittest
+import numpy as np
 import path
 import sys
-
 
 # -- from parent directory
 directory = path.Path(__file__).abspath()
@@ -48,8 +48,8 @@ class TestGenerateMelSpectrogram(unittest.TestCase):
         # then
         self.assertEqual(len(xAry), 2)
         self.assertEqual(len(yAry), 2)
-        self.assertEqual(yAry[0], 1)
-        self.assertEqual(yAry[1], 0)
+        np.testing.assert_array_equal(yAry[0], np.array([0., 1.]))
+        np.testing.assert_array_equal(yAry[1], np.array([1., 0.]))
 
 
 if __name__ == '__main__':
