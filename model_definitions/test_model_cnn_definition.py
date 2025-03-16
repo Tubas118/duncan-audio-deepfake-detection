@@ -2,12 +2,11 @@ import unittest
 import path
 import sys
 
-from model_cnn_definition import ModelCnnDefinition
-
 # -- from parent directory
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 from configuration.configuration import ConfigLoader
+from model_cnn_definition import ModelCnnDefinition
 
 class TestModelCnnDefinition(unittest.TestCase):
 

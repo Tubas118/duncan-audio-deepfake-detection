@@ -2,16 +2,18 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense,
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
 
-from model_abstract_definition import ModelAbstractDefinition
+from configuration.configuration import Job
+from model_definitions.model_abstract_definition import ModelAbstractDefinition
 
 class ModelCnnDefinition(ModelAbstractDefinition):
 
-    def __init__(self, job, width, channels):
+    def __init__(self, job: Job, width, channels):
         super().__init__(job)
         self.width = width
         self.channels = channels
 
     def buildModel(self):
+        print(f"__job__: {self.__job__}")
         input_shape = (self.__job__.numMels, self.width, self.channels)
         model_input = Input(shape = input_shape)
 
