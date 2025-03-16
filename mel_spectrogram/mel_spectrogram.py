@@ -3,18 +3,18 @@ import numpy as np
 import librosa
 
 from configuration.configuration import Job
-from readers.label_reader import readLabels
+from readers.label_reader import readTrainingLabelsWithJob
 
 class MelSpectrogramGenerator:
 
     def __init__(self):
         pass
 
-    def generateMelSpectrograms(self, job: Job, _p_: str):
+    def generateMelSpectrograms(self, job: Job, dataPathSuffix: str):
         X = []
         y = []
-        labels = readLabels(job)
-        fullDataPath = job.fullJoinFilePath(job.dataPath, _p_)
+        labels = readTrainingLabelsWithJob(job)
+        fullDataPath = job.fullJoinFilePath(job.dataPathRoot, dataPathSuffix)
         print(f"fullDataPath: {fullDataPath}")
 
         for filename, label in labels.items():

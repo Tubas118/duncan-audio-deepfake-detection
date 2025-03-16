@@ -22,8 +22,8 @@ class Job:
 
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
-        self.dataPath: str = source['data-path']
-        self.trainingDataPath: str = source['training-data-path']
+        self.dataPathRoot: str = source['data-path-root']
+        self.trainingDataPathSuffix: str = source['training-data-path-suffix']
         self.trainingDataExtension: str = source['training-data-extension']
         self.trainingLabelFilename: str = source['training-label-filename']
         self.numClasses: int = source['num-classes']

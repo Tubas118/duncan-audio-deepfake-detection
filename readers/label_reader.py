@@ -1,9 +1,12 @@
 import os
 from configuration.configuration import Job
 
+def readTrainingLabelsWithJob(job: Job):
+    labelFileName = job.fullJoinFilePath(job.dataPathRoot, job.trainingLabelFilename)
+    return readLabelsWithJob(labelFileName)
 
-def readLabels(job: Job) -> list[str]:
-    labelFileName = job.fullJoinFilePath(job.dataPath, job.trainingLabelFilename)
+
+def readLabelsWithJob(labelFileName: str) -> list[str]:
     print(f'Loading {labelFileName}...')
     labels = {}
 

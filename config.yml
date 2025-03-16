@@ -3,8 +3,8 @@ active-job-id: ASVspoof-2019-1
 
 jobs:
   ASVspoof-2019-1:
-    data-path: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
-    training-data-path: LA/ASVspoof2019_LA_train/flac
+    data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
+    training-data-path-suffix: LA/ASVspoof2019_LA_train/flac
     training-data-extension: .flac
     training-label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
     num-classes: 2        # Number of classes (bonafide and spoof)
@@ -19,8 +19,8 @@ jobs:
     batch-size: 32
     num-epochs: 10
   ASVspoof-2019-2:
-    data-path: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
-    training-data-path: LA/ASVspoof2019_LA_train/flac
+    data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
+    training-data-path-suffix: LA/ASVspoof2019_LA_train/flac
     training-data-extension: .flac
     training-label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
     num-classes: 2        # Number of classes (bonafide and spoof)

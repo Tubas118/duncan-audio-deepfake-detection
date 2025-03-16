@@ -37,13 +37,13 @@ class TestGenerateMelSpectrogram(unittest.TestCase):
         config = ConfigLoader('config.yml')
         job = config.getJobConfig(config.activeJobId)
         rootDir = directory.parent.parent
-        job.dataPath = rootDir
-        job.trainingDataPath = "testdata"
+        job.dataPathRoot = rootDir
+        job.trainingDataPathSuffix = "testdata"
         job.trainingLabelFilename = "testlabels/LA.cm.train.trn.txt"
         generator = MelSpectrogramGenerator()
 
         # when
-        xAry, yAry = generator.generateMelSpectrograms(job, job.trainingDataPath)
+        xAry, yAry = generator.generateMelSpectrograms(job, job.trainingDataPathSuffix)
 
         # then
         self.assertEqual(len(xAry), 2)
