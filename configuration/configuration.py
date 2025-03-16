@@ -22,11 +22,12 @@ class Job:
 
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
-        self.dataPathRoot: str = source['data-path-root']
+        self.dataPathRootRaw: str = source['data-path-root']
+        self.dataPathRoot: str = self.fullFilePath(self.dataPathRootRaw)
         self.trainingDataPathSuffix: str = source['training-data-path-suffix']
         self.trainingDataExtension: str = source['training-data-extension']
         self.trainingLabelFilename: str = source['training-label-filename']
-        self.executeToCategoricalForTrainingLabels = source['training-labels-execute-to-categorical']
+        self.executeToCategoricalForTrainingLabels = source.get('training-labels-execute-to-categorical', True)
         self.numClasses: int = source['num-classes']
         self.sampleRate: int = source['sample-rate']
         self.duration: int = source['duration']
@@ -37,12 +38,7 @@ class Job:
         self.metrics = source['metrics']
         self.batchSize: str = source['batch-size']
         self.numEpochs: str = source['num-epochs']
-
-
-        nowStr = datetime.datetime.now().isoformat()
-        nowStr = nowStr.replace(":", "-")
-        self.persistedModel: str = jobId + nowStr + '.libjob'
-        self.persistedModelResults: str = jobId + nowStr + '.txt'
+        self.__determine_persistedModelValue__(source, 'persisted-model')
 
     def fullJoinFilePath(self, path, filename):
         return self.fullFilePath(os.path.join(path, filename))
@@ -51,3 +47,20 @@ class Job:
         expanded = os.path.expandvars(filepath)
         return expanded.replace("\\", "/")
 
+    def __determine_persistedModelValue__(self, source, keyName: str):
+        checkValue: str = source.get(keyName, "")
+        jobExt: str = ".libjob"
+        resultsExt: str = ".txt"
+
+        if (len(checkValue) > 0):
+            usePersistedModel: str = checkValue
+            usePersistedModelResults: str = usePersistedModel.removesuffix(jobExt) + resultsExt
+        else:
+            nowStr = datetime.datetime.now().isoformat()
+            nowStr = nowStr.replace(":", "-")
+            persistedModelRootFilename = self.jobId + "_" + nowStr
+            usePersistedModel: str = persistedModelRootFilename + jobExt
+            usePersistedModelResults: str = persistedModelRootFilename + resultsExt
+
+        self.persistedModel: str = usePersistedModel
+        self.persistedModelResults: str = usePersistedModelResults
