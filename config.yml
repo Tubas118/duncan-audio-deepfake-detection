@@ -1,5 +1,5 @@
 project-name: audio-deepfake-detection
-active-job-id: ASVspoof-2019-2
+active-job-id: ASVspoof-2019-1
 
 jobs:
   ASVspoof-2019-1:
