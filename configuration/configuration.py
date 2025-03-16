@@ -1,3 +1,4 @@
+import datetime
 import os
 import yaml
 
@@ -19,24 +20,28 @@ class ConfigLoader:
 # ======================================================================
 class Job:
 
-    def __init__(self, jobId, source):
-        self.jobId = jobId
-        self.dataPath = source['data-path']
-        self.trainingDataPath = source['training-data-path']
-        self.trainingDataExtension = source['training-data-extension']
-        self.trainingLabelFilename = source['training-label-filename']
-        self.numClasses = source['num-classes']
-        self.sampleRate = source['sample-rate']
-        self.duration = source['duration']
-        self.numMels = source['num-mels']
-        self.maxTimeSteps = source['max-time-steps']
-        self.optimizer = source['optimizer']
-        self.loss = source['loss']
+    def __init__(self, jobId: int, source):
+        self.jobId: int = jobId
+        self.dataPath: str = source['data-path']
+        self.trainingDataPath: str = source['training-data-path']
+        self.trainingDataExtension: str = source['training-data-extension']
+        self.trainingLabelFilename: str = source['training-label-filename']
+        self.numClasses: int = source['num-classes']
+        self.sampleRate: int = source['sample-rate']
+        self.duration: int = source['duration']
+        self.numMels: int = source['num-mels']
+        self.maxTimeSteps: int = source['max-time-steps']
+        self.optimizer: str = source['optimizer']
+        self.loss: str = source['loss']
         self.metrics = source['metrics']
-        self.batchSize = source['batch-size']
-        self.numEpochs = source['num-epochs']
+        self.batchSize: str = source['batch-size']
+        self.numEpochs: str = source['num-epochs']
 
-        self.persistedModel = jobId + '.libjob'
+
+        nowStr = datetime.datetime.now().isoformat()
+        nowStr = nowStr.replace(":", "-")
+        self.persistedModel: str = jobId + nowStr + '.libjob'
+        self.persistedModelResults: str = jobId + nowStr + '.txt'
 
     def fullJoinFilePath(self, path, filename):
         return self.fullFilePath(os.path.join(path, filename))
