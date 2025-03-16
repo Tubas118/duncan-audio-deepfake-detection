@@ -18,13 +18,12 @@ import numpy as np
 import librosa
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense, Dropout
-from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
 
 import configuration.configuration as configuration
+from mel_spectrogram.mel_spectrogram import MelSpectrogramGenerator
 from notebook_utils import notebookToPython
-from readers.label_reader import readLabels
+from readers.label_reader import readTrainingLabelsWithJob
 
 # +
 config = configuration.ConfigLoader('config.yml')
@@ -33,59 +32,17 @@ notebookToPython(config.projectName)
 job = config.getJobConfig(config.activeJobId)
 # -
 
-trainingLabels = readLabels(job)
-
-# +
-X = []
-y = []
-
-
-fullDataPath = job.fullJoinFilePath(job.dataPath, job.trainingDataPath)
-
-for filename, label in trainingLabels.items():
-    audioSourceFilename = job.fullJoinFilePath(fullDataPath, filename + job.trainingDataExtension)
-    
-    audio, _ = librosa.load(audioSourceFilename, sr = job.sampleRate, duration = job.duration)
-
-    mel_spectrogram = librosa.feature.melspectrogram(y = audio, sr = job.sampleRate, n_mels = job.numMels)
-    mel_spectrogram = librosa.power_to_db(mel_spectrogram, ref=np.max)
-
-    if (mel_spectrogram.shape[1] < job.maxTimeSteps):
-        padWidth = ((0, 0), (0, job.maxTimeSteps - mel_spectrogram.shape[1]))
-        mel_spectrogram = np.pad(array=mel_spectrogram, pad_width=padWidth, mode='constant')
-    else:
-        mel_spectrogram = mel_spectrogram[:, :job.maxTimeSteps]
-
-    X.append(mel_spectrogram)
-    y.append(label)
-# -
-
-X = np.array(X)
-y = np.array(y)
-y_encoded = to_categorical(y, job.numClasses)
+generator = MelSpectrogramGenerator()
+X, y_encoded = generator.generateMelSpectrograms(job, job.trainingDataPathSuffix)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2)    # test data is 20% of all data
 
-# Define CNN model architecture
-input_shape = (job.numMels, X_train.shape[2], 1)  # Input shape for CNN (height, width, channels)
-model_input = Input(shape=input_shape)
-
-
 # +
-# TODO - why were these parameters selected? What purpose do they serve? Should they be configurable?
-x = Conv2D(filters=32, kernel_size=(3, 3), activation='relu')(model_input)
-x = MaxPooling2D(pool_size=(2, 2))(x)
-x = Conv2D(filters=64, kernel_size=(3, 3), activation='relu')(x)
-x = MaxPooling2D(pool_size=(2, 2))(x)
-x = Flatten()(x)
-x = Dense(units=128, activation='relu')(x)
-x = Dropout(0.5)(x)
+import model_definitions.model_cnn_definition as model_cnn_definition
 
-model_output = Dense(job.numClasses, activation='softmax')(x)
+modelDef = model_cnn_definition.ModelCnnDefinition(job, X_train.shape[2], 1)
+model = modelDef.buildModel()
 # -
-
-model = Model(inputs=model_input, outputs=model_output)
-
 
 model.compile(optimizer=job.optimizer, loss=job.loss, metrics=job.metrics)
 
@@ -99,7 +56,6 @@ joblib.dump(model, job.persistedModel)
 # +
 import joblib
 import numpy as np
-import librosa
 import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -109,22 +65,22 @@ from tensorflow.keras.utils import to_categorical
 
 import configuration.configuration as configuration
 from notebook_utils import notebookToPython
-from readers.label_reader import readLabels
+from readers.label_reader import readLabelsWithJob
 
 # +
+oldJob = job
 config = configuration.ConfigLoader('config.yml')
 
 notebookToPython(config.projectName)
 job = config.getJobConfig(config.activeJobId)
+
+if (len(oldJob.persistedModel) > 0 and oldJob.persistedModel != job.persistedModel):
+    job.persistedModel = oldJob.persistedModel
+
 # -
 
 model = joblib.load(job.persistedModel)
 
-# y_pred=model.predict(X_test) 
-# y_pred=np.argmax(y_pred, axis=1)
-# y_test=np.argmax(y_test, axis=1)
-# cm = confusion_matrix(y_test, y_pred)
-# print(cm)
 y_pred = model.predict(X_test)
 y_pred = np.argmax(y_pred, axis=1)
 y_test = np.argmax(y_test, axis=1)
@@ -132,5 +88,18 @@ y_pred
 
 y_test
 
+# +
+import json
+from datetime import datetime
+import pytz
+
 score = accuracy_score(y_test, y_pred)
-score
+
+timestamp_utc = datetime.now(pytz.utc)
+
+with open(job.persistedModelResults, "w") as file:
+    file.write(f"job completed: {timestamp_utc.isoformat()}\n")
+    file.write(f"model file: {job.persistedModel}\n")
+    file.write(f"accuracy_score: {score}\n\n")
+    prettyJson = json.dumps(job.__dict__, indent=4)
+    file.write(f"job: {prettyJson}\n")
