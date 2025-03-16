@@ -15,6 +15,7 @@ class MelSpectrogramGenerator:
         X = []
         y = []
         labels = readTrainingLabelsWithJob(job)
+        segmentLength = int(len(labels) / 20)
         fullDataPath = job.fullJoinFilePath(job.dataPathRoot, dataPathSuffix)
         print(f"fullDataPath: {fullDataPath}")
 
@@ -22,6 +23,8 @@ class MelSpectrogramGenerator:
             _X, _y = self.generateMelSpectrogram(job, fullDataPath, filename, label)
             X.append(_X)
             y.append(_y)
+            if ((len(X) % segmentLength) == 0):
+                print(f"Loading audio files: {len(X)}")
 
         X = np.array(X)
         y = np.array(y)
@@ -29,11 +32,12 @@ class MelSpectrogramGenerator:
         if (job.executeToCategoricalForTrainingLabels):
             y = to_categorical(y, job.numClasses)
 
+        print(f"Number of audio files load: {len(X)}")
+
         return X, y
 
     def generateMelSpectrogram(self, job: Job, fullDataPath, filename, label):
         audioSourceFilename = job.fullJoinFilePath(fullDataPath, filename + job.trainingDataExtension)
-        print(f"audio file path: {audioSourceFilename}")
         
         audio, _ = librosa.load(audioSourceFilename, sr = job.sampleRate, duration = job.duration)
 

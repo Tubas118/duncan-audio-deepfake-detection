@@ -19,7 +19,7 @@ class TestGenerateMelSpectrogram(unittest.TestCase):
         config = ConfigLoader('config.yml')
         job = config.getJobConfig(config.activeJobId)
         print(f"path: {directory.parent.parent}")
-        filename = "testdata/LA_T_1272637"
+        filename = "testaudio/LA_T_1272637"
         label = 1
         generator = MelSpectrogramGenerator()
 
@@ -38,8 +38,8 @@ class TestGenerateMelSpectrogram(unittest.TestCase):
         job = config.getJobConfig(config.activeJobId)
         rootDir = directory.parent.parent
         job.dataPathRoot = rootDir
-        job.trainingDataPathSuffix = "testdata"
-        job.trainingLabelFilename = "testlabels/LA.cm.train.trn.txt"
+        job.trainingDataPathSuffix = "testaudio"
+        job.trainingLabelFilename = "testvalues/LA.cm.train.trn.txt"
         generator = MelSpectrogramGenerator()
 
         # when
