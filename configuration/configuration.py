@@ -2,6 +2,9 @@ import datetime
 import os
 import yaml
 
+JOB_EXT: str = ".libjob"
+RESULTS_EXT: str = ".txt"
+
 class ConfigLoader:
 
     def __init__(self, configFilename):
@@ -46,24 +49,31 @@ class Job:
     def fullFilePath(self, filepath):
         expanded = os.path.expandvars(filepath)
         return expanded.replace("\\", "/")
+    
+    def newPersistedModelResultsName(self, persistedModelRootFilename: str, generateTimestamp = False):
+            mid_section = ""
+
+            if (generateTimestamp):
+                mid_section = datetime.datetime.now().isoformat()
+                mid_section = "_" + mid_section.replace(":", "-")
+
+            return persistedModelRootFilename + mid_section + RESULTS_EXT
 
     def __determine_persistedModelValue__(self, source, keyName: str):
         checkValue: str = source.get(keyName, "")
-        jobExt: str = ".libjob"
-        resultsExt: str = ".txt"
 
         if (len(checkValue) > 0):
-            print(f"Using configured model name: {checkValue}")
             useNewModelGenerated = False
             usePersistedModel: str = checkValue
-            usePersistedModelResults: str = usePersistedModel.removesuffix(jobExt) + resultsExt
+            usePersistedModelResults: str = self.newPersistedModelResultsName(usePersistedModel, True)
+            print(f"Using configured model name: {checkValue}")
         else:
             useNewModelGenerated = True
             nowStr = datetime.datetime.now().isoformat()
             nowStr = nowStr.replace(":", "-")
             persistedModelRootFilename = self.jobId + "_" + nowStr
-            usePersistedModel: str = persistedModelRootFilename + jobExt
-            usePersistedModelResults: str = persistedModelRootFilename + resultsExt
+            usePersistedModel: str = persistedModelRootFilename + JOB_EXT
+            usePersistedModelResults: str = self.newPersistedModelResultsName(usePersistedModel)
             print(f"Generating new model name: {usePersistedModel}")
 
         self.newModelGenerated = useNewModelGenerated
