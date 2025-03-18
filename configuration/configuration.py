@@ -52,12 +52,13 @@ class Job:
     
     def newPersistedModelResultsName(self, persistedModelRootFilename: str, generateTimestamp = False):
             mid_section = ""
+            rootFilename = persistedModelRootFilename.removesuffix(JOB_EXT)
 
             if (generateTimestamp):
                 mid_section = datetime.datetime.now().isoformat()
                 mid_section = "_" + mid_section.replace(":", "-")
 
-            return persistedModelRootFilename + mid_section + RESULTS_EXT
+            return rootFilename + mid_section + RESULTS_EXT
 
     def __determine_persistedModelValue__(self, source, keyName: str):
         checkValue: str = source.get(keyName, "")

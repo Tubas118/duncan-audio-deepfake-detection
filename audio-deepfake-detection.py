@@ -74,7 +74,7 @@ y_pred_work
 y_test_work
 
 # +
-from sklearn.base import accuracy_score
+from sklearn.metrics import accuracy_score
 
 score = accuracy_score(y_test_work, y_pred_work)
 
