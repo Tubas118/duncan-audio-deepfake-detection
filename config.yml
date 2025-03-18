@@ -1,13 +1,13 @@
 project-name: audio-deepfake-detection
-active-job-id: ASVspoof-2019-1
+active-job-id: ASVspoof-2019_test-1
 
 jobs:
   ASVspoof-2019-1:
     data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
-    training-data-path-suffix: LA/ASVspoof2019_LA_train/flac
-    training-data-extension: .flac
-    training-label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
-    training-labels-execute-to-categorical: true
+    data-path-suffix: LA/ASVspoof2019_LA_train/flac
+    data-extension: .flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    labels-execute-to-categorical: true
     num-classes: 2        # Number of classes (bonafide and spoof)
     sample-rate: 16000
     duration: 5
@@ -19,12 +19,12 @@ jobs:
       - accuracy
     batch-size: 32
     num-epochs: 10
-  ASVspoof-2019-2:
+  ASVspoof-2019_test-1:
     data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
-    training-data-path-suffix: LA/ASVspoof2019_LA_train/flac
-    training-data-extension: .flac
-    training-label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
-    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    data-extension: .flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T21-46-18.789612.libjob
     num-classes: 2        # Number of classes (bonafide and spoof)
     sample-rate: 16000
     duration: 5

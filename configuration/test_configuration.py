@@ -21,6 +21,7 @@ class TestConfiguration(unittest.TestCase):
         assert "$HOMEDRIVE$HOMEPATH" not in job.dataPathRoot
         self.assertIsNotNone(job.persistedModel)
         self.assertIsNotNone(job.persistedModelResults)
+        self.assertTrue(job.newModelGenerated)
 
         assert "ASVspoof-2019-1" in job.persistedModel
         assert ".libjob" in job.persistedModel
@@ -43,6 +44,7 @@ class TestConfiguration(unittest.TestCase):
         assert "$HOMEDRIVE$HOMEPATH" not in job.dataPathRoot
         self.assertIsNotNone(job.persistedModel)
         self.assertIsNotNone(job.persistedModelResults)
+        self.assertFalse(job.newModelGenerated)
 
         assert "ASVspoof-2019-1" in job.persistedModel
         assert ".libjob" in job.persistedModel

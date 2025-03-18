@@ -24,10 +24,10 @@ class Job:
         self.jobId: int = jobId
         self.dataPathRootRaw: str = source['data-path-root']
         self.dataPathRoot: str = self.fullFilePath(self.dataPathRootRaw)
-        self.trainingDataPathSuffix: str = source['training-data-path-suffix']
-        self.trainingDataExtension: str = source['training-data-extension']
-        self.trainingLabelFilename: str = source['training-label-filename']
-        self.executeToCategoricalForTrainingLabels = source.get('training-labels-execute-to-categorical', True)
+        self.dataPathSuffix: str = source['data-path-suffix']
+        self.dataExtension: str = source['data-extension']
+        self.labelFilename: str = source['label-filename']
+        self.executeToCategoricalForLabels = source.get('labels-execute-to-categorical', True)
         self.numClasses: int = source['num-classes']
         self.sampleRate: int = source['sample-rate']
         self.duration: int = source['duration']
@@ -53,14 +53,20 @@ class Job:
         resultsExt: str = ".txt"
 
         if (len(checkValue) > 0):
+            print(f"Using configured model name: {checkValue}")
+            useNewModelGenerated = False
             usePersistedModel: str = checkValue
             usePersistedModelResults: str = usePersistedModel.removesuffix(jobExt) + resultsExt
         else:
+            useNewModelGenerated = True
             nowStr = datetime.datetime.now().isoformat()
             nowStr = nowStr.replace(":", "-")
             persistedModelRootFilename = self.jobId + "_" + nowStr
             usePersistedModel: str = persistedModelRootFilename + jobExt
             usePersistedModelResults: str = persistedModelRootFilename + resultsExt
+            print(f"Generating new model name: {usePersistedModel}")
 
+        self.newModelGenerated = useNewModelGenerated
         self.persistedModel: str = usePersistedModel
         self.persistedModelResults: str = usePersistedModelResults
+        print(f"Assigned model name: {self.persistedModel}")

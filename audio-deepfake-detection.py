@@ -14,16 +14,11 @@
 
 # +
 import joblib
-import numpy as np
-import librosa
-import tensorflow as tf
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.utils import to_categorical
 
 import configuration.configuration as configuration
 from mel_spectrogram.mel_spectrogram import MelSpectrogramGenerator
 from notebook_utils import notebookToPython
-from readers.label_reader import readTrainingLabelsWithJob
 
 # +
 config = configuration.ConfigLoader('config.yml')
@@ -33,7 +28,7 @@ job = config.getJobConfig(config.activeJobId)
 # -
 
 generator = MelSpectrogramGenerator()
-X, y_encoded = generator.generateMelSpectrograms(job, job.trainingDataPathSuffix)
+X, y_encoded = generator.generateMelSpectrograms(job, job.dataPathSuffix)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2)    # test data is 20% of all data
 
@@ -73,33 +68,49 @@ config = configuration.ConfigLoader('config.yml')
 
 notebookToPython(config.projectName)
 job = config.getJobConfig(config.activeJobId)
+newPersistedModelResults = job.persistedModelResults
 
 if (len(oldJob.persistedModel) > 0 and oldJob.persistedModel != job.persistedModel):
     job.persistedModel = oldJob.persistedModel
+    job.persistedModelResults = oldJob.persistedModelResults
+    print(f"Loading previously generated model: {job.persistedModel}")
 
 # -
 
 model = joblib.load(job.persistedModel)
 
-y_pred = model.predict(X_test)
-y_pred = np.argmax(y_pred, axis=1)
-y_test = np.argmax(y_test, axis=1)
-y_pred
+if (not (len(X_test ) > 0 and len(y_test) > 0)):
+    generator = MelSpectrogramGenerator()
+    X, y_encoded = generator.generateMelSpectrograms(job, job.dataPathSuffix)
+    X_test = X
+    y_test = y_encoded
+    job.persistedModelResults = newPersistedModelResults
 
-y_test
+y_pred = model.predict(X_test)
+y_pred_work = np.argmax(y_pred, axis=1)
+y_test_work = np.argmax(y_test, axis=1)
+y_pred_work
+
+y_test_work
 
 # +
-import json
 from datetime import datetime
+import json
 import pytz
 
-score = accuracy_score(y_test, y_pred)
+score = accuracy_score(y_test_work, y_pred_work)
 
 timestamp_utc = datetime.now(pytz.utc)
 
+# +
+prettyJson = json.dumps(job.__dict__, indent=4)
+
+report = f"job completed: {timestamp_utc.isoformat()}\n"
+report = report + f"model file: {job.persistedModel}\n"
+report = report + f"accuracy_score: {score}\n\n"
+report = report + f"job: {prettyJson}\n"
+
+print(report)
+
 with open(job.persistedModelResults, "w") as file:
-    file.write(f"job completed: {timestamp_utc.isoformat()}\n")
-    file.write(f"model file: {job.persistedModel}\n")
-    file.write(f"accuracy_score: {score}\n\n")
-    prettyJson = json.dumps(job.__dict__, indent=4)
-    file.write(f"job: {prettyJson}\n")
+    file.write(report)

@@ -2,7 +2,7 @@ import os
 from configuration.configuration import Job
 
 def readTrainingLabelsWithJob(job: Job):
-    labelFileName = job.fullJoinFilePath(job.dataPathRoot, job.trainingLabelFilename)
+    labelFileName = job.fullJoinFilePath(job.dataPathRoot, job.labelFilename)
     return readLabelsWithJob(labelFileName)
 
 
