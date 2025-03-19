@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from tensorflow.keras.models import Model
 import copy
 
 from configuration.configuration import Job
@@ -9,5 +10,5 @@ class ModelAbstractDefinition(ABC):
         self.__job__: Job = copy.deepcopy(job)
 
     @abstractmethod
-    def buildModel(self):
+    def buildModel(self) -> Model:
         pass

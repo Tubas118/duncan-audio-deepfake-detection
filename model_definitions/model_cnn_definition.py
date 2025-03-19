@@ -12,7 +12,7 @@ class ModelCnnDefinition(ModelAbstractDefinition):
         self.width = width
         self.channels = channels
 
-    def buildModel(self):
+    def buildModel(self) -> Model:
         print(f"__job__: {self.__job__}")
         input_shape = (self.__job__.numMels, self.width, self.channels)
         model_input = Input(shape = input_shape)
