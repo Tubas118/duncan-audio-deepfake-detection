@@ -36,5 +36,4 @@ model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)
 # ### Test Model
 
 evaluationProc = BasicModelEvaluationProcessor(job, model)
-identifiers = ['placeholder-1', 'placeholder-2']
-evaluationProc.process(identifiers, X_test, y_test)
+evaluationProc.process(X_test, y_test)

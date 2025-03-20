@@ -21,6 +21,7 @@ class BasicModelTrainingProcessor:
         print("Selecting training and test data")
         X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size)
         
+        print(f"Training using {len(X_train)} files.")
         model = self.__train_model__(X_train, X_test, y_train, y_test, channels)
 
         return model, X_train, X_test, y_train, y_test
