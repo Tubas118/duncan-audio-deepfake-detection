@@ -24,8 +24,6 @@ class TestGenerateMelSpectrogram(unittest.TestCase):
         label = 1
         generator = MelSpectrogramGenerator()
 
-
-
         # when
         X, y = generator.generateMelSpectrogram(job, directory.parent.parent, filename, label)
 

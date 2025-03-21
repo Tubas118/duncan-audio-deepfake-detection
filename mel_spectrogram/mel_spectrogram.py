@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 import librosa
 from tensorflow.keras.utils import to_categorical
@@ -8,9 +7,11 @@ from readers.label_reader import readTrainingLabelsWithJob
 
 class MelSpectrogramGenerator:
 
+    # -------------------------------------------------------------------------
     def __init__(self):
         pass
 
+    # -------------------------------------------------------------------------
     def generateMelSpectrograms(self, job: Job, dataPathSuffix: str):
         X = []
         y = []
@@ -20,7 +21,7 @@ class MelSpectrogramGenerator:
         print(f"fullDataPath: {fullDataPath}")
 
         for filename, label in labels.items():
-            _X, _y = self.generateMelSpectrogram(job, fullDataPath, filename, label)
+            _X, _y = self.__generateMelSpectrogram_worker__(job, fullDataPath, filename, label)
             X.append(_X)
             y.append(_y)
             if (segmentLength == 0 or (len(X) % segmentLength) == 0):
@@ -36,7 +37,25 @@ class MelSpectrogramGenerator:
 
         return X, y
 
+    # -------------------------------------------------------------------------
     def generateMelSpectrogram(self, job: Job, fullDataPath, filename, label):
+        X = []
+        y = []
+
+        _X, _y = self.__generateMelSpectrogram_worker__(job, fullDataPath, filename, label)
+
+        X.append(_X)
+        y.append(_y)
+        X = np.array(X)
+        y = np.array(y)
+
+        if (job.executeToCategoricalForLabels):
+            y = to_categorical(y, job.numClasses)
+
+        return X, y
+
+    # -------------------------------------------------------------------------
+    def __generateMelSpectrogram_worker__(self, job: Job, fullDataPath, filename, label):
         audioSourceFilename = job.fullJoinFilePath(fullDataPath, filename + job.dataExtension)
         
         audio, _ = librosa.load(audioSourceFilename, sr = job.sampleRate, duration = job.duration)

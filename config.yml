@@ -1,8 +1,8 @@
 project-name: audio-deepfake-detection
-active-job-id: ASVspoof-2019_eval-1
+active-job-id: ASVspoof-2019_small-eval-1
 
 jobs:
-  ASVspoof-2019-1:
+  ASVspoof-2019_training:
     data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
     data-path-suffix: LA/ASVspoof2019_LA_train/flac
     data-extension: .flac

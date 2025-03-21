@@ -22,10 +22,6 @@ class TestModelAbstractDefinition(unittest.TestCase):
     def setUp(self):
         pass
 
-    # def test_getRootPath(self):
-    #     print(os.getcwd())
-    #     print(os.pardir)
-
     def test_copyJob(self):
         # given
         config = ConfigLoader('config.yml')

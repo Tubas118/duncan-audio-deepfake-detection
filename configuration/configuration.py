@@ -50,9 +50,15 @@ class Job:
         expanded = os.path.expandvars(filepath)
         return expanded.replace("\\", "/")
     
-    def newPersistedModelResultsName(self, persistedModelRootFilename: str, generateTimestamp = False):
+    def newPersistedModelResultsName(self, persistedModelRootFilename: str = None, generateTimestamp = False):
             mid_section = ""
-            rootFilename = persistedModelRootFilename.removesuffix(JOB_EXT)
+
+            if (persistedModelRootFilename == None):
+                rootFilename = self.persistedModel
+            else:
+                rootFilename = persistedModelRootFilename
+
+            rootFilename = rootFilename.removesuffix(JOB_EXT)
 
             if (generateTimestamp):
                 mid_section = datetime.datetime.now().isoformat()
