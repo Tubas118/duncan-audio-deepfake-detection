@@ -17,7 +17,9 @@ class ConfigLoader:
         self.projectName = self.__configLoader['project-name']
 
     def getJobConfig(self, jobId):
-        selectedJob = self.__configLoader['jobs'][jobId]
+        selectedJob = self.__configLoader['job-defaults']
+        overlayJob = self.__configLoader['jobs'][jobId]
+        selectedJob.update(overlayJob)
         return Job(jobId, selectedJob)
     
 # ======================================================================
@@ -25,6 +27,7 @@ class Job:
 
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
+        self.inputFileBatchSize: str = source['input-file-batch-size']
         self.dataPathRootRaw: str = source['data-path-root']
         self.dataPathRoot: str = self.fullFilePath(self.dataPathRootRaw)
         self.dataPathSuffix: str = source['data-path-suffix']

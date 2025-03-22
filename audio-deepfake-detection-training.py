@@ -14,8 +14,8 @@
 
 # +
 notebookName = 'audio-deepfake-detection-training'
-# runJobId = 'ASVspoof-2019_training'
-runJobId = 'ASVspoof-2019_small-eval-1'
+runJobId = 'ASVspoof-2019_training'
+# runJobId = 'ASVspoof-2019_small-eval-1'     # This should fail
 
 import configuration.configuration as configuration
 import model_definitions.model_cnn_definition as model_cnn_definition
@@ -32,7 +32,7 @@ notebookToPython(notebookName)
 job = config.getJobConfig(runJobId)
 
 if (job.newModelGenerated == False):
-    raise ValueError("This notebook is meant for training. Select a job without a value for 'persisted-mode' set.")
+    raise ValueError("This notebook is meant for training. Select a job without a value for 'persisted-model' set.")
 # -
 
 generator = MelSpectrogramGenerator()

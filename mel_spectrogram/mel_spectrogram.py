@@ -39,15 +39,7 @@ class MelSpectrogramGenerator:
 
     # -------------------------------------------------------------------------
     def generateMelSpectrogram(self, job: Job, fullDataPath, filename, label):
-        X = []
-        y = []
-
-        _X, _y = self.__generateMelSpectrogram_worker__(job, fullDataPath, filename, label)
-
-        X.append(_X)
-        y.append(_y)
-        X = np.array(X)
-        y = np.array(y)
+        X, y = self.__generateMelSpectrogram_worker__(job, fullDataPath, filename, label)
 
         if (job.executeToCategoricalForLabels):
             y = to_categorical(y, job.numClasses)

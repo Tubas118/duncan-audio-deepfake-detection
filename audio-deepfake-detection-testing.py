@@ -15,7 +15,9 @@
 # +
 notebookName = 'audio-deepfake-detection-testing'
 # runJobId = 'ASVspoof-2019_small-eval-1'
-runJobId = 'ASVspoof-2019_training'     # This should fail
+# runJobId = 'ASVspoof-2019_small-eval-2'
+runJobId = 'ASVspoof-2019_eval-1'
+# runJobId = 'ASVspoof-2019_training'     # This should fail
 
 import joblib
 import numpy as np
@@ -33,8 +35,12 @@ config = configuration.ConfigLoader('config.yml')
 notebookToPython(notebookName)
 job = config.getJobConfig(runJobId)
 
+import json
+prettyJson = json.dumps(job.__dict__, indent=4)
+print(f"job: {prettyJson}")
+
 if (job.newModelGenerated):
-    raise ValueError("This notebook is meant for testing. Select a job with a value for 'persisted-mode' set.")
+    raise ValueError("This notebook is meant for testing. Select a job with a value for 'persisted-model' set.")
 # -
 
 generator = MelSpectrogramGenerator()
@@ -44,11 +50,30 @@ evaluationProc = BasicModelEvaluationProcessor(job, model)
 fullDataPath = job.fullJoinFilePath(job.dataPathRoot, job.dataPathSuffix)
 labels = readTrainingLabelsWithJob(job)
 
+
+def processArrays(X, y):
+    _X = np.array(X)
+    _y = np.array(y)
+    evaluationProc.process(_X, _y)
+
+
+
 # +
+X = []
+y = []
+
 for filename, label in labels.items():
-    print(f"\nEvaluating {filename} - {label}")
-    X, y = generator.generateMelSpectrogram(job, fullDataPath, filename, label)
-    evaluationProc.process(X, y)
+    _X, _y = generator.generateMelSpectrogram(job, fullDataPath, filename, label)
+    X.append(_X)
+    y.append(_y)
+
+    if (len(X) >= job.inputFileBatchSize):
+        processArrays(X, y)
+        X = []
+        y = []
+
+if (len(X) > 0):
+    processArrays(X, y)
 
 print("\n")
 evaluationProc.reportSnapshot()
