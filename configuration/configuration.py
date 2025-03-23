@@ -5,6 +5,7 @@ import yaml
 JOB_EXT: str = ".libjob"
 RESULTS_EXT: str = ".txt"
 
+# ======================================================================
 class ConfigLoader:
 
     def __init__(self, configFilename):
@@ -28,6 +29,7 @@ class Job:
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
         self.inputFileBatchSize: str = source['input-file-batch-size']
+        self.outputFolder: str = source['output-folder']
         self.dataPathRootRaw: str = source['data-path-root']
         self.dataPathRoot: str = self.fullFilePath(self.dataPathRootRaw)
         self.dataPathSuffix: str = source['data-path-suffix']
@@ -45,6 +47,8 @@ class Job:
         self.batchSize: str = source['batch-size']
         self.numEpochs: str = source['num-epochs']
         self.__determine_persistedModelValue__(source, 'persisted-model')
+
+        self.__check_for_output_folder__()
 
     def fullJoinFilePath(self, path, filename):
         return self.fullFilePath(os.path.join(path, filename))
@@ -69,6 +73,18 @@ class Job:
 
             return rootFilename + mid_section + RESULTS_EXT
 
+    def __check_for_output_folder__(self):
+        if (len(self.outputFolder) > 0):
+            self.outputFolder = self.outputFolder.rstrip().lstrip()
+
+            if (self.outputFolder.startswith("/") or ":" in self.outputFolder):
+                raise ValueError("Invalid output folder configured")
+            
+            if (not os.path.exists(self.outputFolder)):
+                print(f"Output folder does not exist. Creating '{self.outputFolder}'.")
+                os.makedirs(self.outputFolder)
+                print("Output folder created.")
+
     def __determine_persistedModelValue__(self, source, keyName: str):
         checkValue: str = source.get(keyName, "")
 
@@ -82,6 +98,10 @@ class Job:
             nowStr = datetime.datetime.now().isoformat()
             nowStr = nowStr.replace(":", "-")
             persistedModelRootFilename = self.jobId + "_" + nowStr
+
+            if (len(self.outputFolder) > 0):
+                persistedModelRootFilename = self.fullJoinFilePath(self.outputFolder, persistedModelRootFilename)
+
             usePersistedModel: str = persistedModelRootFilename + JOB_EXT
             usePersistedModelResults: str = self.newPersistedModelResultsName(usePersistedModel)
             print(f"Generating new model name: {usePersistedModel}")

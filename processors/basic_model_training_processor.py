@@ -29,6 +29,8 @@ class BasicModelTrainingProcessor:
     # -------------------------------------------------------------------------
     def __train_model__(self, X_train, X_test, y_train, y_test, channels) -> Model:
         modelDef: ModelAbstractDefinition = self.modelDefType(self.job, X_train.shape[2], channels)
+        print(f"Model definition:\n{modelDef.printModelDefintions()}")
+
         model = modelDef.buildModel()
         model.compile(optimizer=self.job.optimizer, loss=self.job.loss, metrics=self.job.metrics)
 

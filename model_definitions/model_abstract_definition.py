@@ -1,6 +1,7 @@
+import copy
+import inspect
 from abc import ABC, abstractmethod
 from tensorflow.keras.models import Model
-import copy
 
 from configuration.configuration import Job
 
@@ -12,3 +13,7 @@ class ModelAbstractDefinition(ABC):
     @abstractmethod
     def buildModel(self) -> Model:
         pass
+
+    def printModelDefintions(self):
+        lines = inspect.getsource(self.buildModel)
+        print(lines)

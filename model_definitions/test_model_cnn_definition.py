@@ -27,6 +27,7 @@ class TestModelCnnDefinition(unittest.TestCase):
         # then
         self.assertIsNotNone(model)
         self.assertDictEqual(job.__dict__, modelDef.__job__.__dict__)
+        modelDef.printModelDefintions()
         
 
 

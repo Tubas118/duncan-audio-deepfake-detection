@@ -16,7 +16,7 @@
 notebookName = 'audio-deepfake-detection-testing'
 # runJobId = 'ASVspoof-2019_small-eval-1'
 # runJobId = 'ASVspoof-2019_small-eval-2'
-runJobId = 'ASVspoof-2019_eval-1'
+runJobId = 'ASVspoof-2019_eval-2'
 # runJobId = 'ASVspoof-2019_training'     # This should fail
 
 import joblib
