@@ -34,6 +34,7 @@ class Job:
         self.dataPathRoot: str = self.fullFilePath(self.dataPathRootRaw)
         self.dataPathSuffix: str = source['data-path-suffix']
         self.dataExtension: str = source['data-extension']
+        self.trainingSplitRandomState: int = source['training-split-random-state']
         self.labelFilename: str = source['label-filename']
         self.executeToCategoricalForLabels = source.get('labels-execute-to-categorical', True)
         self.numClasses: int = source['num-classes']

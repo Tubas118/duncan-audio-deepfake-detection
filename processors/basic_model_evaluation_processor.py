@@ -7,8 +7,9 @@ from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Model
 
 from configuration.configuration import Job
+from processors.abstract_model_processor import AbstractModelProcessor
 
-class BasicModelEvaluationProcessor:
+class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
     # -------------------------------------------------------------------------
     def __init__(self, job: Job, model: Model = None):
@@ -20,6 +21,7 @@ class BasicModelEvaluationProcessor:
         else:
             self.model = model
 
+    # -------------------------------------------------------------------------
     def resetStatistics(self):
         self.jobStartTime = None
         self.inputFileBatchCount = 0
@@ -43,21 +45,31 @@ class BasicModelEvaluationProcessor:
         print(f"  Batches: {self.inputFileBatchCount} - Files: {self.inputFileCount} - Score: {score} - Elements: {len(X_test)}")
 
     # -------------------------------------------------------------------------
-    def reportSnapshot(self):
+    def reportSnapshot(self, initialProcessor: AbstractModelProcessor = None):
+        report = ""
+
+        if (initialProcessor != None):
+            report = initialProcessor.reportSnapshot()
+            report = report + "\n"
+
         timestamp_utc = datetime.now(pytz.utc)
         elapsed_time = timestamp_utc - self.jobStartTime
         prettyJson = json.dumps(self.job.__dict__, indent=4)
 
-        report = f"start time: {self.jobStartTime.isoformat()}\n"
+        report = report + f"---- Testing (start) ----\n"
+        report = report + f"start time: {self.jobStartTime.isoformat()}\n"
         report = report + f"end time: {timestamp_utc.isoformat()}\n"
         report = report + f"elapsed: {elapsed_time}\n\n"
         report = report + f"model file: {self.job.persistedModel}\n"
         report = report + f"batch count: {self.inputFileBatchCount}\n"
         report = report + f"file count: {self.inputFileCount}\n"
         report = report + f"accuracy_score: {(float) (self.score) / self.inputFileBatchCount}\n\n"
-        report = report + f"job: {prettyJson}\n"
+        report = report + f"job: {prettyJson}\n\n"
+        report = report + f"---- Testing (end) ----\n"
 
         print(report)
 
         with open(self.job.persistedModelResults, "w") as file:
             file.write(report)
+
+        return report

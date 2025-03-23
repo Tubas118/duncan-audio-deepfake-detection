@@ -43,9 +43,10 @@ model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)
 
 # ### Test Model
 
-# +
 evaluationProc = BasicModelEvaluationProcessor(job, model)
 evaluationProc.process(X_test, y_test)
 
+
 print("\n")
-evaluationProc.reportSnapshot()
+report = evaluationProc.reportSnapshot(trainingProc)
+evaluationProc.writeReportToFile(job.persistedModelResults, report)

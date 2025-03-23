@@ -15,8 +15,9 @@
 # +
 notebookName = 'audio-deepfake-detection-testing'
 # runJobId = 'ASVspoof-2019_small-eval-1'
-# runJobId = 'ASVspoof-2019_small-eval-2'
-runJobId = 'ASVspoof-2019_eval-2'
+# runJobId = 'ASVspoof-2019_eval-1'
+# runJobId = 'ASVspoof-2019_eval-1_large-batch'
+runJobId = 'ASVspoof-2019_eval-1_huge-batch'
 # runJobId = 'ASVspoof-2019_training'     # This should fail
 
 import joblib
@@ -76,4 +77,5 @@ if (len(X) > 0):
     processArrays(X, y)
 
 print("\n")
-evaluationProc.reportSnapshot()
+report = evaluationProc.reportSnapshot()
+evaluationProc.writeReportToFile(job.persistedModelResults, report)
