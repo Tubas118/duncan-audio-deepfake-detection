@@ -23,10 +23,11 @@ This README file was written based on an environment with the following versions
 ### Options
 * `jobs`: A list of jobs each with their own parameters.
   * `{{name}}`: name of job.
-    * `data-path`:
-    * `training-data-path`: 
-    * `training-data-extension`:
-    * `training-label-filename`: 
+    * `data-path-root`:
+    * `data-path-suffix`: 
+    * `data-extension`:
+    * `label-filename`: 
+    * `labels-execute-to-categorical`:
     * `num-classes`:
     * `sample-rate`:
     * `duration`:
