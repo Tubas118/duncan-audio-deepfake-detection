@@ -1,38 +1,30 @@
 project-name: audio-deepfake-detection
 active-job-id: ASVspoof-2019-2
 
+job-defaults:
+  input-file-batch-size: 1000
+  output-folder: output
+  data-path-root: .
+  data-extension: .flac
+  # Assign 'None' to training-split-random-state to get random split. Pass same int for reproducible split.
+  training-split-random-state: 3
+  labels-execute-to-categorical: true
+  num-classes: 2        # Number of classes (bonafide and spoof)
+  sample-rate: 16000
+  duration: 5
+  num-mels: 128
+  max-time-steps: 109
+  batch-size: 32
+  num-epochs: 10
+  optimizer: adam
+  loss: categorical_crossentropy
+  metrics:
+    - accuracy
+
 jobs:
   ASVspoof-2019-1:
-    data-path-root: .
     data-path-suffix: testaudio
-    data-extension: .flac
     label-filename: testvalues/LA.cm.train.trn.txt
-    labels-execute-to-categorical: true
-    num-classes: 2        # Number of classes (bonafide and spoof)
-    sample-rate: 16000
-    duration: 5
-    num-mels: 128
-    max-time-steps: 109
-    optimizer: adam
-    loss: categorical_crossentropy
-    metrics:
-      - accuracy
-    batch-size: 32
-    num-epochs: 10
   ASVspoof-2019-2:
-    data-path-root: .
     data-path-suffix: testaudio
-    data-extension: .flac
     label-filename: testvalues/LA.cm.train.trn.txt
-    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
-    num-classes: 2        # Number of classes (bonafide and spoof)
-    sample-rate: 16000
-    duration: 5
-    num-mels: 128
-    max-time-steps: 109
-    optimizer: adam
-    loss: categorical_crossentropy
-    metrics:
-      - accuracy
-    batch-size: 32
-    num-epochs: 10
