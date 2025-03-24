@@ -19,7 +19,7 @@ runJobId = 'ASVspoof-2019_training'
 
 import configuration.configuration as configuration
 import model_definitions.model_cnn_definition as model_cnn_definition
-from mel_spectrogram.mel_spectrogram import MelSpectrogramGenerator
+from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from notebook_utils import notebookToPython
 from processors.basic_model_training_processor import BasicModelTrainingProcessor
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
@@ -35,8 +35,8 @@ if (job.newModelGenerated == False):
     raise ValueError("This notebook is meant for training. Select a job without a value for 'persisted-model' set.")
 # -
 
-generator = MelSpectrogramGenerator()
-X, y_encoded = generator.generateMelSpectrograms(job, job.dataPathSuffix)
+generator = MelSpectrogramPreprocessor()
+X, y_encoded = generator.extract_features_multipleSource(job, job.dataPathSuffix)
 
 trainingProc = BasicModelTrainingProcessor(job, model_cnn_definition.ModelCnnDefinition)
 model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)

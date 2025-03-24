@@ -17,7 +17,11 @@ class ModelCnnDefinition(ModelAbstractDefinition):
         input_shape = (self.__job__.numMels, self.width, self.channels)
         model_input = Input(shape = input_shape)
 
-        # TODO - why were these parameters selected? What purpose do they serve? Should they be configurable?
+        # Derived from:
+        # Anagha, R., Arya, A., Narayan, V. H., Abhishek, S., & Anjali, T. (2023).
+        #   Audio Deepfake Detection Using Deep Learning.
+        #   2023 12th International Conference on System Modeling & Advancement in Research Trends (SMART), System Modeling & Advancement in Research Trends (SMART), 2023 12th International Conference On, 176–181.
+        #   https://doi.org/10.1109/SMART59791.2023.10428163
         x = Conv2D(filters=32, kernel_size=(3, 3), activation='relu')(model_input)
         x = MaxPooling2D(pool_size=(2, 2))(x)
         x = Conv2D(filters=64, kernel_size=(3, 3), activation='relu')(x)
