@@ -13,11 +13,10 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
     # -------------------------------------------------------------------------
     def __init__(self, job: Job, model: Model = None):
-        self.job = job
-        self.resetStatistics()
+        super().__init__(job)
 
         if (model == None):
-            self.model = joblib.load(self.job.persistedModel)
+            self.model = joblib.load(self.__job__.persistedModel)
         else:
             self.model = model
 
@@ -54,22 +53,17 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
         timestamp_utc = datetime.now(pytz.utc)
         elapsed_time = timestamp_utc - self.jobStartTime
-        prettyJson = json.dumps(self.job.__dict__, indent=4)
+        prettyJson = json.dumps(self.__job__.__dict__, indent=4)
 
         report = report + f"---- Testing (start) ----\n"
         report = report + f"start time: {self.jobStartTime.isoformat()}\n"
         report = report + f"end time: {timestamp_utc.isoformat()}\n"
         report = report + f"elapsed: {elapsed_time}\n\n"
-        report = report + f"model file: {self.job.persistedModel}\n"
+        report = report + f"model file: {self.__job__.persistedModel}\n"
         report = report + f"batch count: {self.inputFileBatchCount}\n"
         report = report + f"file count: {self.inputFileCount}\n"
         report = report + f"accuracy_score: {(float) (self.score) / self.inputFileBatchCount}\n\n"
         report = report + f"job: {prettyJson}\n\n"
         report = report + f"---- Testing (end) ----\n"
-
-        print(report)
-
-        with open(self.job.persistedModelResults, "w") as file:
-            file.write(report)
 
         return report
