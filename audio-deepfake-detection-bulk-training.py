@@ -15,8 +15,8 @@
 notebookName = 'audio-deepfake-detection-bulk-training'
 runJobId = 'ASVspoof-2019_training'
 # runJobId = 'ASVspoof-2019_small-eval-1'     # This should fail
-random_state_lowValue = 1
-random_state_highValue = 3
+random_state_lowValue = 4
+random_state_highValue = 200
 
 import configuration.configuration as configuration
 import model_definitions.model_cnn_definition as model_cnn_definition
