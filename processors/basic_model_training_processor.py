@@ -7,13 +7,13 @@ from tensorflow.keras.models import Model
 
 from configuration.configuration import Job
 from model_definitions.model_abstract_definition import ModelAbstractDefinition
-from processors.abstract_model_processor import AbstractModelProcessor
+from processors.abstract_model_training_processor import AbstractModelTrainingProcessor
 
-class BasicModelTrainingProcessor(AbstractModelProcessor):
+class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
 
     # -------------------------------------------------------------------------
     def __init__(self, job: Job, modelDefType):
-        self.job = job
+        super().__init__(job)
         self.resetStatistics()
         self.modelDefType = modelDefType
 
@@ -24,15 +24,14 @@ class BasicModelTrainingProcessor(AbstractModelProcessor):
         self.inputFileCount = 0
 
     # -------------------------------------------------------------------------
-    def process(self, X, y_encoded, channels, test_size = 0.2):
-        if (self.job.newModelGenerated == False):
-            raise ValueError("The job is configured to re-use an existing model, not generate a new model.")
-        
+    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None):
         if (self.jobStartTime == None):
             self.jobStartTime = datetime.now(pytz.utc)
 
-        print("Selecting training and test data")
-        X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=self.job.trainingSplitRandomState)
+        useTrainingSplitRandomState: int = self.__get_training_split_random_state__(trainingSplitRandomState)
+
+        print(f"Selecting training and test data - traininSplitRandomState: {useTrainingSplitRandomState}")
+        X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=useTrainingSplitRandomState)
         
         print(f"Training using {len(X_train)} files.")
         model = self.__train_model__(X_train, X_test, y_train, y_test, channels)
@@ -43,13 +42,13 @@ class BasicModelTrainingProcessor(AbstractModelProcessor):
     def reportSnapshot(self):
         timestamp_utc = datetime.now(pytz.utc)
         elapsed_time = timestamp_utc - self.jobStartTime
-        prettyJson = json.dumps(self.job.__dict__, indent=4)
+        prettyJson = json.dumps(self.__job__.__dict__, indent=4)
 
         report = f"---- Training (start) ----\n"
         report = report + f"start time: {self.jobStartTime.isoformat()}\n"
         report = report + f"end time: {timestamp_utc.isoformat()}\n"
         report = report + f"elapsed: {elapsed_time}\n\n"
-        report = report + f"model file: {self.job.persistedModel}\n"
+        report = report + f"model file: {self.__job__.persistedModel}\n"
         report = report + f"batch count: {self.inputFileBatchCount}\n"
         report = report + f"file count: {self.inputFileCount}\n"
         report = report + f"job: {prettyJson}\n\n"
@@ -59,16 +58,16 @@ class BasicModelTrainingProcessor(AbstractModelProcessor):
 
     # -------------------------------------------------------------------------
     def __train_model__(self, X_train, X_test, y_train, y_test, channels) -> Model:
-        modelDef: ModelAbstractDefinition = self.modelDefType(self.job, X_train.shape[2], channels)
+        modelDef: ModelAbstractDefinition = self.modelDefType(self.__job__, X_train.shape[2], channels)
         print(f"Model definition:\n{modelDef.printModelDefintions()}")
 
         model = modelDef.buildModel()
-        model.compile(optimizer=self.job.optimizer, loss=self.job.loss, metrics=self.job.metrics)
+        model.compile(optimizer=self.__job__.optimizer, loss=self.__job__.loss, metrics=self.__job__.metrics)
 
         print("Training the Model...")
-        model.fit(X_train, y_train, batch_size=self.job.batchSize, epochs=self.job.numEpochs, validation_data=(X_test, y_test))
+        model.fit(X_train, y_train, batch_size=self.__job__.batchSize, epochs=self.__job__.numEpochs, validation_data=(X_test, y_test))
 
-        print(f"Saving model: {self.job.persistedModel}")
-        joblib.dump(model, self.job.persistedModel)
+        print(f"Saving model: {self.__job__.persistedModel}")
+        joblib.dump(model, self.__job__.persistedModel)
 
         return model
