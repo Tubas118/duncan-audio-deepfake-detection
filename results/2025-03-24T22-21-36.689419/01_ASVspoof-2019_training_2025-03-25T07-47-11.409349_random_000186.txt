@@ -1,9 +1,9 @@
 ---- Training (start) ----
-start time: 2025-03-25T03:34:18.990750+00:00
-end time: 2025-03-25T03:41:59.909863+00:00
-elapsed: 0:07:40.919113
+start time: 2025-03-26T11:34:59.319724+00:00
+end time: 2025-03-26T11:42:51.309607+00:00
+elapsed: 0:07:51.989883
 
-model file: output/ASVspoof-2019_training_2025-03-24T22-21-36.689419_random_000002.libjob
+model file: output/ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
 batch count: 0
 file count: 0
 job: {
@@ -30,21 +30,21 @@ job: {
     "batchSize": 32,
     "numEpochs": 10,
     "newModelGenerated": true,
-    "persistedModel": "output/ASVspoof-2019_training_2025-03-24T22-21-36.689419_random_000002.libjob",
-    "persistedModelResults": "output/ASVspoof-2019_training_2025-03-24T22-21-36.689419_random_000002.txt"
+    "persistedModel": "output/ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob",
+    "persistedModelResults": "output/ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.txt"
 }
 
 ---- Training (end) ----
 
 ---- Testing (start) ----
-start time: 2025-03-25T03:41:57.230908+00:00
-end time: 2025-03-25T03:41:59.909863+00:00
-elapsed: 0:00:02.678955
+start time: 2025-03-26T11:42:47.834387+00:00
+end time: 2025-03-26T11:42:51.310766+00:00
+elapsed: 0:00:03.476379
 
-model file: output/ASVspoof-2019_training_2025-03-24T22-21-36.689419_random_000002.libjob
+model file: output/ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
 batch count: 1
 file count: 5076
-accuracy_score: 0.898936170212766
+accuracy_score: 0.9956658786446021
 
 job: {
     "jobId": "ASVspoof-2019_training",
@@ -70,8 +70,8 @@ job: {
     "batchSize": 32,
     "numEpochs": 10,
     "newModelGenerated": true,
-    "persistedModel": "output/ASVspoof-2019_training_2025-03-24T22-21-36.689419_random_000002.libjob",
-    "persistedModelResults": "output/ASVspoof-2019_training_2025-03-24T22-21-36.689419_random_000002.txt"
+    "persistedModel": "output/ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob",
+    "persistedModelResults": "output/ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.txt"
 }
 
 ---- Testing (end) ----
