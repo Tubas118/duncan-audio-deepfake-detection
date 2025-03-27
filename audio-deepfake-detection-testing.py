@@ -13,8 +13,8 @@
 # ---
 
 notebookName = 'audio-deepfake-detection-testing'
-# runJobId = 'ASVspoof-2019_2025-03-24-1_large-batch'
-runJobId = 'ASVspoof-2019_2025-03-24-1_huge-batch'
+# runJobId = 'ASVspoof-2019_2025-03-24-2_large-batch'
+runJobId = 'ASVspoof-2019_2025-03-24-2_huge-batch'
 # runJobId = 'ASVspoof-2019_training'     # This should fail
 
 # +
