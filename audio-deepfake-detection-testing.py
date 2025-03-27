@@ -12,14 +12,12 @@
 #     name: python3
 # ---
 
-# +
 notebookName = 'audio-deepfake-detection-testing'
-# runJobId = 'ASVspoof-2019_small-eval-1'
-# runJobId = 'ASVspoof-2019_eval-1'
-# runJobId = 'ASVspoof-2019_eval-1_large-batch'
-runJobId = 'ASVspoof-2019_eval-1_huge-batch'
+# runJobId = 'ASVspoof-2019_2025-03-24-1_large-batch'
+runJobId = 'ASVspoof-2019_2025-03-24-1_huge-batch'
 # runJobId = 'ASVspoof-2019_training'     # This should fail
 
+# +
 import joblib
 import numpy as np
 from tensorflow.keras.utils import to_categorical
