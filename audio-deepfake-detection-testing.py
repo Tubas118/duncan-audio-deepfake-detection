@@ -14,7 +14,7 @@
 
 notebookName = 'audio-deepfake-detection-testing'
 # runJobId = 'ASVspoof-2019_2025-03-24-5_large-batch'
-runJobId = 'ASVspoof-2019_2025-03-24-5_huge-batch'
+runJobId = 'ASVspoof-2019_random-186_validation'
 # runJobId = 'ASVspoof-2019_training'     # This should fail
 
 # +

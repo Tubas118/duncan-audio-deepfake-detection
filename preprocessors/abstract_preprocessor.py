@@ -45,3 +45,13 @@ class AbstractPreprocessor(ABC):
     @abstractmethod
     def __extract_features_singleSource_worker__(self, job: Job, fullDataPath, filename, label):
         pass
+
+    def __pad_data__(self, source, job: Job):
+        if (source.shape[1] < job.maxTimeSteps):
+            padWidth = ((0, 0), (0, job.maxTimeSteps - source.shape[1]))
+            source = np.pad(array=source, pad_width=padWidth, mode='constant')
+        else:
+            source = source[:, :job.maxTimeSteps]
+
+        return source
+    

@@ -1,0 +1,39 @@
+---- Testing (start) ----
+start time: 2025-03-28T02:22:56.624277+00:00
+end time: 2025-03-28T02:26:57.336176+00:00
+elapsed: 0:04:00.711899
+
+model file: results/2025-03-27T20-07-45.848482_original/ASVspoof-2019_training_2025-03-27T20-07-45.848482.libjob
+batch count: 1
+file count: 71237
+accuracy_score: 0.8898606061456827
+
+job: {
+    "jobId": "ASVspoof-2019_random-186_validation",
+    "inputFileBatchSize": 71237,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_eval/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 3,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "executeToCategoricalForLabels": true,
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": false,
+    "persistedModel": "results/2025-03-27T20-07-45.848482_original/ASVspoof-2019_training_2025-03-27T20-07-45.848482.libjob",
+    "persistedModelResults": "results/2025-03-27T20-07-45.848482_original/ASVspoof-2019_training_2025-03-27T20-07-45.848482_2025-03-27T20-30-05.496898.txt"
+}
+
+---- Testing (end) ----
