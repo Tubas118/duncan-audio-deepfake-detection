@@ -12,20 +12,18 @@
 #     name: python3
 # ---
 
-# +
 notebookName = 'audio-deepfake-detection-testing'
-# runJobId = 'ASVspoof-2019_small-eval-1'
-# runJobId = 'ASVspoof-2019_eval-1'
-# runJobId = 'ASVspoof-2019_eval-1_large-batch'
-runJobId = 'ASVspoof-2019_eval-1_huge-batch'
+# runJobId = 'ASVspoof-2019_2025-03-24-5_large-batch'
+runJobId = 'ASVspoof-2019_random-186_validation'
 # runJobId = 'ASVspoof-2019_training'     # This should fail
 
+# +
 import joblib
 import numpy as np
 from tensorflow.keras.utils import to_categorical
 
 import configuration.configuration as configuration
-from mel_spectrogram.mel_spectrogram import MelSpectrogramGenerator
+from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from notebook_utils import notebookToPython
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
 from readers.label_reader import readTrainingLabelsWithJob
@@ -44,7 +42,7 @@ if (job.newModelGenerated):
     raise ValueError("This notebook is meant for testing. Select a job with a value for 'persisted-model' set.")
 # -
 
-generator = MelSpectrogramGenerator()
+generator = MelSpectrogramPreprocessor()
 model = joblib.load(job.persistedModel)
 evaluationProc = BasicModelEvaluationProcessor(job, model)
 
@@ -64,7 +62,7 @@ X = []
 y = []
 
 for filename, label in labels.items():
-    _X, _y = generator.generateMelSpectrogram(job, fullDataPath, filename, label)
+    _X, _y = generator.extract_features_singleSource(job, fullDataPath, filename, label)
     X.append(_X)
     y.append(_y)
 
