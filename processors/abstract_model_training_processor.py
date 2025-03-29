@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from configuration.configuration import Job
+from config.configuration import Job
 from processors.abstract_model_processor import AbstractModelProcessor
 
 # ======================================================================

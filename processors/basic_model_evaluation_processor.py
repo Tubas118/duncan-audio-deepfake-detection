@@ -6,7 +6,7 @@ from datetime import datetime
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Model
 
-from configuration.configuration import Job
+from config.configuration import Job
 from processors.abstract_model_processor import AbstractModelProcessor
 
 class BasicModelEvaluationProcessor(AbstractModelProcessor):

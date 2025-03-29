@@ -5,7 +5,7 @@ from datetime import datetime
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.models import Model
 
-from configuration.configuration import Job
+from config.configuration import Job
 from model_definitions.model_abstract_definition import ModelAbstractDefinition
 from processors.abstract_model_training_processor import AbstractModelTrainingProcessor
 

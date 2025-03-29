@@ -2,11 +2,15 @@ import numpy as np
 from abc import ABC, abstractmethod
 from tensorflow.keras.utils import to_categorical
 
-from configuration.configuration import Job
+from config.configuration import Job
 from readers.label_reader import readTrainingLabelsWithJob
 
 class AbstractPreprocessor(ABC):
 
+    def __init__(self, silent):
+        if (silent == False):
+            print(f'{self.__class__.__name__}')
+        
     # -------------------------------------------------------------------------
     def extract_features_singleSource(self, job: Job, fullDataPath, filename, label):
         X, y = self.__extract_features_singleSource_worker__(job, fullDataPath, filename, label)

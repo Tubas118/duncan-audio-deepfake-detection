@@ -1,5 +1,6 @@
 import datetime
 import os
+import re
 import yaml
 
 JOB_EXT: str = ".libjob"
@@ -42,9 +43,12 @@ class Job:
         self.duration: int = source['duration']
         self.numMels: int = source['num-mels']
         self.maxTimeSteps: int = source['max-time-steps']
+        self.kernelSize = self.__to_tuple_2_ints__(source['kernel-size'])   # tuple of 2 ints
+        self.poolSize = self.__to_tuple_2_ints__(source['pool-size'])       # tuple of 2 ints
         self.optimizer: str = source['optimizer']
         self.loss: str = source['loss']
         self.metrics = source['metrics']
+        self.preprocessor: str = source['preprocessor']
         self.batchSize: str = source['batch-size']
         self.numEpochs: str = source['num-epochs']
         self.__determine_persistedModelValue__(source, 'persisted-model')
@@ -111,3 +115,16 @@ class Job:
         self.persistedModel: str = usePersistedModel
         self.persistedModelResults: str = usePersistedModelResults
         print(f"Assigned model name: {self.persistedModel}")
+
+    def __to_tuple_2_ints__(self, value: str):
+        splitValue = list(filter(None, re.split('[ (,)]', value)))
+        num1 = int(splitValue[0])
+        num2 = int(splitValue[1])
+        return (num1, num2)
+
+# ======================================================================
+class RunDetails:
+
+    def __init__(self, configFilename: str, jobId: str):
+        self.configFilename = configFilename
+        self.jobId = jobId

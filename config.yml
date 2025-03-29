@@ -14,12 +14,15 @@ job-defaults:
   duration: 5
   num-mels: 128
   max-time-steps: 109
+  kernel-size: (2, 2)
+  pool-size: (2, 2)
   batch-size: 32
   num-epochs: 10
   optimizer: adam
   loss: categorical_crossentropy
   metrics:
     - accuracy
+  preprocessor: mel_spectrogram
 
 jobs:
   # Training

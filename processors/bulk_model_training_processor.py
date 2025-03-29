@@ -1,7 +1,7 @@
 import pytz
 from datetime import datetime
 
-from configuration.configuration import JOB_EXT, Job
+from config.configuration import JOB_EXT, Job
 from processors.abstract_model_processor import AbstractModelProcessor
 from processors.abstract_model_training_processor import AbstractModelTrainingProcessor
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor

@@ -3,7 +3,7 @@ import inspect
 from abc import ABC, abstractmethod
 from tensorflow.keras.models import Model
 
-from configuration.configuration import Job
+from config.configuration import Job
 
 class ModelAbstractDefinition(ABC):
 
