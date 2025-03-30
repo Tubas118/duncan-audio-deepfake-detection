@@ -4,8 +4,8 @@ The following was derived from a YouTube tutorial published by Mosh Hamedani.
 ## Assumptions
 This README file was written based on an environment with the following versions loaded:
 * Windows 11 Home 23H2 OS Build 22631.4890
-* Anaconda Navigator 2.6.4
-* Visual Studio Code 1.97.2
+* Anaconda Navigator 2.6.4 to 2.6.5
+* Visual Studio Code 1.97.2 to 1.98.2
 ## Setup
 * Start Anaconda Navigator.
 * From the Home panel, launch Visual Studio Code (VSC).
@@ -23,6 +23,7 @@ This README file was written based on an environment with the following versions
   ```
   python -m unittest
   ```
+  * NOTE: If the unit tests do not run from the `conda` command-line in Visual Studio Code, try exiting and relaunching from Anaconda Navigator.
 ## Configure
 ### Options
 * `job-defaults`:
