@@ -1,5 +1,5 @@
 import os
-from configuration.configuration import Job
+from config.configuration import Job
 
 def readTrainingLabelsWithJob(job: Job):
     labelFileName = job.fullJoinFilePath(job.dataPathRoot, job.labelFilename)

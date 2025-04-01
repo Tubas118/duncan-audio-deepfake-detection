@@ -14,17 +14,25 @@ job-defaults:
   duration: 5
   num-mels: 128
   max-time-steps: 109
+  kernel-size: (2, 2)
+  pool-size: (2, 2)
   batch-size: 32
   num-epochs: 10
   optimizer: adam
   loss: categorical_crossentropy
   metrics:
     - accuracy
-
+  preprocessor: mel_spectrogram
+  
 jobs:
   ASVspoof-2019-1:
     data-path-suffix: testaudio
     label-filename: testvalues/LA.cm.train.trn.txt
   ASVspoof-2019-2:
+    data-path-suffix: testaudio
+    label-filename: testvalues/LA.cm.train.trn.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+  Check-data-path-root:
+    data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
     data-path-suffix: testaudio
     label-filename: testvalues/LA.cm.train.trn.txt

@@ -27,8 +27,8 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense,
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
 
-import configuration.configuration as configuration
-from configuration.configuration import Job
+import config.configuration as configuration
+from config.configuration import Job
 from notebook_utils import notebookToPython
 from readers.label_reader import readTrainingLabelsWithJob
 

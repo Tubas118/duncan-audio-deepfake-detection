@@ -2,7 +2,7 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense,
 from tensorflow.keras.models import Model
 from tensorflow.keras.utils import to_categorical
 
-from configuration.configuration import Job
+from config.configuration import Job
 from model_definitions.model_abstract_definition import ModelAbstractDefinition
 
 class ModelCnnDefinition(ModelAbstractDefinition):
@@ -16,16 +16,17 @@ class ModelCnnDefinition(ModelAbstractDefinition):
         print(f"__job__: {self.__job__}")
         input_shape = (self.__job__.numMels, self.width, self.channels)
         model_input = Input(shape = input_shape)
+        job = self.__job__
 
         # Derived from:
         # Anagha, R., Arya, A., Narayan, V. H., Abhishek, S., & Anjali, T. (2023).
         #   Audio Deepfake Detection Using Deep Learning.
         #   2023 12th International Conference on System Modeling & Advancement in Research Trends (SMART), System Modeling & Advancement in Research Trends (SMART), 2023 12th International Conference On, 176–181.
         #   https://doi.org/10.1109/SMART59791.2023.10428163
-        x = Conv2D(filters=32, kernel_size=(3, 3), activation='relu')(model_input)
-        x = MaxPooling2D(pool_size=(2, 2))(x)
-        x = Conv2D(filters=64, kernel_size=(3, 3), activation='relu')(x)
-        x = MaxPooling2D(pool_size=(2, 2))(x)
+        x = Conv2D(filters=32, kernel_size=job.kernelSize, activation='relu')(model_input)
+        x = MaxPooling2D(pool_size=job.poolSize)(x)
+        x = Conv2D(filters=64, kernel_size=job.kernelSize, activation='relu')(x)
+        x = MaxPooling2D(pool_size=job.poolSize)(x)
         x = Flatten()(x)
         x = Dense(units=128, activation='relu')(x)
         x = Dropout(0.5)(x)

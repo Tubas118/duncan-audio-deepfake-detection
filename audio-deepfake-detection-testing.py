@@ -12,24 +12,31 @@
 #     name: python3
 # ---
 
+# +
+from config.configuration import RunDetails
+
+# runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_large-batch')
+runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_huge-batch')
+
 notebookName = 'audio-deepfake-detection-testing'
-# runJobId = 'ASVspoof-2019_2025-03-24-5_large-batch'
-runJobId = 'ASVspoof-2019_random-186_validation'
-# runJobId = 'ASVspoof-2019_training'     # This should fail
+# -
+
+configFilename = runDetail.configFilename
+runJobId = runDetail.jobId
 
 # +
 import joblib
 import numpy as np
 from tensorflow.keras.utils import to_categorical
 
-import configuration.configuration as configuration
+import config.configuration as configuration
 from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from notebook_utils import notebookToPython
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
 from readers.label_reader import readTrainingLabelsWithJob
 
 # +
-config = configuration.ConfigLoader('config.yml')
+config = configuration.ConfigLoader(configFilename)
 
 notebookToPython(notebookName)
 job = config.getJobConfig(runJobId)

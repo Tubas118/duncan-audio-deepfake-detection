@@ -1,0 +1,130 @@
+project-name: audio-deepfake-detection
+active-job-id: ASVspoof-2019_small-eval-1
+
+job-defaults:
+  input-file-batch-size: 1000
+  output-folder: output
+  data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
+  data-extension: .flac
+  # Assign 'None' to training-split-random-state to get random split. Pass same int for reproducible split.
+  training-split-random-state: 3
+  labels-execute-to-categorical: true
+  num-classes: 2        # Number of classes (bonafide and spoof)
+  sample-rate: 16000
+  duration: 5
+  num-mels: 128
+  max-time-steps: 109
+  kernel-size: (2, 2)
+  pool-size: (2, 2)
+  batch-size: 32
+  num-epochs: 10
+  optimizer: adam
+  loss: categorical_crossentropy
+  metrics:
+    - accuracy
+  preprocessor: mfcc
+
+jobs:
+  # Training
+  ASVspoof-2019_training_mfcc:
+    data-path-suffix: LA/ASVspoof2019_LA_train/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+  # Model Validation (mfcc)
+  ASVspoof-2019_2025-03-27-mfcc-check-1_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-27T22-16-59.087001_mfcc/ASVspoof-2019_training_mfcc_2025-03-27T22-16-59.087001.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-27-mfcc-check-1_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-27T22-16-59.087001_mfcc/ASVspoof-2019_training_mfcc_2025-03-27T22-16-59.087001.libjob
+    input-file-batch-size: 71237
+  # Model #1 (mfcc)
+  ASVspoof-2019_2025-03-29-1_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/01_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000013.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-1_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/01_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000013.libjob
+    input-file-batch-size: 71237
+  # Model #2a (mfcc)
+  ASVspoof-2019_2025-03-29-2a_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/02_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000133.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-2a_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/02_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000133.libjob
+    input-file-batch-size: 71237
+  # Model #2b (mfcc)
+  ASVspoof-2019_2025-03-29-2b_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/02_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000184.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-2b_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/02_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000184.libjob
+    input-file-batch-size: 71237
+  # Model #3a (mfcc)
+  ASVspoof-2019_2025-03-29-3a_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/03_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000140.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-3a_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/03_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000140.libjob
+    input-file-batch-size: 71237
+  # Model #3b (mfcc)
+  ASVspoof-2019_2025-03-29-3b_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/03_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000141.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-3b_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/03_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000141.libjob
+    input-file-batch-size: 71237
+  # Model #4a (mfcc)
+  ASVspoof-2019_2025-03-29-4a_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/04_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000009.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-4a_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/04_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000009.libjob
+    input-file-batch-size: 71237
+  # Model #4b (mfcc)
+  ASVspoof-2019_2025-03-29-4b_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/04_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000159.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-4b_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/04_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000159.libjob
+    input-file-batch-size: 71237
+  # Model #5 (mfcc)
+  ASVspoof-2019_2025-03-29-5_large-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/05_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000025.libjob
+    input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-29-5_huge-batch:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-29T17-36-18.258353_mfcc/05_ASVspoof-2019_training_mfcc_2025-03-29T17-36-18.258353_random_000025.libjob
+    input-file-batch-size: 71237

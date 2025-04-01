@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import copy
 
-from configuration.configuration import Job
+from config.configuration import Job
 
 # ======================================================================
 class AbstractModelProcessor(ABC):

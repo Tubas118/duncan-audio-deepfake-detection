@@ -7,8 +7,8 @@ from preprocessors.abstract_preprocessor import AbstractPreprocessor
 class MelSpectrogramPreprocessor(AbstractPreprocessor):
 
     # -------------------------------------------------------------------------
-    def __init__(self):
-        pass
+    def __init__(self, silent=False):
+        super().__init__(silent)
 
     # -------------------------------------------------------------------------
     def __extract_features_singleSource_worker__(self, job, fullDataPath, filename, label):

@@ -6,7 +6,7 @@ import sys
 # -- from parent directory
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
-from configuration.configuration import ConfigLoader
+from config.configuration import ConfigLoader
 from model_definitions.model_abstract_definition import ModelAbstractDefinition
 
 class ModelDefinitionForTesting(ModelAbstractDefinition):
@@ -24,7 +24,7 @@ class TestModelAbstractDefinition(unittest.TestCase):
 
     def test_copyJob(self):
         # given
-        config = ConfigLoader('config.yml')
+        config = ConfigLoader('testvalues/config-for-unit-test.yml')
         job = config.getJobConfig(config.activeJobId)
         checkJobId = job.jobId
 
