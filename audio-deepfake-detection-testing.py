@@ -15,8 +15,8 @@
 # +
 from config.configuration import RunDetails
 
-runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-27-mfcc-check-1_large-batch')
-# runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-27-mfcc-check-1_huge-batch')
+# runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_large-batch')
+runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_huge-batch')
 
 notebookName = 'audio-deepfake-detection-testing'
 # -
