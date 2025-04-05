@@ -38,7 +38,8 @@ class Job:
         self.trainingSplitRandomState: int = source['training-split-random-state']
         self.labelFilename: str = source['label-filename']
         self.executeToCategoricalForLabels = source.get('labels-execute-to-categorical', True)
-        self.numClasses: int = source['num-classes']
+        self.classes: list[str] = source.get('classes')
+        self.numClasses: int = len(self.classes)
         self.sampleRate: int = source['sample-rate']
         self.duration: int = source['duration']
         self.numMels: int = source['num-mels']
@@ -49,8 +50,8 @@ class Job:
         self.loss: str = source['loss']
         self.metrics = source['metrics']
         self.preprocessor: str = source['preprocessor']
-        self.batchSize: str = source['batch-size']
-        self.numEpochs: str = source['num-epochs']
+        self.batchSize: int = source['batch-size']
+        self.numEpochs: int = source['num-epochs']
         self.__determine_persistedModelValue__(source, 'persisted-model')
 
         self.__check_for_output_folder__()

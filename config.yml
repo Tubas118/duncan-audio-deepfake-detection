@@ -10,6 +10,9 @@ job-defaults:
   training-split-random-state: 3
   labels-execute-to-categorical: true
   num-classes: 2        # Number of classes (bonafide and spoof)
+  classes:
+    - spoof
+    - bonafide
   sample-rate: 16000
   duration: 5
   num-mels: 128
@@ -29,6 +32,10 @@ jobs:
   ASVspoof-2019_training:
     data-path-suffix: LA/ASVspoof2019_LA_train/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+  # Small data set for quick run
+  ASVspoof-2019_small-eval-1:
+    data-path-suffix: LA/ASVspoof2019_LA_eval_small/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval-small.trl.txt
   # Validation
   ASVspoof-2019_random-186_validation:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
