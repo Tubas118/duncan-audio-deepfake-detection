@@ -15,8 +15,9 @@
 # +
 from config.configuration import RunDetails
 
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
+# runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
 # runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_training_mfcc')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_small-eval-1')
 
 notebookName = 'audio-deepfake-detection-training'
 # -
@@ -53,7 +54,7 @@ model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)
 # ### Test Model
 
 evaluationProc = BasicModelEvaluationProcessor(job, model)
-evaluationProc.process(X_test, y_test)
+evaluationProc.process(y_encoded, X_test, y_test)
 
 
 print("\n")

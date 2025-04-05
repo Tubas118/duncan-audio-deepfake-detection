@@ -33,7 +33,7 @@ import config.configuration as configuration
 from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from notebook_utils import notebookToPython
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
-from readers.label_reader import readTrainingLabelsWithJob
+from readers.label_reader import readLabelsWithJob
 
 # +
 config = configuration.ConfigLoader(configFilename)
@@ -54,7 +54,7 @@ model = joblib.load(job.persistedModel)
 evaluationProc = BasicModelEvaluationProcessor(job, model)
 
 fullDataPath = job.fullJoinFilePath(job.dataPathRoot, job.dataPathSuffix)
-labels = readTrainingLabelsWithJob(job)
+labels = readLabelsWithJob(job)
 
 
 def processArrays(X, y):

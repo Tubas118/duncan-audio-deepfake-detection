@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from tensorflow.keras.utils import to_categorical
 
 from config.configuration import Job
-from readers.label_reader import readTrainingLabelsWithJob
+from readers.label_reader import readLabelsWithJob
 
 class AbstractPreprocessor(ABC):
 
@@ -24,7 +24,7 @@ class AbstractPreprocessor(ABC):
     def extract_features_multipleSource(self, job: Job, dataPathSuffix: str):
         X = []
         y = []
-        labels = readTrainingLabelsWithJob(job)
+        labels = readLabelsWithJob(job)
         segmentLength = int(len(labels) / 20)
         fullDataPath = job.fullJoinFilePath(job.dataPathRoot, dataPathSuffix)
         print(f"fullDataPath: {fullDataPath}")
