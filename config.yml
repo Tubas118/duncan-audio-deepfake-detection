@@ -40,13 +40,13 @@ jobs:
   # Compare-Sksmta
   Compare-Sksmta-training:
     training-split-random-state: -1
-    data-path-suffix: LA/ASVspoof2019_LA_train/flac
-    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    data-path-suffix: LA/ASVspoof2019_LA_eval_small/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval-small.trl.txt
   Compare-Sksmta-eval:
     data-path-root: ./
     data-path-suffix: testaudio-sksmta
     label-filename: testvalues/sksmta.train.trn.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
+    persisted-model: results/2025-04-06T21-07-25.252600_sksmta/Compare-Sksmta-training_2025-04-06T21-07-25.252600.libjob
     input-file-batch-size: 1
   # Model #1
   ASVspoof-2019_2025-03-24-1_large-batch:

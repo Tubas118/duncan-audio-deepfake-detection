@@ -16,7 +16,7 @@ class AbstractPreprocessor(ABC):
         return self.__extract_features_singleSource_worker__(job, fullDataPath, filename)
     
     # -------------------------------------------------------------------------
-    def extract_features_jobSource(self, job: Job, dataPathSuffix: str, includeTrueLabels = False):
+    def extract_features_jobSource(self, job: Job, dataPathSuffix: str):
         X = []
         y = []
         source = readLabelsWithJob(job)
@@ -24,15 +24,13 @@ class AbstractPreprocessor(ABC):
         fullDataPath = job.fullJoinFilePath(job.dataPathRoot, dataPathSuffix)
         print(f"fullDataPath: {fullDataPath}")
 
-        true_labels = self.__init_true_labels__(includeTrueLabels)
+        true_labels = {}
 
         for filename, label in source.items():
             _X = self.__extract_features_singleSource_worker__(job, fullDataPath, filename)
             X.append(_X)
             y.append(label)
-
-            if (includeTrueLabels):
-                true_labels[filename] = label
+            true_labels[filename] = label
 
             if (segmentLength == 0 or (len(X) % segmentLength) == 0):
                 print(f"Loading audio files: {len(X)}")

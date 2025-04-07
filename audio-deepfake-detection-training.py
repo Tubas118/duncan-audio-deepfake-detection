@@ -15,10 +15,10 @@
 # +
 from config.configuration import RunDetails
 
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
+# runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
 # runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_training_mfcc')
 # runDetail = RunDetails('config.yml', 'ASVspoof-2019_small-eval-1')
-# runDetail = RunDetails('config.yml', 'Compare-Sksmta-training')
+runDetail = RunDetails('config.yml', 'Compare-Sksmta-training')
 
 notebookName = 'audio-deepfake-detection-training'
 # -
@@ -48,7 +48,7 @@ preproc_factory = PreprocessorFactory()
 preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor)
 
 
-X, y_encoded = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
+X, y_encoded, true_labels = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
 
 trainingProc = BasicModelTrainingProcessor(job, model_cnn_definition.ModelCnnDefinition)
 model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)
@@ -60,7 +60,7 @@ from processors.model_evaluation_result import ModelEvaluationResult
 
 
 evaluationProc = BasicModelEvaluationProcessor(job, model)
-results: ModelEvaluationResult = evaluationProc.process(y_encoded, X_test, y_test)
+results: ModelEvaluationResult = evaluationProc.process(X_test, y_test, true_labels)
 
 
 # +

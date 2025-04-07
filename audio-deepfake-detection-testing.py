@@ -65,7 +65,7 @@ preproc_factory = PreprocessorFactory()
 preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor)
 # -
 
-X_test, y_test, true_labels = preprocessor.extract_features_jobSource(job, job.dataPathSuffix, True)
+X_test, y_test, true_labels = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
 
 results = evaluationProc.process(X_test, y_test, true_labels)
 
@@ -84,7 +84,7 @@ from sklearn.metrics import auc, roc_curve
 
 
 # Compute ROC curve and AUC
-fpr, tpr, _ = roc_curve(y_true, results.pred)
+fpr, tpr, _ = roc_curve(results.true, results.pred)
 roc_auc = auc(fpr, tpr)
 
 # Plot ROC curve
