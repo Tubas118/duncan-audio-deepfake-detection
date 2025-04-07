@@ -28,18 +28,20 @@ class ConfusionMatrixPlot:
     #     return self.plot(classes, y_true, y_pred, title)
 
 
-    def plot(self, classes, trueAry: np.array, predAry: np.array, title = 'Confusion Matrix') -> ConfusionMatrixDetails:
+    def plot(self, trueAry: np.array, predAry: np.array, classes, title = 'Confusion Matrix') -> ConfusionMatrixDetails:
         if (self.debugOn):
-            print(f'trueAry: {trueAry}')
-            print(f'predAry: {predAry}')
-            print(f'classes: {classes}')
+            print(f'(inst) trueAry: {trueAry}, {type(trueAry)}')
+            print(f'(inst) predAry: {predAry}, {type(predAry)}')
+            print(f'(inst) classes: {classes}, {type(classes)}')
 
-        cm = confusion_matrix(trueAry, predAry, labels=classes)
+        cm = confusion_matrix(trueAry, predAry)
+        print(f'confusion_matrix_plot (instance): {cm}')
 
         disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=classes)
         dispPlot = disp.plot(cmap=plt.cm.Blues)
-        details = ConfusionMatrixDetails(cm, dispPlot, trueAry, predAry)
+        # details = ConfusionMatrixDetails(cm, dispPlot, trueAry, predAry)
         plt.title(title)
         plt.show(block=False)
-        return details
+        # return details
+        return None
 

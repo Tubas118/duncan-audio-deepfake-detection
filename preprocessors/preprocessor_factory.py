@@ -1,6 +1,7 @@
 from types import MappingProxyType
 
 from config.configuration import Job
+from preprocessors.abstract_preprocessor import AbstractPreprocessor
 from preprocessors.mel_freq_cepstral_coefficient import MelFrequencyCepstralCoeffiecient
 from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 
@@ -14,7 +15,7 @@ class PreprocessorFactory:
         self.availablePreprocessors = MappingProxyType(availablePreprocessors)
         
 
-    def newPreprocessor(self, preprocessorId: str):
+    def newPreprocessor(self, preprocessorId: str) -> AbstractPreprocessor:
         entry = self.availablePreprocessors.get(preprocessorId, None)
         if (entry != None):
             preprocessorType = entry.get('type')

@@ -25,7 +25,7 @@ class TestConfusionMatrixPlot(unittest.TestCase):
     def setUp(self):
         pass
 
-
+    # -------------------------------------------------------------------------
     def test_concept_catsDogs1(self):
         # given
         classes = CAT_DOG_CLASSES
@@ -45,7 +45,7 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
         self.assertEqual(score, expected_acc)
 
-
+    # -------------------------------------------------------------------------
     def test_concept_catsDogs2(self):
         # given
         classes = CAT_DOG_CLASSES
@@ -65,7 +65,7 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
         self.assertEqual(score, expected_acc)
 
-
+    # -------------------------------------------------------------------------
     def test_concept_catsDogsFish1(self):
         # given
         classes = CAT_DOG_FISH_CLASSES
@@ -85,7 +85,7 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
         self.assertEqual(score, expected_acc)
 
-
+    # -------------------------------------------------------------------------
     def test_plotPred1(self):
         # given
         classes = AUDIO_DEEPFAKE_CLASSES
@@ -107,13 +107,34 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
         self.assertEqual(score, expected_acc)
 
-
+    # -------------------------------------------------------------------------
     def test_plotPred2(self):
         # given
         classes = AUDIO_DEEPFAKE_CLASSES
         idx_classes = np.array(range(0, len(classes)))
         y_true = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
         y_pred = np.argmax(ADC_Y_PRED_2, axis=1)
+        expected_cm = np.array([[0, 0], [2, 8]])
+        expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
+        title = CONFUSION_MATRIX_CHART_TITLE()        
+
+        # when
+        confusionMatrixPlot = ConfusionMatrixPlot()
+        cmDetails: ConfusionMatrixDetails = confusionMatrixPlot.plot(idx_classes, y_true, y_pred, title)
+        plt.pause(0.001)    # Brief delay to allow plot to display
+
+        # then
+        assert_array_equal(cmDetails.cm, expected_cm)        
+        score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
+        self.assertEqual(score, expected_acc)
+
+
+    def test_small_eval_data1(self):
+        # given
+        classes = AUDIO_DEEPFAKE_CLASSES
+        idx_classes = np.array(range(0, len(classes)))
+        y_true = [[0., 1.]]
+        y_pred = np.argmax([[0., 1.]], axis=1)
         expected_cm = np.array([[0, 0], [2, 8]])
         expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
         title = CONFUSION_MATRIX_CHART_TITLE()        
