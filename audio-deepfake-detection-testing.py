@@ -15,7 +15,8 @@
 # +
 from config.configuration import RunDetails
 
-runDetail = RunDetails('config.yml', 'Compare-Sksmta-eval')
+# runDetail = RunDetails('config.yml', 'Compare-Sksmta-eval')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_2025-03-24-1_large-batch')
 
 notebookName = 'audio-deepfake-detection-testing'
 # -
@@ -31,6 +32,8 @@ from sklearn.metrics import confusion_matrix
 import config.configuration as configuration
 from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from notebook_utils import notebookToPython
+from postprocessors.confusion_matrix_plot import ConfusionMatrixPlot
+from postprocessors.roc_curve_plot import RocCurvePlot
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
 from processors.model_evaluation_result import ModelEvaluationResult
 from readers.label_reader import readLabelsWithJob
@@ -67,37 +70,13 @@ preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preproc
 
 X_test, y_test, true_labels = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
 
-results = evaluationProc.process(X_test, y_test, true_labels)
-
-# +
-from postprocessors.confusion_matrix_plot import ConfusionMatrixPlot
-
+results: ModelEvaluationResult = evaluationProc.process(X_test, y_test, true_labels)
 
 cm_plot = ConfusionMatrixPlot()
-cm_plot.plot(trueAry=results.true, predAry=results.pred, classes=job.classes)
+cm_plot.plotFromResults(results, job)
 
-# +
-# Get the predicted probabilities for the positive class
-from matplotlib import pyplot as plt
-from sklearn.metrics import auc, roc_curve
-
-
-
-# Compute ROC curve and AUC
-fpr, tpr, _ = roc_curve(results.true, results.pred)
-roc_auc = auc(fpr, tpr)
-
-# Plot ROC curve
-plt.figure()
-plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
-plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Receiver Operating Characteristic')
-plt.legend(loc="lower right")
-plt.show()
+roc_plot = RocCurvePlot()
+roc_plot.plotFromResults(results)
 
 # +
 print("\n")

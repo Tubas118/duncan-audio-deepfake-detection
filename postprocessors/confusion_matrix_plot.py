@@ -3,6 +3,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
+from config.configuration import Job
+from processors.model_evaluation_result import ModelEvaluationResult
+
 class ConfusionMatrixDetails:
 
     def __init__(self, cm: confusion_matrix, display: ConfusionMatrixDisplay, y_true, y_pred):
@@ -17,10 +20,12 @@ class ConfusionMatrixDetails:
 #   2. Derived from https://github.com/sksmta/audio-deepfake-detection/blob/main/main.ipynb
 class ConfusionMatrixPlot:
 
+    # -------------------------------------------------------------------------
     def __init__(self, debugOn = False):
         self.debugOn = debugOn
 
 
+    # -------------------------------------------------------------------------
     # *** Commenting out for the moment - this is probably not the right place for this
     # def preprocessAndPlot(self, classes, y_true_dict, y_pred, title = 'Confusion Matrix') -> ConfusionMatrixDetails:
     #     y_true = np.array([1 if y_true_dict[key] == classes[1] else 0 for key in y_true_dict.keys()])
@@ -28,6 +33,12 @@ class ConfusionMatrixPlot:
     #     return self.plot(classes, y_true, y_pred, title)
 
 
+    # -------------------------------------------------------------------------
+    def plotFromResults(self, results: ModelEvaluationResult, job: Job, title = 'Confusion Matrix') -> ConfusionMatrixDetails:
+        return self.plot(results.true, results.pred, job.classes, title)
+
+
+    # -------------------------------------------------------------------------
     def plot(self, trueAry: np.array, predAry: np.array, classes, title = 'Confusion Matrix') -> ConfusionMatrixDetails:
         if (self.debugOn):
             print(f'(inst) trueAry: {trueAry}, {type(trueAry)}')
