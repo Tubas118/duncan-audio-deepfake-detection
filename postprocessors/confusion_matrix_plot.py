@@ -35,13 +35,14 @@ class ConfusionMatrixPlot:
             print(f'(inst) classes: {classes}, {type(classes)}')
 
         cm = confusion_matrix(trueAry, predAry)
-        print(f'confusion_matrix_plot (instance): {cm}')
+
+        if (self.debugOn):
+            print(f'confusion_matrix_plot (instance):\n{cm}')
 
         disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=classes)
         dispPlot = disp.plot(cmap=plt.cm.Blues)
-        # details = ConfusionMatrixDetails(cm, dispPlot, trueAry, predAry)
+        details = ConfusionMatrixDetails(cm, dispPlot, trueAry, predAry)
         plt.title(title)
         plt.show(block=False)
-        # return details
-        return None
+        return details
 
