@@ -12,7 +12,7 @@ class MelFrequencyCepstralCoeffiecient(AbstractPreprocessor):
         super().__init__(silent)
 
     # -------------------------------------------------------------------------
-    def __extract_features_singleSource_worker__(self, job, fullDataPath, filename, label):
+    def __extract_features_singleSource_worker__(self, job, fullDataPath, filename):
         audioSourceFilename = job.fullJoinFilePath(fullDataPath, filename + job.dataExtension)
 
         audio, _ = librosa.load(audioSourceFilename, sr = job.sampleRate, duration = job.duration)
@@ -20,4 +20,4 @@ class MelFrequencyCepstralCoeffiecient(AbstractPreprocessor):
         mfccs = librosa.feature.mfcc(y = audio, sr = job.sampleRate, n_mfcc = job.numMels)
         mfccs = self.__pad_data__(mfccs, job)
 
-        return mfccs, label
+        return mfccs

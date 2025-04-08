@@ -15,9 +15,11 @@ from preprocessors.preprocessor_factory import PreprocessorFactory
 
 class TestGenerateMelSpectrogram(unittest.TestCase):
 
+    # -------------------------------------------------------------------------
     def setUp(self):
         pass
 
+    # -------------------------------------------------------------------------
     def test_generate_preprocessors_from_factory(self):
         availablePreprocessorsFactory = PreprocessorFactory()
 
@@ -26,13 +28,13 @@ class TestGenerateMelSpectrogram(unittest.TestCase):
             print(f'---- Testing: {preprocessorId} - name: {preprocessorType.get("typeName")}')
             self.__basic_preprocessor_testing__(preprocessorId)
 
+    # -------------------------------------------------------------------------
     def __basic_preprocessor_testing__(self, preprocessorTypeId):
         # given
         config = ConfigLoader('testvalues/config-for-unit-test.yml')
         job = config.getJobConfig(config.activeJobId)
         print(f"path: {directory.parent.parent}")
         filename = "testaudio/LA_T_1272637"
-        label = 1
 
         # when #1
         preprocessorFactory = PreprocessorFactory()
@@ -42,12 +44,11 @@ class TestGenerateMelSpectrogram(unittest.TestCase):
         self.assertIsInstance(generator, AbstractPreprocessor)
 
         # when #2
-        X, y = generator.extract_features_singleSource(job, directory.parent.parent, filename, label)
+        X = generator.extract_features_singleSource(job, directory.parent.parent, filename)
 
         # then
         self.assertIsNotNone(X)
         self.assertGreater(len(X), 0)
-        self.assertGreater(len(y), 0)
 
 
 if __name__ == '__main__':
