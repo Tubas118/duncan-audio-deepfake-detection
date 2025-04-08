@@ -47,7 +47,7 @@ if (job.newModelGenerated == False):
 preproc_factory = PreprocessorFactory()
 preprocessor = preproc_factory.newPreprocessor(job.preprocessor)
 
-X, y_encoded = preprocessor.extract_features_multipleSource(job, job.dataPathSuffix)
+X, y_encoded = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
 
 # +
 bulkTrainingProc = BulkModelTrainingProcessor(job,

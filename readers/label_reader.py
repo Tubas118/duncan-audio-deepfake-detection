@@ -1,12 +1,12 @@
 import os
 from config.configuration import Job
 
-def readTrainingLabelsWithJob(job: Job):
+def readLabelsWithJob(job: Job):
     labelFileName = job.fullJoinFilePath(job.dataPathRoot, job.labelFilename)
-    return readLabelsWithJob(labelFileName)
+    return readLabelsWithFilename(labelFileName, job.classes)
 
 
-def readLabelsWithJob(labelFileName: str) -> list[str]:
+def readLabelsWithFilename(labelFileName: str, classes) -> list[str]:
     print(f'Loading {labelFileName}...')
     labels = {}
 
@@ -16,7 +16,7 @@ def readLabelsWithJob(labelFileName: str) -> list[str]:
     for line in lines:
         parts = line.strip().split()
         file_name = parts[1]
-        label = 1 if parts[-1] == "bonafide" else 0
+        label = 1 if parts[-1] == classes[1] else 0
         labels[file_name] = label
         
     return labels

@@ -7,7 +7,9 @@ from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Model
 
 from config.configuration import Job
+from postprocessors.confusion_matrix_plot import ConfusionMatrixPlot
 from processors.abstract_model_processor import AbstractModelProcessor
+from processors.model_evaluation_result import ModelEvaluationResult
 
 class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
@@ -28,13 +30,14 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         self.score = 0
 
     # -------------------------------------------------------------------------
-    def process(self, X_test, y_test):
+    def process(self, X_test, y_test, true_labels) -> ModelEvaluationResult:
         if (self.jobStartTime == None):
             self.jobStartTime = datetime.now(pytz.utc)
 
         y_pred = self.model.predict(X_test)
         y_pred_work = np.argmax(y_pred, axis=1)
         y_test_work = np.argmax(y_test, axis=1)
+        y_true = None
 
         score = accuracy_score(y_test_work, y_pred_work)
         self.score = self.score + score
@@ -42,6 +45,12 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         self.inputFileBatchCount = self.inputFileBatchCount + 1
         self.inputFileCount = self.inputFileCount + len(X_test)
         print(f"  Batches: {self.inputFileBatchCount} - Files: {self.inputFileCount} - Score: {score} - Elements: {len(X_test)}")
+
+        if (len(true_labels) > 0):
+            job: Job = self.__job__
+            y_true = np.array([label for label in true_labels.values()])
+
+        return ModelEvaluationResult(test=y_test, pred=y_pred_work, true=y_true)
 
     # -------------------------------------------------------------------------
     def reportSnapshot(self, initialProcessor: AbstractModelProcessor = None):
@@ -67,3 +76,8 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         report = report + f"---- Testing (end) ----\n"
 
         return report
+    
+    # -------------------------------------------------------------------------
+    def __confusion_matrix__(self, classes, y_encoded, y_pred_classes):
+        cm_plot = ConfusionMatrixPlot()
+        cm_plot.plot(classes, y_encoded, y_pred_classes)

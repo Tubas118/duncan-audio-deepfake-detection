@@ -1,0 +1,103 @@
+---- Training (start) ----
+start time: 2025-04-07T02:07:29.427804+00:00
+end time: 2025-04-07T02:07:33.920937+00:00
+elapsed: 0:00:04.493133
+
+model file: output/Compare-Sksmta-training_2025-04-06T21-07-25.252600.libjob
+batch count: 0
+file count: 0
+job: {
+    "jobId": "Compare-Sksmta-training",
+    "inputFileBatchSize": 1000,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_eval_small/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": -1,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval-small.trl.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": true,
+    "persistedModel": "output/Compare-Sksmta-training_2025-04-06T21-07-25.252600.libjob",
+    "persistedModelResults": "output/Compare-Sksmta-training_2025-04-06T21-07-25.252600.txt"
+}
+
+---- Training (end) ----
+
+---- Testing (start) ----
+start time: 2025-04-07T02:07:33.702611+00:00
+end time: 2025-04-07T02:07:33.920937+00:00
+elapsed: 0:00:00.218326
+
+model file: output/Compare-Sksmta-training_2025-04-06T21-07-25.252600.libjob
+batch count: 1
+file count: 1
+accuracy_score: 0.0
+
+job: {
+    "jobId": "Compare-Sksmta-training",
+    "inputFileBatchSize": 1000,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_eval_small/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": -1,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval-small.trl.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": true,
+    "persistedModel": "output/Compare-Sksmta-training_2025-04-06T21-07-25.252600.libjob",
+    "persistedModelResults": "output/Compare-Sksmta-training_2025-04-06T21-07-25.252600.txt"
+}
+
+---- Testing (end) ----
