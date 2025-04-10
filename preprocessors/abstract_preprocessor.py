@@ -37,10 +37,14 @@ class AbstractPreprocessor(ABC):
 
         X = np.array(X)
 
-        if (job.executeToCategoricalForLabels):
-            y = to_categorical(y, job.numClasses)
+        # if (job.executeToCategoricalForLabels):
+        #     print(f'Original "y" values: {y}')
+        #     y = to_categorical(y, job.numClasses)
+        #     print(f'Running "to_categorical" with {job.numClasses} classes')
+        # else:
+        #     print('Skipping "to_categorical"')
 
-        print(f"Number of audio files loaded: {len(X)}")
+        print(f"Number of audio files loaded: {len(X)}, y: {y}, true_labels: {true_labels}")
 
         return X, y, true_labels
 

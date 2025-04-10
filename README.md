@@ -71,6 +71,8 @@ The following commands can be used to save changes to dependencies in the enviro
 
 * Anagha, R., Arya, A., Narayan, V. H., Abhishek, S., & Anjali, T. (2023). Audio Deepfake Detection Using Deep Learning. *2023 12th International Conference on System Modeling & Advancement in Research Trends (SMART), System Modeling & Advancement in Research Trends (SMART), 2023 12th International Conference On*, 176–181. https://doi.org/10.1109/SMART59791.2023.10428163
 
+* Chan, J. (2021). *Machine learning with Python for beginners: A step-by-step guide to hands-on projects* [Kindle edition].
+
 * Hamedani, M. (2020, September 17). *Python machine learning tutorial (Data science)*. YouTube. https://www.youtube.com/watch?v=7eh4d6sabA0
 
 * Koul, N. (2024). *Ultimate Deepfake detection using Python* [Kindle edition]. Orange Education Pvt Ltd.

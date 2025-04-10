@@ -1,13 +1,15 @@
+from io import StringIO
 import joblib
 import json
 import numpy as np
 import pytz
 from datetime import datetime
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, root_mean_squared_error
 from tensorflow.keras.models import Model
 
 from config.configuration import Job
-from postprocessors.confusion_matrix_plot import ConfusionMatrixPlot
+from postprocessors.metrics import Metrics
+from postprocessors.plot_confusion_matrix import ConfusionMatrixPlot
 from processors.abstract_model_processor import AbstractModelProcessor
 from processors.model_evaluation_result import ModelEvaluationResult
 
@@ -27,7 +29,6 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         self.jobStartTime = None
         self.inputFileBatchCount = 0
         self.inputFileCount = 0
-        self.score = 0
 
     # -------------------------------------------------------------------------
     def process(self, X_test, y_test, true_labels) -> ModelEvaluationResult:
@@ -36,24 +37,27 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
         y_pred = self.model.predict(X_test)
         y_pred_work = np.argmax(y_pred, axis=1)
-        y_test_work = np.argmax(y_test, axis=1)
-        y_true = None
+        y_test_work = y_test    # np.argmax(y_test, axis=1)
 
-        score = accuracy_score(y_test_work, y_pred_work)
-        self.score = self.score + score
+        if (len(true_labels) > 0):
+            y_test_work = np.array([label for label in true_labels.values()])
 
         self.inputFileBatchCount = self.inputFileBatchCount + 1
         self.inputFileCount = self.inputFileCount + len(X_test)
-        print(f"  Batches: {self.inputFileBatchCount} - Files: {self.inputFileCount} - Score: {score} - Elements: {len(X_test)}")
 
-        if (len(true_labels) > 0):
-            job: Job = self.__job__
-            y_true = np.array([label for label in true_labels.values()])
+        results = ModelEvaluationResult(testAry=y_test_work, predAry=y_pred_work)
 
-        return ModelEvaluationResult(test=y_test, pred=y_pred_work, true=y_true)
+        metrics = Metrics()
+        metrics.evaluateResults(results)
+        print(f'Metric results: {results.reportSnaphot()}')
+
+        print(f"  Batches: {self.inputFileBatchCount} - Files: {self.inputFileCount} - Accuracy Score: {results.accuracy_score} - Elements: {len(X_test)}")
+        self.lastResults = results
+
+        return results
 
     # -------------------------------------------------------------------------
-    def reportSnapshot(self, initialProcessor: AbstractModelProcessor = None):
+    def reportSnapshot(self, initialProcessor: AbstractModelProcessor = None) -> str:
         report = ""
 
         if (initialProcessor != None):
@@ -64,6 +68,8 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         elapsed_time = timestamp_utc - self.jobStartTime
         prettyJson = json.dumps(self.__job__.__dict__, indent=4)
 
+        report = report + f"{self.__model_summary_to_string__()}"
+
         report = report + f"---- Testing (start) ----\n"
         report = report + f"start time: {self.jobStartTime.isoformat()}\n"
         report = report + f"end time: {timestamp_utc.isoformat()}\n"
@@ -71,13 +77,18 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         report = report + f"model file: {self.__job__.persistedModel}\n"
         report = report + f"batch count: {self.inputFileBatchCount}\n"
         report = report + f"file count: {self.inputFileCount}\n"
-        report = report + f"accuracy_score: {(float) (self.score) / self.inputFileBatchCount}\n\n"
+
+        if (self.lastResults != None):
+            report = report + f"\n{self.lastResults.reportSnaphot()}\n"
+
+        report = report + "\n"
         report = report + f"job: {prettyJson}\n\n"
         report = report + f"---- Testing (end) ----\n"
 
         return report
-    
+
     # -------------------------------------------------------------------------
-    def __confusion_matrix__(self, classes, y_encoded, y_pred_classes):
-        cm_plot = ConfusionMatrixPlot()
-        cm_plot.plot(classes, y_encoded, y_pred_classes)
+    def __model_summary_to_string__(self) -> str:
+        string_io = StringIO()
+        self.model.summary(print_fn=lambda x: string_io.write(x + '\n'))
+        return string_io.getvalue()

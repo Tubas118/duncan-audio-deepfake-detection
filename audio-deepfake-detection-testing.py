@@ -15,8 +15,8 @@
 # +
 from config.configuration import RunDetails
 
-# runDetail = RunDetails('config.yml', 'Compare-Sksmta-eval')
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_2025-03-24-1_large-batch')
+runDetail = RunDetails('config.yml', 'Compare-Sksmta-eval')
+# runDetail = RunDetails('config.yml', 'ASVspoof-2019_2025-03-24-1_large-batch')
 
 notebookName = 'audio-deepfake-detection-testing'
 # -
@@ -26,14 +26,12 @@ runJobId = runDetail.jobId
 
 # +
 import joblib
-import numpy as np
-from sklearn.metrics import confusion_matrix
 
 import config.configuration as configuration
 from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from notebook_utils import notebookToPython
-from postprocessors.confusion_matrix_plot import ConfusionMatrixPlot
-from postprocessors.roc_curve_plot import RocCurvePlot
+from postprocessors.plot_confusion_matrix import ConfusionMatrixPlot
+from postprocessors.plot_roc_curve import RocCurvePlot
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
 from processors.model_evaluation_result import ModelEvaluationResult
 from readers.label_reader import readLabelsWithJob

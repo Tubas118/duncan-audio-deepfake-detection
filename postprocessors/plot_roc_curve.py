@@ -15,7 +15,8 @@ class RocCurveDetails:
 
 
 # References:
-#   1. Derived from https://github.com/sksmta/audio-deepfake-detection/blob/main/main.ipynb
+#   1. https://scikit-learn.org/stable/auto_examples/model_selection/plot_roc.html
+#   2. Derived from https://github.com/sksmta/audio-deepfake-detection/blob/main/main.ipynb
 class RocCurvePlot:
 
     # -------------------------------------------------------------------------
@@ -24,22 +25,12 @@ class RocCurvePlot:
 
 
     # -------------------------------------------------------------------------
-    def plotFromResults(self, results: ModelEvaluationResult, title = 'Receiver Operating Characteristic') -> RocCurveDetails:
-        return self.plot(results.true, results.pred, title)
+    def plotFromResults(self, results: ModelEvaluationResult, title = 'Receiver Operating Characteristic'):
+        self.plot(results.roc_fpr, results.roc_tpr, results.roc_auc, title)
 
 
     # -------------------------------------------------------------------------
-    def plot(self, trueAry: np.array, predAry: np.array, title = 'Receiver Operating Characteristic') -> RocCurveDetails:
-        if (self.debugOn):
-            print(f'(inst) trueAry: {trueAry}, {type(trueAry)}')
-            print(f'(inst) predAry: {predAry}, {type(predAry)}')
-
-        # Compute ROC curve and AUC
-        fpr, tpr, _ = roc_curve(trueAry, predAry)
-        roc_auc = auc(fpr, tpr)
-
-        roc_details = RocCurveDetails(fpr, tpr, roc_auc)
-
+    def plot(self, fpr: np.array, tpr: np.array, roc_auc: float, title = 'Receiver Operating Characteristic'):
         # Plot ROC curve
         plt.figure()
         plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
@@ -48,8 +39,6 @@ class RocCurvePlot:
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('Receiver Operating Characteristic')
+        plt.title(title)
         plt.legend(loc="lower right")
         plt.show()
-
-        return roc_details
