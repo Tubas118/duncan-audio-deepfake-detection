@@ -12,6 +12,8 @@
 #     name: python3
 # ---
 
+# ### Setup
+
 # +
 from config.configuration import RunDetails
 
@@ -28,10 +30,11 @@ runJobId = runDetail.jobId
 import joblib
 
 import config.configuration as configuration
-from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from notebook_utils import notebookToPython
-from postprocessors.plot_confusion_matrix import ConfusionMatrixPlot
-from postprocessors.plot_roc_curve import RocCurvePlot
+from postprocessors.plot_confusion_matrix import PlotConfusionMatrix
+from postprocessors.plot_roc_curve import PlotRocCurve
+from postprocessors.plot_spectrogram import PlotSpectrogram
+from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
 from processors.model_evaluation_result import ModelEvaluationResult
 from readers.label_reader import readLabelsWithJob
@@ -57,6 +60,8 @@ evaluationProc = BasicModelEvaluationProcessor(job, model)
 fullDataPath = job.fullJoinFilePath(job.dataPathRoot, job.dataPathSuffix)
 y_test = readLabelsWithJob(job)
 
+# ### Mel Spectrogram preprocessing with "power_to_db" applied
+
 # +
 from preprocessors.abstract_preprocessor import AbstractPreprocessor
 from preprocessors.preprocessor_factory import PreprocessorFactory
@@ -64,17 +69,57 @@ from preprocessors.preprocessor_factory import PreprocessorFactory
 
 preproc_factory = PreprocessorFactory()
 preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor)
+
 # -
 
-X_test, y_test, true_labels = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
+X_test, y_test, true_labels, source_filenames = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
+
+# ### Mel Spectrogram samples
+
+# +
+plot_mel_spectrogram = PlotSpectrogram()
+
+display_melSpectrogram_count = len(X_test)
+
+if (display_melSpectrogram_count > 5): display_melSpectrogram_count = 5
+
+for idx in range(0, display_melSpectrogram_count):
+    filename = source_filenames[idx]
+    data = X_test[idx]
+    title = f"Mel Spectrogram: {filename} ({idx + 1} of {display_melSpectrogram_count})"
+    plot_mel_spectrogram.plot(data, job, title)
+# -
+
+# ### Mel Spectrogram with and without "power_to_db" transformation applied
+
+# +
+fullDataPath = job.fullJoinFilePath(job.dataPathRoot, job.dataPathSuffix)
+
+preproc_noExec_power_to_db: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor, False)
+X_test_noPowerToDb = preproc_noExec_power_to_db.extract_features_singleSource(job, fullDataPath, source_filenames[0])
+
+# +
+
+filename = source_filenames[idx]
+plot_mel_spectrogram.plot(X_test[0], job, f"Mel Spectrogram: {filename} (with power_to_db)")
+
+plot_mel_spectrogram_noPowerToDb = PlotSpectrogram()
+plot_mel_spectrogram_noPowerToDb.plot(X_test_noPowerToDb, job, f"Mel Spectrogram: {filename} (without power_to_db)")
+# -
+
+# ### Scoring
 
 results: ModelEvaluationResult = evaluationProc.process(X_test, y_test, true_labels)
 
-cm_plot = ConfusionMatrixPlot()
+# ### Plots
+
+cm_plot = PlotConfusionMatrix()
 cm_plot.plotFromResults(results, job)
 
-roc_plot = RocCurvePlot()
+roc_plot = PlotRocCurve()
 roc_plot.plotFromResults(results)
+
+# ### Final Results
 
 # +
 print("\n")

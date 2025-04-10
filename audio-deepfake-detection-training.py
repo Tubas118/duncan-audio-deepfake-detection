@@ -64,7 +64,7 @@ results: ModelEvaluationResult = evaluationProc.process(X_test, y_test, true_lab
 
 
 # +
-from postprocessors.plot_confusion_matrix import ConfusionMatrixDetails, ConfusionMatrixPlot
+from postprocessors.plot_confusion_matrix import ConfusionMatrixDetails, PlotConfusionMatrix
 import json
 
 print(f'results.test: {results.test}')

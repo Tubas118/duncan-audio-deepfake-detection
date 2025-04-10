@@ -11,7 +11,7 @@ from sklearn.metrics import accuracy_score
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
-from postprocessors.plot_confusion_matrix import ConfusionMatrixDetails, ConfusionMatrixPlot
+from postprocessors.plot_confusion_matrix import PlotConfusionMatrix
 from testvalues.test_data_confusion_matrix_plot import ADC_Y_TRUE_DICT, AUDIO_DEEPFAKE_CLASSES, ADC_Y_PRED_1, ADC_Y_PRED_2
 from utils.common_test_utils import CALCULATE_EXPECTED_SCORE, CONFUSION_MATRIX_CHART_TITLE
 
@@ -20,7 +20,7 @@ CAT_DOG_CLASSES = ['Cat', 'Dog']
 CAT_DOG_FISH_CLASSES = ['Cat', 'Dog', 'Fish']
 
 
-class TestConfusionMatrixPlot(unittest.TestCase):
+class TestPlotConfusionMatrix(unittest.TestCase):
 
     def setUp(self):
         pass
@@ -32,18 +32,15 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         y_true = np.array(['Cat', 'Cat', 'Dog', 'Dog', 'Cat', 'Dog'])
         y_pred = np.array(['Cat', 'Cat', 'Cat', 'Dog', 'Cat', 'Cat'])
         expected_cm = [[3, 0], [2, 1]]
-        expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
         title = CONFUSION_MATRIX_CHART_TITLE()
 
         # when
-        confusionMatrixPlot = ConfusionMatrixPlot()
-        cmDetails: ConfusionMatrixDetails = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
+        confusionMatrixPlot = PlotConfusionMatrix()
+        cm = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
         plt.pause(0.001)    # Brief delay to allow plot to display
 
         # then
-        assert_array_equal(cmDetails.cm, expected_cm)
-        score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
-        self.assertEqual(score, expected_acc)
+        assert_array_equal(cm, expected_cm)
 
     # -------------------------------------------------------------------------
     def test_concept_catsDogs2(self):
@@ -52,18 +49,15 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         y_true = np.array(['Cat', 'Cat', 'Dog', 'Dog', 'Cat', 'Dog'])
         y_pred = np.array(['Cat', 'Cat', 'Cat', 'Cat', 'Cat', 'Cat'])
         expected_cm = [[3, 0], [3, 0]]
-        expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
         title = CONFUSION_MATRIX_CHART_TITLE()
 
         # when
-        confusionMatrixPlot = ConfusionMatrixPlot()
-        cmDetails: ConfusionMatrixDetails = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
+        confusionMatrixPlot = PlotConfusionMatrix()
+        cm = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
         plt.pause(0.001)    # Brief delay to allow plot to display
 
         # then
-        assert_array_equal(cmDetails.cm, expected_cm)
-        score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
-        self.assertEqual(score, expected_acc)
+        assert_array_equal(cm, expected_cm)
 
     # -------------------------------------------------------------------------
     def test_concept_catsDogsFish1(self):
@@ -72,42 +66,35 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         y_true = np.array(['Cat', 'Cat', 'Fish', 'Dog', 'Cat', 'Fish'])
         y_pred = np.array(['Cat', 'Cat', 'Fish', 'Dog', 'Cat', 'Cat'])
         expected_cm = [[3, 0, 0], [0, 1, 0], [1, 0, 1]]
-        expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
         title = CONFUSION_MATRIX_CHART_TITLE()
 
         # when
-        confusionMatrixPlot = ConfusionMatrixPlot(True)
-        cmDetails: ConfusionMatrixDetails = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
+        confusionMatrixPlot = PlotConfusionMatrix()
+        cm = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
         plt.pause(0.001)    # Brief delay to allow plot to display
 
         # then
-        assert_array_equal(cmDetails.cm, expected_cm)
-        score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
-        self.assertEqual(score, expected_acc)
+        assert_array_equal(cm, expected_cm)
 
     # -------------------------------------------------------------------------
     @unittest.skip  # confusion_matrix generates [[10]] when expecting [[0,0],[0,10]]
     def test_plotPred1(self):
         # given
         classes = AUDIO_DEEPFAKE_CLASSES
-        true_labels = ADC_Y_TRUE_DICT
         
         y_true = np.array([ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ])
         y_pred = np.argmax(ADC_Y_PRED_1, axis=1)
 
         expected_cm = np.array([[0, 0], [0, 10]])
-        expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
         title = CONFUSION_MATRIX_CHART_TITLE()        
 
         # when
-        confusionMatrixPlot = ConfusionMatrixPlot(True)
-        cmDetails: ConfusionMatrixDetails = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
+        confusionMatrixPlot = PlotConfusionMatrix(True)
+        cm = confusionMatrixPlot.plot(y_true, y_pred, classes, title)
         plt.pause(0.001)    # Brief delay to allow plot to display
 
         # then
-        assert_array_equal(cmDetails.cm, expected_cm)        
-        score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
-        self.assertEqual(score, expected_acc)
+        assert_array_equal(cm, expected_cm)
 
     # -------------------------------------------------------------------------
     def test_plotPred2(self):
@@ -117,18 +104,15 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         y_true = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
         y_pred = np.argmax(ADC_Y_PRED_2, axis=1)
         expected_cm = np.array([[0, 0], [2, 8]])
-        expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
         title = CONFUSION_MATRIX_CHART_TITLE()        
 
         # when
-        confusionMatrixPlot = ConfusionMatrixPlot()
-        cmDetails: ConfusionMatrixDetails = confusionMatrixPlot.plot(y_true, y_pred, idx_classes, title)
+        confusionMatrixPlot = PlotConfusionMatrix()
+        cm = confusionMatrixPlot.plot(y_true, y_pred, idx_classes, title)
         plt.pause(0.001)    # Brief delay to allow plot to display
 
         # then
-        assert_array_equal(cmDetails.cm, expected_cm)        
-        score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
-        self.assertEqual(score, expected_acc)
+        assert_array_equal(cm, expected_cm)
 
 
     # -------------------------------------------------------------------------
@@ -139,18 +123,15 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         y_true = [0., 1.]
         y_pred = np.argmax([[0., 1.], [1., 0.0001]], axis=1)
         expected_cm = np.array([[0, 1], [1, 0]])
-        expected_acc = CALCULATE_EXPECTED_SCORE(expected_cm, len(classes), len(y_pred))
         title = CONFUSION_MATRIX_CHART_TITLE()        
 
         # when
-        confusionMatrixPlot = ConfusionMatrixPlot()
-        cmDetails: ConfusionMatrixDetails = confusionMatrixPlot.plot(y_true, y_pred, idx_classes, title)
+        confusionMatrixPlot = PlotConfusionMatrix()
+        cm = confusionMatrixPlot.plot(y_true, y_pred, idx_classes, title)
         plt.pause(0.001)    # Brief delay to allow plot to display
 
         # then
-        assert_array_equal(cmDetails.cm, expected_cm)        
-        score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
-        self.assertEqual(score, expected_acc)
+        assert_array_equal(cm, expected_cm)
 
 
 

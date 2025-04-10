@@ -10,7 +10,7 @@ from processors.model_evaluation_result import ModelEvaluationResult
 # References:
 #   1. Chan, J. (2021). Machine learning with Python for beginners: A step-by-step guide to hands-on projects [Kindle edition].
 #   2. Derived from https://github.com/sksmta/audio-deepfake-detection/blob/main/main.ipynb
-class ConfusionMatrixPlot:
+class PlotConfusionMatrix:
 
     # -------------------------------------------------------------------------
     def __init__(self):
@@ -26,6 +26,7 @@ class ConfusionMatrixPlot:
     def plot(self, testAry: np.array, predAry: np.array, classes, title = 'Confusion Matrix'):
         cm = confusion_matrix(testAry, predAry)
         self.plotFromMatrix(cm, classes, title)
+        return cm
 
 
     # -------------------------------------------------------------------------

@@ -9,7 +9,7 @@ from tensorflow.keras.models import Model
 
 from config.configuration import Job
 from postprocessors.metrics import Metrics
-from postprocessors.plot_confusion_matrix import ConfusionMatrixPlot
+from postprocessors.plot_confusion_matrix import PlotConfusionMatrix
 from processors.abstract_model_processor import AbstractModelProcessor
 from processors.model_evaluation_result import ModelEvaluationResult
 
