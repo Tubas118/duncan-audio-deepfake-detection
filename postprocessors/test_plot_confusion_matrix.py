@@ -152,7 +152,7 @@ class TestConfusionMatrixPlot(unittest.TestCase):
         score = accuracy_score(cmDetails.y_pred, cmDetails.y_true)
         self.assertEqual(score, expected_acc)
 
-    
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -5,6 +5,10 @@ class ModelEvaluationResult:
 
     # -------------------------------------------------------------------------
     def __init__(self, testAry: np.array, predAry: np.array):
+        if (len(testAry) != len(predAry)):
+            raise ValueError("Arrays must be same length")
+        
+        self.batchSize = len(testAry)
         self.testAry: np.array = testAry
         self.predAry: np.array = predAry
 
@@ -42,12 +46,14 @@ class ModelEvaluationResult:
                 value = self.__check_formatting__(key, value)
                 t.add_row([key, value])
 
-        report = report = f"{t}\n"
+        report = report + f"{t}\n"
 
         report = report + f"{indent}--- Results (end) ---"
 
         return report
-    
+
+
+    # -------------------------------------------------------------------------
     def __check_formatting__(self, key, value):
         workingValue = value
 
