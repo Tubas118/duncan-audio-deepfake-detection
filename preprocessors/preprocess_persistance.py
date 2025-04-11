@@ -14,11 +14,15 @@ class PreprocessPersistance:
     # -------------------------------------------------------------------------
     @staticmethod
     def load(filename: str) -> "PreprocessPersistance":
-        return PreprocessPersistance()
+        with open(filename, 'rb') as file:
+            data: PreprocessPersistance = pickle.load(file)
+
+        return data
 
     # -------------------------------------------------------------------------
     def save(self, filename: str):
-        pass
+        with open(filename, 'wb') as file:
+            pickle.dump(self, file)
 
     # -------------------------------------------------------------------------
     def compare(self, other: "PreprocessPersistance") -> bool:
