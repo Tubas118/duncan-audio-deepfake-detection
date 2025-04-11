@@ -90,18 +90,18 @@ class Job:
 
 
     # -------------------------------------------------------------------------
-    def __determine_persistedModelValue__(self, source, keyName: str):
-        results: "__DerivedFilename__" = self.__determine_filename_noExtension__(source, keyName)
+    def __determine_persistedModelValue__(self, source: dict, keyName: str):
+        results: "__DerivedFilename__" = self.__determine_filename__(source, keyName, JOB_EXT)
         self.newModelGenerated = results.generateNew
-        self.persistedModel: str = f"{results.filenameRoot}{JOB_EXT}"
+        self.persistedModel: str = results.filenameRoot
         self.persistedModelResults: str = self.__newPersistedModelResultsName__(self.persistedModel)
 
 
     # -------------------------------------------------------------------------
-    def __determine_preprocessDataValue__(self, source, keyName: str):
-        results: "__DerivedFilename__" = self.__determine_filename_noExtension__(source, keyName)
+    def __determine_preprocessDataValue__(self, source: dict, keyName: str):
+        results: "__DerivedFilename__" = self.__determine_filename__(source, keyName, PREPROC_EXT)
         self.newPreprocessData = results.generateNew
-        self.preprocessDataFilename = f"{results.filenameRoot}{PREPROC_EXT}"
+        self.preprocessDataFilename = results.filenameRoot
 
         if (self.newPreprocessData):
             print(f"Generating new preprocessed binary file: {self.preprocessDataFilename}")
@@ -110,7 +110,7 @@ class Job:
 
 
     # -------------------------------------------------------------------------
-    def __determine_filename_noExtension__(self, source, keyName: str) -> "__DerivedFilename__":
+    def __determine_filename__(self, source: dict, keyName: str, ext: str) -> "__DerivedFilename__":
         checkValue: str = source.get(keyName, "")
 
         if (len(checkValue) > 0):
@@ -124,6 +124,8 @@ class Job:
 
             if (len(self.outputFolder) > 0):
                 useFilename = self.fullJoinFilePath(self.outputFolder, useFilename)
+
+            useFilename = f"{useFilename}{ext}"
 
         return __DerivedFilename__(generateNew, useFilename)
 
