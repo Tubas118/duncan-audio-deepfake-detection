@@ -10,11 +10,16 @@ sys.path.append(directory.parent.parent)
 # from configuration.configuration import ConfigLoader, Job
 import config.configuration as configuration
 
+
+# =============================================================================
 class TestConfiguration(unittest.TestCase):
 
+    # -------------------------------------------------------------------------
     def setUp(self):
         pass
 
+
+    # -------------------------------------------------------------------------
     def test_checkDataPathRoot(self):
         # given
         config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
@@ -32,6 +37,7 @@ class TestConfiguration(unittest.TestCase):
         print(f"kernel size: {job.kernelSize} - type: {type(job.kernelSize)}")
 
 
+    # -------------------------------------------------------------------------
     def test_loadConfig_noPersistedModelProvided(self):
         # given
         config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
@@ -55,26 +61,69 @@ class TestConfiguration(unittest.TestCase):
         assert "2025-03-16T12-41-11.676368" not in job.persistedModel
         assert "2025-03-16T12-41-11.676368" not in job.persistedModelResults
 
+
+    # -------------------------------------------------------------------------
     def test_loadConfig_persistedModelProvided(self):
         # given
         config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
 
         # when
-        job: configuration.Job = config.getJobConfig("ASVspoof-2019-2")
+        jobId = "ASVspoof-2019-2"
+        job: configuration.Job = config.getJobConfig(jobId)
 
         # then
         self.assertIsNotNone(job.persistedModel)
         self.assertIsNotNone(job.persistedModelResults)
         self.assertFalse(job.newModelGenerated)
 
-        assert "ASVspoof-2019-1" in job.persistedModel
+        assert jobId not in job.persistedModel
         assert ".libjob" in job.persistedModel
-        assert "ASVspoof-2019-1" in job.persistedModelResults
+        assert jobId not in job.persistedModelResults
         assert ".txt" in job.persistedModelResults
 
         assert "2025-03-16T12-41-11.676368" in job.persistedModel
         assert "2025-03-16T12-41-11.676368" in job.persistedModelResults
 
+
+    # -------------------------------------------------------------------------
+    def test_loadConfig_noPersistedPreprocessedDataProvided(self):
+        # given
+        config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
+
+        # when
+        jobId = "ASVspoof-2019-1"
+        job: configuration.Job = config.getJobConfig(jobId)
+
+        # then
+        self.assertIsNotNone(job.preprocessDataFilename)
+        self.assertTrue(job.newPreprocessData)
+
+        assert jobId in job.preprocessDataFilename
+        assert ".pp-bin" in job.preprocessDataFilename
+
+        assert "2025-03-16T12-41-11.676368" not in job.preprocessDataFilename
+
+
+    # -------------------------------------------------------------------------
+    def test_loadConfig_persistedPreprocessedDataProvided(self):
+        # given
+        config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
+
+        # when
+        jobId = "ASVspoof-2019-2"
+        job: configuration.Job = config.getJobConfig(jobId)
+
+        # then
+        self.assertIsNotNone(job.preprocessDataFilename)
+        self.assertFalse(job.newPreprocessData)
+
+        assert jobId not in job.preprocessDataFilename
+        assert ".pp-bin" in job.preprocessDataFilename
+
+        assert "2025-03-16T12-41-11.676368" in job.preprocessDataFilename
+
+
+    # -------------------------------------------------------------------------
     @parameterized.expand([
         ("(2, 3)", (2, 3)),
         ("(3,4)", (3, 4)),
