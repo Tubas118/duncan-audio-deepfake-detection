@@ -22,7 +22,7 @@ class AbstractPreprocessor(ABC):
         X = []
         y = []
         source = readLabelsWithJob(job)
-        segmentLength = int(len(source) / 20)
+        segmentLength = int(len(source) / 10)
         fullDataPath = job.fullJoinFilePath(job.dataPathRoot, dataPathSuffix)
         print(f"fullDataPath: {fullDataPath}")
 
@@ -42,7 +42,7 @@ class AbstractPreprocessor(ABC):
 
         X = np.array(X)
 
-        print(f"Number of audio files loaded: {len(X)}, y: {y}, true_labels: {true_labels}")
+        print(f"Number of audio files loaded: {len(X)}")
 
         return X, y, true_labels, filenames
 

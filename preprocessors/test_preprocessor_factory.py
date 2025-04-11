@@ -1,5 +1,4 @@
 import unittest
-import numpy as np
 import path
 import sys
 
@@ -13,7 +12,7 @@ from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from preprocessors.preprocessor_factory import PreprocessorFactory
 
 
-class TestGenerateMelSpectrogram(unittest.TestCase):
+class TestPreprocessorFactory(unittest.TestCase):
 
     # -------------------------------------------------------------------------
     def setUp(self):

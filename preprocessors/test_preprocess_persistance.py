@@ -12,6 +12,7 @@ sys.path.append(directory.parent.parent)
 from preprocessors.preprocess_persistance import PreprocessPersistance
 
 
+# =============================================================================
 class TestPreprocessPersistance(unittest.TestCase):
 
     # -------------------------------------------------------------------------
@@ -78,8 +79,10 @@ class TestPreprocessPersistance(unittest.TestCase):
             os.remove(filename)
 
 
+# =============================================================================
 class __DataForTestPreprocessPersistance__:
 
+    # -------------------------------------------------------------------------
     def __init__(self, y_true: np.array, y_pred: np.array, labels: np.array, filenames: np.array):
         self.y_true = y_true
         self.y_pred = y_pred
