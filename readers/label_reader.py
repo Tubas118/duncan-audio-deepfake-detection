@@ -16,7 +16,8 @@ def readLabelsWithFilename(labelFileName: str, classes) -> list[str]:
     for line in lines:
         parts = line.strip().split()
         file_name = parts[1]
-        label = 1 if parts[-1] == classes[1] else 0
-        labels[file_name] = label
+        labelIndex = classes.index(parts[-1])
+        labels[file_name] = labelIndex
         
     return labels
+

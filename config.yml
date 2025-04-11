@@ -54,3 +54,8 @@ jobs:
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
     persisted-model: results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
     input-file-batch-size: 4000
+  ASVspoof-2019_2025-03-24-1_preprocessed-data:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
+    preprocessed-data: LA/ASVspoof2019_LA_eval/ASVspoof2019_LA_eval_2025-04-11T11-31-39.918233.pp-bin

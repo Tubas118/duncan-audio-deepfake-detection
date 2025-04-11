@@ -15,11 +15,11 @@ class PreprocessorFactory:
         self.availablePreprocessors = MappingProxyType(availablePreprocessors)
         
 
-    def newPreprocessor(self, preprocessorId: str) -> AbstractPreprocessor:
+    def newPreprocessor(self, preprocessorId: str, exec_power_to_db=True) -> AbstractPreprocessor:
         entry = self.availablePreprocessors.get(preprocessorId, None)
         if (entry != None):
             preprocessorType = entry.get('type')
-            return preprocessorType()
+            return preprocessorType(exec_power_to_db=exec_power_to_db)
         
         return None
 

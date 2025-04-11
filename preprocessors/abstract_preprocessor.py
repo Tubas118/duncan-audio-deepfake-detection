@@ -7,9 +7,11 @@ from readers.label_reader import readLabelsWithJob
 
 class AbstractPreprocessor(ABC):
 
-    def __init__(self, silent):
+    def __init__(self, silent, exec_power_to_db=True):
         if (silent == False):
             print(f'{self.__class__.__name__}')
+
+        self.exec_power_to_db = exec_power_to_db
         
     # -------------------------------------------------------------------------
     def extract_features_singleSource(self, job: Job, fullDataPath, filename):
@@ -20,13 +22,16 @@ class AbstractPreprocessor(ABC):
         X = []
         y = []
         source = readLabelsWithJob(job)
-        segmentLength = int(len(source) / 20)
+        segmentLength = int(len(source) / 10)
         fullDataPath = job.fullJoinFilePath(job.dataPathRoot, dataPathSuffix)
         print(f"fullDataPath: {fullDataPath}")
 
         true_labels = {}
+        filenames = []
 
         for filename, label in source.items():
+            filenames.append(filename)
+            
             _X = self.__extract_features_singleSource_worker__(job, fullDataPath, filename)
             X.append(_X)
             y.append(label)
@@ -37,12 +42,9 @@ class AbstractPreprocessor(ABC):
 
         X = np.array(X)
 
-        if (job.executeToCategoricalForLabels):
-            y = to_categorical(y, job.numClasses)
-
         print(f"Number of audio files loaded: {len(X)}")
 
-        return X, y, true_labels
+        return X, y, true_labels, filenames
 
     # -------------------------------------------------------------------------
     def __init_true_labels__(self, includeTrueLabels = False):

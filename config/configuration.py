@@ -4,11 +4,13 @@ import re
 import yaml
 
 JOB_EXT: str = ".libjob"
+PREPROC_EXT: str = ".pp-bin"
 RESULTS_EXT: str = ".txt"
 
-# ======================================================================
+# =============================================================================
 class ConfigLoader:
 
+    # -------------------------------------------------------------------------
     def __init__(self, configFilename):
         self.configFilename = configFilename
 
@@ -18,18 +20,22 @@ class ConfigLoader:
         self.activeJobId = self.__configLoader['active-job-id']
         self.projectName = self.__configLoader['project-name']
 
+
+    # -------------------------------------------------------------------------
     def getJobConfig(self, jobId):
         selectedJob = self.__configLoader['job-defaults']
         overlayJob = self.__configLoader['jobs'][jobId]
         selectedJob.update(overlayJob)
         return Job(jobId, selectedJob)
-    
-# ======================================================================
+
+
+# =============================================================================
 class Job:
 
+    # -------------------------------------------------------------------------
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
-        self.inputFileBatchSize: str = source['input-file-batch-size']
+        # IGNORED: self.inputFileBatchSize: str = source['input-file-batch-size']
         self.outputFolder: str = source['output-folder']
         self.dataPathRootRaw: str = source['data-path-root']
         self.dataPathRoot: str = self.fullFilePath(self.dataPathRootRaw)
@@ -53,32 +59,23 @@ class Job:
         self.batchSize: int = source['batch-size']
         self.numEpochs: int = source['num-epochs']
         self.__determine_persistedModelValue__(source, 'persisted-model')
+        self.__determine_preprocessDataValue__(source, 'preprocessed-data')
 
         self.__check_for_output_folder__()
 
+
+    # -------------------------------------------------------------------------
     def fullJoinFilePath(self, path, filename):
         return self.fullFilePath(os.path.join(path, filename))
 
+
+    # -------------------------------------------------------------------------
     def fullFilePath(self, filepath):
         expanded = os.path.expandvars(filepath)
         return expanded.replace("\\", "/")
     
-    def newPersistedModelResultsName(self, persistedModelRootFilename: str = None, generateTimestamp = False):
-            mid_section = ""
 
-            if (persistedModelRootFilename == None):
-                rootFilename = self.persistedModel
-            else:
-                rootFilename = persistedModelRootFilename
-
-            rootFilename = rootFilename.removesuffix(JOB_EXT)
-
-            if (generateTimestamp):
-                mid_section = datetime.datetime.now().isoformat()
-                mid_section = "_" + mid_section.replace(":", "-")
-
-            return rootFilename + mid_section + RESULTS_EXT
-
+    # -------------------------------------------------------------------------
     def __check_for_output_folder__(self):
         if (len(self.outputFolder) > 0):
             self.outputFolder = self.outputFolder.rstrip().lstrip()
@@ -91,41 +88,90 @@ class Job:
                 os.makedirs(self.outputFolder)
                 print("Output folder created.")
 
-    def __determine_persistedModelValue__(self, source, keyName: str):
+
+    # -------------------------------------------------------------------------
+    def __determine_persistedModelValue__(self, source: dict, keyName: str):
+        results: "__DerivedFilename__" = self.__determine_filename__(source, keyName, JOB_EXT)
+        self.newModelGenerated = results.generateNew
+        self.persistedModel: str = results.filenameRoot
+        self.persistedModelResults: str = self.__newPersistedModelResultsName__(self.persistedModel, results.generateNew == False)
+
+
+    # -------------------------------------------------------------------------
+    def __determine_preprocessDataValue__(self, source: dict, keyName: str):
+        results: "__DerivedFilename__" = self.__determine_filename__(source, keyName, PREPROC_EXT)
+        self.newPreprocessData = results.generateNew
+        self.preprocessDataFilename = results.filenameRoot
+
+        if (self.newPreprocessData):
+            print(f"Generating new preprocessed binary file: {self.preprocessDataFilename}")
+        else:
+            print(f"Using existing preprocessed binary file: {self.preprocessDataFilename}")
+
+
+    # -------------------------------------------------------------------------
+    def __determine_filename__(self, source: dict, keyName: str, ext: str) -> "__DerivedFilename__":
         checkValue: str = source.get(keyName, "")
 
         if (len(checkValue) > 0):
-            useNewModelGenerated = False
-            usePersistedModel: str = checkValue
-            usePersistedModelResults: str = self.newPersistedModelResultsName(usePersistedModel, True)
-            print(f"Using configured model name: {checkValue}")
+            generateNew = False
+            useFilename: str = checkValue
         else:
-            useNewModelGenerated = True
+            generateNew = True
             nowStr = datetime.datetime.now().isoformat()
             nowStr = nowStr.replace(":", "-")
-            persistedModelRootFilename = self.jobId + "_" + nowStr
+            useFilename = f"{self.jobId}_{nowStr}"
 
             if (len(self.outputFolder) > 0):
-                persistedModelRootFilename = self.fullJoinFilePath(self.outputFolder, persistedModelRootFilename)
+                useFilename = self.fullJoinFilePath(self.outputFolder, useFilename)
 
-            usePersistedModel: str = persistedModelRootFilename + JOB_EXT
-            usePersistedModelResults: str = self.newPersistedModelResultsName(usePersistedModel)
-            print(f"Generating new model name: {usePersistedModel}")
+            useFilename = f"{useFilename}{ext}"
 
-        self.newModelGenerated = useNewModelGenerated
-        self.persistedModel: str = usePersistedModel
-        self.persistedModelResults: str = usePersistedModelResults
-        print(f"Assigned model name: {self.persistedModel}")
+        return __DerivedFilename__(generateNew, useFilename)
 
+
+    # -------------------------------------------------------------------------
+    def __newPersistedModelResultsName__(self, filenameRoot: str = None, generateTimestamp = False):
+        if (filenameRoot == None):
+            rootFilename = self.persistedModel
+        else:
+            rootFilename = filenameRoot
+
+        return self.__newFilename__(rootFilename, RESULTS_EXT, generateTimestamp)
+    
+
+    # -------------------------------------------------------------------------
+    def __newFilename__(self, filenameRoot: str, ext: str, generateTimestamp = False) -> str:
+        mid_section = ""
+        rootFilename = filenameRoot.removesuffix(JOB_EXT)
+
+        if (generateTimestamp):
+            mid_section = datetime.datetime.now().isoformat()
+            mid_section = "_" + mid_section.replace(":", "-")
+
+        return rootFilename + mid_section + ext
+
+
+    # -------------------------------------------------------------------------
     def __to_tuple_2_ints__(self, value: str):
         splitValue = list(filter(None, re.split('[ (,)]', value)))
         num1 = int(splitValue[0])
         num2 = int(splitValue[1])
         return (num1, num2)
 
-# ======================================================================
+
+# =============================================================================
 class RunDetails:
 
+    # -------------------------------------------------------------------------
     def __init__(self, configFilename: str, jobId: str):
         self.configFilename = configFilename
         self.jobId = jobId
+
+
+# =============================================================================
+class __DerivedFilename__:
+
+    def __init__(self, generateNew: bool, filenameRoot: str):
+        self.generateNew = generateNew
+        self.filenameRoot = filenameRoot
