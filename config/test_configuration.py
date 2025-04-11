@@ -53,10 +53,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertIsInstance(job.kernelSize, Tuple)
         self.assertIsInstance(job.poolSize, Tuple)
 
-        assert jobId in job.persistedModel
-        assert ".libjob" in job.persistedModel
-        assert jobId in job.persistedModelResults
-        assert ".txt" in job.persistedModelResults
+        self.__assert_nameWithJobId__(job.persistedModel, jobId, ".libjob")
+        self.__assert_nameWithJobId__(job.persistedModelResults, jobId, ".txt")
 
         assert "2025-03-16T12-41-11.676368" not in job.persistedModel
         assert "2025-03-16T12-41-11.676368" not in job.persistedModelResults
@@ -76,10 +74,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertIsNotNone(job.persistedModelResults)
         self.assertFalse(job.newModelGenerated)
 
-        assert jobId not in job.persistedModel
-        assert ".libjob" in job.persistedModel
-        assert jobId not in job.persistedModelResults
-        assert ".txt" in job.persistedModelResults
+        self.__assert_nameWithoutJobId__(job.persistedModel, jobId, ".libjob")
+        self.__assert_nameWithoutJobId__(job.persistedModelResults, jobId, ".txt")
 
         assert "2025-03-16T12-41-11.676368" in job.persistedModel
         assert "2025-03-16T12-41-11.676368" in job.persistedModelResults
@@ -97,10 +93,7 @@ class TestConfiguration(unittest.TestCase):
         # then
         self.assertIsNotNone(job.preprocessDataFilename)
         self.assertTrue(job.newPreprocessData)
-
-        assert jobId in job.preprocessDataFilename
-        assert ".pp-bin" in job.preprocessDataFilename
-
+        self.__assert_nameWithJobId__(job.preprocessDataFilename, jobId, ".pp-bin")
         assert "2025-03-16T12-41-11.676368" not in job.preprocessDataFilename
 
 
@@ -116,10 +109,7 @@ class TestConfiguration(unittest.TestCase):
         # then
         self.assertIsNotNone(job.preprocessDataFilename)
         self.assertFalse(job.newPreprocessData)
-
-        assert jobId not in job.preprocessDataFilename
-        assert ".pp-bin" in job.preprocessDataFilename
-
+        self.__assert_nameWithoutJobId__(job.preprocessDataFilename, jobId, ".pp-bin")
         assert "2025-03-16T12-41-11.676368" in job.preprocessDataFilename
 
 
@@ -140,6 +130,22 @@ class TestConfiguration(unittest.TestCase):
         # then
         self.assertIsInstance(tuple, Tuple)
         self.assertEqual(expected, tuple)
+
+
+    # -------------------------------------------------------------------------
+    def __assert_nameWithJobId__(self, value: str, jobId: str, ext: str):
+        print(f"jobId: {jobId}, ext: {ext}, value: {value}")
+        assert jobId in value
+        assert f"{ext}" in value
+        assert f"{ext}{ext}" not in value
+
+
+    # -------------------------------------------------------------------------
+    def __assert_nameWithoutJobId__(self, value: str, jobId: str, ext: str):
+        print(f"jobId: {jobId}, ext: {ext}, value: {value}")
+        assert jobId not in value
+        assert f"{ext}" in value
+        assert f"{ext}{ext}" not in value
 
 
 if __name__ == '__main__':
