@@ -94,7 +94,7 @@ class Job:
         results: "__DerivedFilename__" = self.__determine_filename__(source, keyName, JOB_EXT)
         self.newModelGenerated = results.generateNew
         self.persistedModel: str = results.filenameRoot
-        self.persistedModelResults: str = self.__newPersistedModelResultsName__(self.persistedModel)
+        self.persistedModelResults: str = self.__newPersistedModelResultsName__(self.persistedModel, results.generateNew == False)
 
 
     # -------------------------------------------------------------------------
