@@ -26,11 +26,14 @@ notebookName = 'audio-deepfake-detection-training'
 configFilename = runDetail.configFilename
 runJobId = runDetail.jobId
 
+# +
+import json
+
 import config.configuration as configuration
 import model_definitions.model_cnn_definition as model_cnn_definition
+from notebook_utils import notebookToPython
 from preprocessors.abstract_preprocessor import AbstractPreprocessor
 from preprocessors.preprocessor_factory import PreprocessorFactory
-from notebook_utils import notebookToPython
 from processors.basic_model_training_processor import BasicModelTrainingProcessor
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
 
@@ -40,6 +43,9 @@ config = configuration.ConfigLoader(configFilename)
 notebookToPython(notebookName)
 job = config.getJobConfig(runJobId)
 
+prettyJson = json.dumps(job.__dict__, indent=4)
+print(f"job: {prettyJson}")
+
 if (job.newModelGenerated == False):
     raise ValueError("This notebook is meant for training. Select a job without a value for 'persisted-model' set.")
 # -
@@ -48,7 +54,7 @@ preproc_factory = PreprocessorFactory()
 preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor)
 
 
-X, y_encoded, true_labels = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
+X, y_encoded, true_labels, source_filenames = preprocessor.extract_features_jobSource(job, job.dataPathSuffix)
 
 trainingProc = BasicModelTrainingProcessor(job, model_cnn_definition.ModelCnnDefinition)
 model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)
@@ -64,7 +70,7 @@ results: ModelEvaluationResult = evaluationProc.process(X_test, y_test, true_lab
 
 
 # +
-from postprocessors.plot_confusion_matrix import ConfusionMatrixDetails, PlotConfusionMatrix
+from postprocessors.confusion_matrix_plot import ConfusionMatrixDetails, ConfusionMatrixPlot
 import json
 
 print(f'results.test: {results.test}')
