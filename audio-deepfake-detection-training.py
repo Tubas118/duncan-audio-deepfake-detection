@@ -15,8 +15,7 @@
 # +
 from config.configuration import RunDetails
 
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
-# runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_training_mfcc')
+runDetail = RunDetails('config.yml', 'GitLab-training-data')
 
 notebookName = 'audio-deepfake-detection-training'
 # -
