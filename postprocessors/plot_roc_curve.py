@@ -9,18 +9,20 @@ from processors.model_evaluation_result import ModelEvaluationResult
 #   2. Derived from https://github.com/sksmta/audio-deepfake-detection/blob/main/main.ipynb
 class PlotRocCurve:
 
+    DEFAULT_TITLE = 'Receiver Operating Characteristic'
+
     # -------------------------------------------------------------------------
     def __init__(self):
         pass
 
 
     # -------------------------------------------------------------------------
-    def plotFromResults(self, results: ModelEvaluationResult, title = 'Receiver Operating Characteristic'):
+    def plotFromResults(self, results: ModelEvaluationResult, title = DEFAULT_TITLE):
         self.plot(results.roc_fpr, results.roc_tpr, results.roc_auc, title)
 
 
     # -------------------------------------------------------------------------
-    def plot(self, fpr: np.array, tpr: np.array, roc_auc: float, title = 'Receiver Operating Characteristic'):
+    def plot(self, fpr: np.array, tpr: np.array, roc_auc: float, title = DEFAULT_TITLE):
         # Plot ROC curve
         plt.figure()
         plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
