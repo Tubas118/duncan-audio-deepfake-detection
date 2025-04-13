@@ -12,25 +12,27 @@ from processors.model_evaluation_result import ModelEvaluationResult
 #   2. Derived from https://github.com/sksmta/audio-deepfake-detection/blob/main/main.ipynb
 class PlotConfusionMatrix:
 
+    DEFAULT_TITLE = 'Confusion Matrix'
+
     # -------------------------------------------------------------------------
     def __init__(self):
         pass
 
 
     # -------------------------------------------------------------------------
-    def plotFromResults(self, results: ModelEvaluationResult, job: Job, title = 'Confusion Matrix'):
+    def plotFromResults(self, results: ModelEvaluationResult, job: Job, title = DEFAULT_TITLE):
         self.plotFromMatrix(results.confusion_matrix, job.classes, title)
 
 
     # -------------------------------------------------------------------------
-    def plot(self, testAry: np.array, predAry: np.array, classes, title = 'Confusion Matrix'):
+    def plot(self, testAry: np.array, predAry: np.array, classes, title = DEFAULT_TITLE):
         cm = confusion_matrix(testAry, predAry)
         self.plotFromMatrix(cm, classes, title)
         return cm
 
 
     # -------------------------------------------------------------------------
-    def plotFromMatrix(self, cm, classes, title = 'Confusion Matrix'):
+    def plotFromMatrix(self, cm, classes, title = DEFAULT_TITLE):
         disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=classes)
         disp.plot(cmap=plt.cm.Blues)
         plt.title(title)
