@@ -11,7 +11,7 @@ This README file was written based on an environment with the following versions
 * From the Home panel, launch Visual Studio Code (VSC).
 * Open the `audio-deepfake-detection` project in VSC.
 * Start a terminal in VSC.
-* Run:
+* Run environment command. If updating an existing environment, replace `create` with `update`:
   ```
   conda env create -f .\environment.yml
   ```
