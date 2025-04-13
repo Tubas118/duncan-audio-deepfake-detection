@@ -9,7 +9,9 @@ job-defaults:
   # Assign 'None' to training-split-random-state to get random split. Pass same int for reproducible split.
   training-split-random-state: 3
   labels-execute-to-categorical: true
-  num-classes: 2        # Number of classes (bonafide and spoof)
+  classes:
+    - spoof
+    - bonafide
   sample-rate: 16000
   duration: 5
   num-mels: 128

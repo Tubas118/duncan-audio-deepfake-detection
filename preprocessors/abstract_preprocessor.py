@@ -7,14 +7,18 @@ from readers.label_reader import readTrainingLabelsWithJob
 
 class AbstractPreprocessor(ABC):
 
-    def __init__(self, silent):
+    def __init__(self, silent, exec_power_to_db=True):
         if (silent == False):
             print(f'{self.__class__.__name__}')
-        
+
+        self.exec_power_to_db = exec_power_to_db
+
     # -------------------------------------------------------------------------
     def extract_features_singleSource(self, job: Job, fullDataPath, filename, label):
         X, y = self.__extract_features_singleSource_worker__(job, fullDataPath, filename, label)
 
+        # TODO: running "to_categorical(...)" is necessary to reformat "y" to something
+        #   usable for training the model. Consider removing it as configurable.
         if (job.executeToCategoricalForLabels):
             y = to_categorical(y, job.numClasses)
 
@@ -39,6 +43,8 @@ class AbstractPreprocessor(ABC):
         X = np.array(X)
         y = np.array(y)
 
+        # TODO: running "to_categorical(...)" is necessary to reformat "y" to something
+        #   usable for training the model. Consider removing it as configurable.
         if (job.executeToCategoricalForLabels):
             y = to_categorical(y, job.numClasses)
 
@@ -46,10 +52,12 @@ class AbstractPreprocessor(ABC):
 
         return X, y
 
+    # -------------------------------------------------------------------------
     @abstractmethod
     def __extract_features_singleSource_worker__(self, job: Job, fullDataPath, filename, label):
         pass
 
+    # -------------------------------------------------------------------------
     def __pad_data__(self, source, job: Job):
         if (source.shape[1] < job.maxTimeSteps):
             padWidth = ((0, 0), (0, job.maxTimeSteps - source.shape[1]))

@@ -7,7 +7,6 @@ import sys
 # -- from parent directory
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
-# from configuration.configuration import ConfigLoader, Job
 import config.configuration as configuration
 
 class TestConfiguration(unittest.TestCase):
