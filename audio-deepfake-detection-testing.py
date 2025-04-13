@@ -17,11 +17,11 @@
 # +
 from config.configuration import RunDetails
 
-# runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_large-batch')
-# runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_huge-batch')
-runDetail = RunDetails('config.yml', 'GitLab-eval-data')
+# runDetail = RunDetails('config.yml', 'GitLab-eval-data')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing')
 
 notebookName = 'audio-deepfake-detection-testing'
+plot_title_suffix = "(Testing)"
 # -
 
 configFilename = runDetail.configFilename
@@ -35,6 +35,7 @@ from tensorflow.keras.utils import to_categorical
 import config.configuration as configuration
 from notebook_utils import notebookToPython
 from postprocessors.plot_confusion_matrix import PlotConfusionMatrix
+from postprocessors.plot_precision_recall_curve import PlotPrecisionRecallCurve
 from postprocessors.plot_roc_curve import PlotRocCurve
 from postprocessors.plot_spectrogram import PlotSpectrogram
 from preprocessors.abstract_preprocessor import AbstractPreprocessor
@@ -142,11 +143,17 @@ plot_spectrogram_noPowerToDb.plot(X_test_noPowerToDb, job, f"{job.preprocessor}:
 
 results = evaluationProc.batchResults[0]
 
+CM_TITLE = f"{PlotConfusionMatrix.DEFAULT_TITLE} {plot_title_suffix}"
 cm_plot = PlotConfusionMatrix()
-cm_plot.plotFromResults(results, job)
+cm_plot.plotFromResults(results, job, CM_TITLE)
 
+RC_TITLE = f"{PlotRocCurve.DEFAULT_TITLE} {plot_title_suffix}"
 roc_plot = PlotRocCurve()
-roc_plot.plotFromResults(results)
+roc_plot.plotFromResults(results, RC_TITLE)
+
+PP_TITLE = f"{PlotPrecisionRecallCurve.DEFAULT_TITLE} {plot_title_suffix}"
+roc_plot = PlotPrecisionRecallCurve()
+roc_plot.plotFromResults(results, PP_TITLE)
 
 # ### Final Results
 
