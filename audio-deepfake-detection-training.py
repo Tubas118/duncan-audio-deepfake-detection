@@ -45,11 +45,6 @@ preprocessor = preproc_factory.newPreprocessor(job.preprocessor)
 
 X, y_encoded = preprocessor.extract_features_multipleSource(job, job.dataPathSuffix)
 
-print(f"X: {type(X)}, {len(X)}, {X}")
-print(f"y_encoded: {type(y_encoded)}, {len(y_encoded)}, {y_encoded}")
-# print(f"true_labels: {type(true_labels)}, {len(true_labels)}, {true_labels}")
-# print(f"filenames: {type(filenames)}, {len(filenames)}, {filenames}")
-
 trainingProc = BasicModelTrainingProcessor(job, model_cnn_definition.ModelCnnDefinition)
 model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)
 
@@ -59,6 +54,9 @@ evaluationProc = BasicModelEvaluationProcessor(job, model)
 evaluationProc.process(X_test, y_test)
 
 
+# +
 print("\n")
 report = evaluationProc.reportSnapshot(trainingProc)
 evaluationProc.writeReportToFile(job.persistedModelResults, report)
+
+print(report)
