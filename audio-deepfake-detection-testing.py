@@ -16,7 +16,8 @@
 from config.configuration import RunDetails
 
 # runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_large-batch')
-runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_huge-batch')
+# runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_2025-03-29-5_huge-batch')
+runDetail = RunDetails('config.yml', 'GitLab-eval-data')
 
 notebookName = 'audio-deepfake-detection-testing'
 # -
