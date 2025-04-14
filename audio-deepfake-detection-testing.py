@@ -18,7 +18,8 @@
 from config.configuration import RunDetails
 
 # runDetail = RunDetails('config.yml', 'GitLab-eval-data')
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing')
+# runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing_epoch-100')
 
 notebookName = 'audio-deepfake-detection-testing'
 plot_title_suffix = "(Testing)"

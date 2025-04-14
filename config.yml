@@ -32,6 +32,11 @@ jobs:
     data-path-suffix: LA/ASVspoof2019_LA_train/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
     training-split-random-state: 186
+  ASVspoof-2019_training_epoch-100:
+    data-path-suffix: LA/ASVspoof2019_LA_train/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    training-split-random-state: 186
+    num-epochs: 100
   GitLab-training-data:
     data-path-root: .
     data-path-suffix: testaudio-sksmta
@@ -40,7 +45,11 @@ jobs:
   ASVspoof-2019_testing:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/final_epoch_10/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob
+    persisted-model: results/final_epoch__10/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob
+  ASVspoof-2019_testing_epoch-100:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/final_epoch_100/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.libjob
   GitLab-eval-data:
     data-path-root: .
     data-path-suffix: testaudio
