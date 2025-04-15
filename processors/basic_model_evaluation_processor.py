@@ -7,9 +7,11 @@ from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Model
 
 from config.configuration import Job
+from model_definitions.model_abstract_definition import ModelAbstractDefinition
 from postprocessors.metrics import Metrics
 from processors.abstract_model_processor import AbstractModelProcessor
 from processors.model_evaluation_result import ModelEvaluationResult
+from utils.safe_len import safe_len
 
 class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
@@ -44,6 +46,10 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         metrics = Metrics()
         metrics.evaluateResults(results)
 
+        self.inputFileBatchCount = self.inputFileBatchCount + results.batchSize
+        self.inputFileCount = self.inputFileCount + safe_len(X_test)
+
+
         print(f"  Batches: {self.inputFileBatchCount} - Files: {self.inputFileCount} - Accuracy Score: {results.accuracy_score} - Elements: {len(X_test)}")
         self.lastResults = results
         self.batchResults.append(results)
@@ -60,7 +66,6 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
         timestamp_utc = datetime.now(pytz.utc)
         elapsed_time = timestamp_utc - self.jobStartTime
-        prettyJson = json.dumps(self.__job__.__dict__, indent=4)
 
         report = report + f"---- Testing (start) ----\n"
         report = report + f"start time: {self.jobStartTime.isoformat()}\n"
@@ -76,7 +81,12 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
                 report = report + f"{batchResult.reportSnaphot()}\n"
 
         report = report + "\n"
-        report = report + f"job: {prettyJson}\n\n"
+        report = report + ModelAbstractDefinition.MODEL_SUMMARY(self.model) + "\n"
+
+        if ("job: {" not in report):
+            prettyJson = json.dumps(self.__job__.__dict__, indent=4)
+            report = report + f"job: {prettyJson}\n\n"
+
         report = report + f"---- Testing (end) ----\n"
 
         return report

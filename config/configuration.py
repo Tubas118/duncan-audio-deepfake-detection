@@ -130,3 +130,18 @@ class RunDetails:
     def __init__(self, configFilename: str, jobId: str):
         self.configFilename = configFilename
         self.jobId = jobId
+
+# ======================================================================
+class BulkRunDetails(RunDetails):
+
+    @staticmethod
+    def DERIVE_BULK_RUN(sourceDetails: RunDetails, preprocessor: str = None, random_state_array = None):
+        return BulkRunDetails(sourceDetails.configFilename,
+                              sourceDetails.jobId,
+                              preprocessor,
+                              random_state_array)
+
+    def __init__(self, configFilename: str, jobId: str, preprocessor: str = None, random_state_array = None):
+        super().__init__(configFilename, jobId)
+        self.preprocessor = preprocessor
+        self.random_state_array = random_state_array
