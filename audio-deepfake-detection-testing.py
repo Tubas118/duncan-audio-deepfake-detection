@@ -18,8 +18,7 @@
 from config.configuration import RunDetails
 
 # runDetail = RunDetails('config.yml', 'GitLab-eval-data')
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing-mfcc')
-# runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing_epoch-100')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_split133_epoch10')
 
 notebookName = 'audio-deepfake-detection-testing'
 plot_title_suffix = "(Testing)"
@@ -164,3 +163,6 @@ report = evaluationProc.reportSnapshot()
 evaluationProc.writeReportToFile(job.persistedModelResults, report)
 
 print(report)
+# -
+
+# !jupyter nbconvert --execute --to html audio-deepfake-detection-testing.ipynb
