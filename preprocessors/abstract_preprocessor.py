@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from tensorflow.keras.utils import to_categorical
 
 from config.configuration import Job
-from readers.label_reader import readLabelsWithJob
+from readers.label_reader import readTrainingLabelsWithJob
 
 class AbstractPreprocessor(ABC):
 
@@ -12,50 +12,49 @@ class AbstractPreprocessor(ABC):
             print(f'{self.__class__.__name__}')
 
         self.exec_power_to_db = exec_power_to_db
-        
+
     # -------------------------------------------------------------------------
-    def extract_features_singleSource(self, job: Job, fullDataPath, filename):
-        return self.__extract_features_singleSource_worker__(job, fullDataPath, filename)
+    def extract_features_singleSource(self, job: Job, fullDataPath, filename, label):
+        X, y = self.__extract_features_singleSource_worker__(job, fullDataPath, filename, label)
+
+        # TODO: running "to_categorical(...)" is necessary to reformat "y" to something
+        #   usable for training the model. Consider removing it as configurable.
+        if (job.executeToCategoricalForLabels):
+            y = to_categorical(y, job.numClasses)
+
+        return X, y
     
     # -------------------------------------------------------------------------
-    def extract_features_jobSource(self, job: Job, dataPathSuffix: str):
+    def extract_features_multipleSource(self, job: Job, dataPathSuffix: str):
         X = []
         y = []
-        source = readLabelsWithJob(job)
-        segmentLength = int(len(source) / 10)
+        labels = readTrainingLabelsWithJob(job)
+        segmentLength = int(len(labels) / 20)
         fullDataPath = job.fullJoinFilePath(job.dataPathRoot, dataPathSuffix)
         print(f"fullDataPath: {fullDataPath}")
 
-        true_labels = {}
-        filenames = []
-
-        for filename, label in source.items():
-            filenames.append(filename)
-            
-            _X = self.__extract_features_singleSource_worker__(job, fullDataPath, filename)
+        for filename, label in labels.items():
+            _X, _y = self.__extract_features_singleSource_worker__(job, fullDataPath, filename, label)
             X.append(_X)
-            y.append(label)
-            true_labels[filename] = label
-
+            y.append(_y)
             if (segmentLength == 0 or (len(X) % segmentLength) == 0):
                 print(f"Loading audio files: {len(X)}")
 
         X = np.array(X)
+        y = np.array(y)
 
-        print(f"Number of audio files loaded: {len(X)}")
+        # TODO: running "to_categorical(...)" is necessary to reformat "y" to something
+        #   usable for training the model. Consider removing it as configurable.
+        if (job.executeToCategoricalForLabels):
+            y = to_categorical(y, job.numClasses)
 
-        return X, y, true_labels, filenames
+        print(f"Number of audio files load: {len(X)}")
 
-    # -------------------------------------------------------------------------
-    def __init_true_labels__(self, includeTrueLabels = False):
-        if (includeTrueLabels == True):
-            return {}
-
-        return None
+        return X, y
 
     # -------------------------------------------------------------------------
     @abstractmethod
-    def __extract_features_singleSource_worker__(self, job: Job, fullDataPath, filename):
+    def __extract_features_singleSource_worker__(self, job: Job, fullDataPath, filename, label):
         pass
 
     # -------------------------------------------------------------------------

@@ -1,6 +1,22 @@
 import numpy as np
+import pytz
+from datetime import datetime
 from prettytable import PrettyTable
 
+__nextModelEvaluationResultIndex__ = 0
+
+# =============================================================================
+def nextModelEvaluationResultIndex() -> int:
+    global __nextModelEvaluationResultIndex__
+    __nextModelEvaluationResultIndex__ = __nextModelEvaluationResultIndex__ + 1
+    return __nextModelEvaluationResultIndex__
+
+# =============================================================================
+def resetNextModelEvaluationResultIndex():
+    global __nextModelEvaluationResultIndex__
+    __nextModelEvaluationResultIndex__ = 0
+
+# =============================================================================
 class ModelEvaluationResult:
 
     # -------------------------------------------------------------------------
@@ -8,6 +24,9 @@ class ModelEvaluationResult:
         if (len(testAry) != len(predAry)):
             raise ValueError("Arrays must be same length")
         
+        self.batchId = nextModelEvaluationResultIndex()
+        self.timestamp_utc = datetime.now(pytz.utc)
+
         self.batchSize = len(testAry)
         self.testAry: np.array = testAry
         self.predAry: np.array = predAry

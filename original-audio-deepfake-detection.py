@@ -30,7 +30,7 @@ from tensorflow.keras.utils import to_categorical
 import config.configuration as configuration
 from config.configuration import Job
 from notebook_utils import notebookToPython
-from readers.label_reader import readLabelsWithJob
+from readers.label_reader import readTrainingLabelsWithJob
 
 # +
 config = configuration.ConfigLoader('config.yml')
@@ -39,7 +39,7 @@ notebookToPython(notebookName)
 job: Job = config.getJobConfig(runJobId)
 # -
 
-trainingLabels = readLabelsWithJob(job)
+trainingLabels = readTrainingLabelsWithJob(job)
 
 # +
 X = []

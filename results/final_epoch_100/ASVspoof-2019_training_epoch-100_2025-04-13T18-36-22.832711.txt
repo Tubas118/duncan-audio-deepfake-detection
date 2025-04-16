@@ -1,0 +1,123 @@
+---- Training (start) ----
+start time: 2025-04-13T23:41:31.124697+00:00
+end time: 2025-04-14T00:41:59.886516+00:00
+elapsed: 1:00:28.761819
+
+model file: output/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.libjob
+batch count: 0
+file count: 0
+job: {
+    "jobId": "ASVspoof-2019_training_epoch-100",
+    "inputFileBatchSize": null,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_train/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 186,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 100,
+    "newModelGenerated": true,
+    "persistedModel": "output/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.libjob",
+    "persistedModelResults": "output/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.txt"
+}
+
+---- Training (end) ----
+
+---- Testing (start) ----
+start time: 2025-04-14T00:41:56.557079+00:00
+end time: 2025-04-14T00:41:59.887524+00:00
+elapsed: 0:00:03.330445
+
+model file: output/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.libjob
+batch count: 0
+file count: 0
+
+  --- Results (start) ---
++-------------------------+------------------------------------------------+
+| Key                     | Value                                          |
++-------------------------+------------------------------------------------+
+| batchId                 | 1                                              |
+| timestamp_utc           | 2025-04-14 00:41:59.439171+00:00               |
+| batchSize               | 5076                                           |
+| accuracy_score          | 0.9972419227738377                             |
+| confusion_matrix        | [[4557    2]                                   |
+|                         |  [  12  505]]                                  |
+| f1_score                | 0.986328125                                    |
+| root_mean_squared_error | 0.052517399270740096                           |
+| roc_fpr                 | [0.00000000e+00 4.38692696e-04 1.00000000e+00] |
+| roc_tpr                 | [0.         0.97678917 1.        ]             |
+| roc_auc                 | 0.9881752377913817                             |
+| precision_recall_curve  | (array([0.10185185, 0.99605523, 1.        ]),  |
+|                         |  array([1.        , 0.97678917, 0.        ]),  |
+|                         |  array([0, 1]))                                |
++-------------------------+------------------------------------------------+
+  --- Results (end) ---
+
+job: {
+    "jobId": "ASVspoof-2019_training_epoch-100",
+    "inputFileBatchSize": null,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_train/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 186,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 100,
+    "newModelGenerated": true,
+    "persistedModel": "output/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.libjob",
+    "persistedModelResults": "output/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.txt"
+}
+
+---- Testing (end) ----

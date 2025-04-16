@@ -1,0 +1,48 @@
+---- Testing (start) ----
+start time: 2025-04-13T03:48:40.354286+00:00
+end time: 2025-04-13T03:48:40.486821+00:00
+elapsed: 0:00:00.132535
+
+model file: results/2025-04-12T22-43-08.984941_0.0.3_gitlab/GitLab-training-data_2025-04-12T22-43-08.984941.libjob
+batch count: 1
+file count: 2
+accuracy_score: 0.5
+
+job: {
+    "jobId": "GitLab-eval-data",
+    "inputFileBatchSize": 1000,
+    "outputFolder": "output",
+    "dataPathRootRaw": ".",
+    "dataPathRoot": ".",
+    "dataPathSuffix": "testaudio",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 3,
+    "labelFilename": "testvalues/LA.cm.train.trn.txt",
+    "executeToCategoricalForLabels": true,
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": false,
+    "persistedModel": "results/2025-04-12T22-43-08.984941_0.0.3_gitlab/GitLab-training-data_2025-04-12T22-43-08.984941.libjob",
+    "persistedModelResults": "results/2025-04-12T22-43-08.984941_0.0.3_gitlab/GitLab-training-data_2025-04-12T22-43-08.984941_2025-04-12T22-48-37.798771.txt"
+}
+
+---- Testing (end) ----

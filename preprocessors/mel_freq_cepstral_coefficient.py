@@ -12,18 +12,16 @@ class MelFrequencyCepstralCoeffiecient(AbstractPreprocessor):
         super().__init__(silent, exec_power_to_db)
 
     # -------------------------------------------------------------------------
-    # (Koul, 2024, pg. 359)
-    def __extract_features_singleSource_worker__(self, job, fullDataPath, filename):
+    def __extract_features_singleSource_worker__(self, job, fullDataPath, filename, label):
         audioSourceFilename = job.fullJoinFilePath(fullDataPath, filename + job.dataExtension)
 
         audio, _ = librosa.load(audioSourceFilename, sr = job.sampleRate, duration = job.duration)
 
         mfccs = librosa.feature.mfcc(y = audio, sr = job.sampleRate, n_mfcc = job.numMels)
 
-        # TODO - noticed author did not include "librosa.power_to_db(...)" for execution - why?
         if (self.exec_power_to_db):
-            mfccs = librosa.power_to_db(mfccs, ref=np.max)
+            mfccs = librosa.power_to_db(mfccs, ref=np.max)  # TODO: Did the author mean to not include "power_to_db"?
 
         mfccs = self.__pad_data__(mfccs, job)
 
-        return mfccs
+        return mfccs, label
