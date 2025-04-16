@@ -1,0 +1,72 @@
+---- Testing (start) ----
+start time: 2025-04-14T03:05:33.965352+00:00
+end time: 2025-04-14T03:07:51.835212+00:00
+elapsed: 0:02:17.869860
+
+model file: results/final_epoch__10_mfcc/ASVspoof-2019_training-mfcc_2025-04-13T20-58-59.037165.libjob
+batch count: 0
+file count: 0
+
+  --- Results (start) ---
++-------------------------+-----------------------------------------------+
+| Key                     | Value                                         |
++-------------------------+-----------------------------------------------+
+| batchId                 | 1                                             |
+| timestamp_utc           | 2025-04-14 03:07:46.051371+00:00              |
+| batchSize               | 71237                                         |
+| accuracy_score          | 0.9045159116751127                            |
+| confusion_matrix        | [[58715  5167]                                |
+|                         |  [ 1635  5720]]                               |
+| f1_score                | 0.627124218835654                             |
+| root_mean_squared_error | 0.30900499724905317                           |
+| roc_fpr                 | [0.        0.0808835 1.       ]               |
+| roc_tpr                 | [0.         0.77770224 1.        ]            |
+| roc_auc                 | 0.8484093697057145                            |
+| precision_recall_curve  | (array([0.10324691, 0.52539726, 1.        ]), |
+|                         |  array([1.        , 0.77770224, 0.        ]), |
+|                         |  array([0, 1]))                               |
++-------------------------+-----------------------------------------------+
+  --- Results (end) ---
+
+job: {
+    "jobId": "ASVspoof-2019_testing-mfcc",
+    "inputFileBatchSize": null,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_eval/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 3,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mfcc",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": false,
+    "persistedModel": "results/final_epoch__10_mfcc/ASVspoof-2019_training-mfcc_2025-04-13T20-58-59.037165.libjob",
+    "persistedModelResults": "results/final_epoch__10_mfcc/ASVspoof-2019_training-mfcc_2025-04-13T20-58-59.037165_2025-04-13T21-17-58.660268.txt"
+}
+
+---- Testing (end) ----

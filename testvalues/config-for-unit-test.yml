@@ -9,10 +9,9 @@ job-defaults:
   # Assign 'None' to training-split-random-state to get random split. Pass same int for reproducible split.
   training-split-random-state: 3
   labels-execute-to-categorical: true
-  num-classes: 2        # Number of classes (bonafide and spoof)
   classes:
-  - spoof
-  - bonafide
+    - spoof
+    - bonafide
   sample-rate: 16000
   duration: 5
   num-mels: 128
@@ -35,7 +34,6 @@ jobs:
     data-path-suffix: testaudio
     label-filename: testvalues/LA.cm.train.trn.txt
     persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
-    preprocessed-data: ASVspoof-2019-1_2025-03-16T12-41-11.676368.pp-bin
   Check-data-path-root:
     data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
     data-path-suffix: testaudio

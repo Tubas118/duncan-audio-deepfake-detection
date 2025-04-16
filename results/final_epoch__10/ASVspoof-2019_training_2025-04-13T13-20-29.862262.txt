@@ -1,0 +1,123 @@
+---- Training (start) ----
+start time: 2025-04-13T18:25:09.829909+00:00
+end time: 2025-04-13T18:31:30.148871+00:00
+elapsed: 0:06:20.318962
+
+model file: output/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob
+batch count: 0
+file count: 0
+job: {
+    "jobId": "ASVspoof-2019_training",
+    "inputFileBatchSize": null,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_train/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 186,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": true,
+    "persistedModel": "output/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob",
+    "persistedModelResults": "output/ASVspoof-2019_training_2025-04-13T13-20-29.862262.txt"
+}
+
+---- Training (end) ----
+
+---- Testing (start) ----
+start time: 2025-04-13T18:31:27.820767+00:00
+end time: 2025-04-13T18:31:30.148871+00:00
+elapsed: 0:00:02.328104
+
+model file: output/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob
+batch count: 0
+file count: 0
+
+  --- Results (start) ---
++-------------------------+-----------------------------------------------+
+| Key                     | Value                                         |
++-------------------------+-----------------------------------------------+
+| batchId                 | 1                                             |
+| timestamp_utc           | 2025-04-13 18:31:29.883599+00:00              |
+| batchSize               | 5076                                          |
+| accuracy_score          | 0.9883766745468873                            |
+| confusion_matrix        | [[4521   38]                                  |
+|                         |  [  21  496]]                                 |
+| f1_score                | 0.9438629876308278                            |
+| root_mean_squared_error | 0.10781152745932453                           |
+| roc_fpr                 | [0.         0.00833516 1.        ]            |
+| roc_tpr                 | [0.         0.95938104 1.        ]            |
+| roc_auc                 | 0.9755229416339309                            |
+| precision_recall_curve  | (array([0.10185185, 0.92883895, 1.        ]), |
+|                         |  array([1.        , 0.95938104, 0.        ]), |
+|                         |  array([0, 1]))                               |
++-------------------------+-----------------------------------------------+
+  --- Results (end) ---
+
+job: {
+    "jobId": "ASVspoof-2019_training",
+    "inputFileBatchSize": null,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_train/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 186,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": true,
+    "persistedModel": "output/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob",
+    "persistedModelResults": "output/ASVspoof-2019_training_2025-04-13T13-20-29.862262.txt"
+}
+
+---- Testing (end) ----

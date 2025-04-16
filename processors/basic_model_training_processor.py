@@ -29,13 +29,9 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
             self.jobStartTime = datetime.now(pytz.utc)
 
         useTrainingSplitRandomState: int = self.__get_training_split_random_state__(trainingSplitRandomState)
-        print(f'useTrainingSplitRandomState: {useTrainingSplitRandomState}')
 
-        if (useTrainingSplitRandomState != None and useTrainingSplitRandomState < 0):
-            X_train, X_test, y_train, y_test = self.__split_sksmta_method__(X, y_encoded)
-        else:
-            print(f"Selecting training and test data - traininSplitRandomState: {useTrainingSplitRandomState}")
-            X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=useTrainingSplitRandomState)
+        print(f"Selecting training and test data - traininSplitRandomState: {useTrainingSplitRandomState}")
+        X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=useTrainingSplitRandomState)
         
         print(f"Training using {len(X_train)} files.")
         model = self.__train_model__(X_train, X_test, y_train, y_test, channels)
@@ -61,17 +57,8 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
         return report
 
     # -------------------------------------------------------------------------
-    def __split_sksmta_method__(self, X, y_encoded):
-        print('IMPORTANT: Splitting using the same method as in "Sksmta" base code')
-        split_index = int(0.8 * len(X))
-        X_train, X_test = X[:split_index], X[split_index:]                  # X_test: var names 'X_val' in Sksmta
-        y_train, y_test = y_encoded[:split_index], y_encoded[split_index:]  # y_test: var names 'y_val' in Sksmta
-        return X_train, X_test, y_train, y_test
-
-    # -------------------------------------------------------------------------
     def __train_model__(self, X_train, X_test, y_train, y_test, channels) -> Model:
         modelDef: ModelAbstractDefinition = self.modelDefType(self.__job__, X_train.shape[2], channels)
-        print(f"Model definition:\n{modelDef.printModelDefintions()}")
 
         model = modelDef.buildModel()
         model.compile(optimizer=self.__job__.optimizer, loss=self.__job__.loss, metrics=self.__job__.metrics)

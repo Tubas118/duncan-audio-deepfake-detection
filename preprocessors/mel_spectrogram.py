@@ -11,7 +11,7 @@ class MelSpectrogramPreprocessor(AbstractPreprocessor):
         super().__init__(silent, exec_power_to_db)
 
     # -------------------------------------------------------------------------
-    def __extract_features_singleSource_worker__(self, job, fullDataPath, filename):
+    def __extract_features_singleSource_worker__(self, job, fullDataPath, filename, label):
         audioSourceFilename = job.fullJoinFilePath(fullDataPath, filename + job.dataExtension)
         
         audio, _ = librosa.load(audioSourceFilename, sr = job.sampleRate, duration = job.duration)
@@ -23,4 +23,4 @@ class MelSpectrogramPreprocessor(AbstractPreprocessor):
 
         mel_spectrogram = self.__pad_data__(mel_spectrogram, job)
 
-        return mel_spectrogram
+        return mel_spectrogram, label
