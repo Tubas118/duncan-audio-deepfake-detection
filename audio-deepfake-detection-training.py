@@ -144,7 +144,7 @@ from scikeras.wrappers import KerasClassifier
 kerasModel = KerasClassifier(build_fn=model, batch_size=job.batchSize, epochs=job.numEpochs,
                              optimizer=job.optimizer, loss=job.loss, metrics=job.metrics)
 
-scores = cross_val_score(kerasModel, X_train, y_train, cv=job.cv)
+scores = cross_val_score(model, X_train, y_train, cv=job.cv)
 print(f"cross validation scores: {scores}")
 
 # -
