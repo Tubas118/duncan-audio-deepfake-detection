@@ -53,6 +53,7 @@ class Job:
         self.preprocessor: str = source['preprocessor']
         self.batchSize: str = source['batch-size']
         self.numEpochs: str = source['num-epochs']
+        self.cv: int = source.get('cv', 5)
         self.__determine_persistedModelValue__(source, 'persisted-model')
 
         self.__check_for_output_folder__()
