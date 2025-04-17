@@ -15,8 +15,8 @@
 # +
 from config.configuration import RunDetails
 
-# runDetail = RunDetails('config.yml', 'GitLab-training-data')
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_training-mfcc')
+runDetail = RunDetails('config.yml', 'GitLab-training-data')
+# runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
 # runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_epoch-100')
 
 notebookName = 'audio-deepfake-detection-training'
@@ -30,6 +30,7 @@ import config.configuration as configuration
 import model_definitions.model_cnn_definition as model_cnn_definition
 from postprocessors.plot_confusion_matrix import PlotConfusionMatrix
 from postprocessors.plot_roc_curve import PlotRocCurve
+from preprocessors.abstract_preprocessor import AbstractPreprocessor
 from preprocessors.preprocessor_factory import PreprocessorFactory
 from notebook_utils import notebookToPython
 from processors.basic_model_training_processor import BasicModelTrainingProcessor
@@ -46,12 +47,178 @@ if (job.newModelGenerated == False):
 # -
 
 preproc_factory = PreprocessorFactory()
-preprocessor = preproc_factory.newPreprocessor(job.preprocessor)
+preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor)
 
 X, y_encoded = preprocessor.extract_features_multipleSource(job, job.dataPathSuffix)
 
-trainingProc = BasicModelTrainingProcessor(job, model_cnn_definition.ModelCnnDefinition)
+# +
+import joblib
+import json
+import pytz
+from datetime import datetime
+from sklearn.model_selection import cross_val_score, train_test_split
+from tensorflow.keras.models import Model
+
+from config.configuration import Job
+from model_definitions.model_abstract_definition import ModelAbstractDefinition
+from processors.abstract_model_training_processor import AbstractModelTrainingProcessor
+
+# =============================================================================
+class BasicModelTrainingProcessor2(AbstractModelTrainingProcessor):
+
+    # -------------------------------------------------------------------------
+    def __init__(self, job: Job, modelDefType):
+        super().__init__(job)
+        self.resetStatistics()
+        self.modelDefType = modelDefType
+
+    # -------------------------------------------------------------------------
+    def resetStatistics(self):
+        self.jobStartTime = None
+        self.inputFileBatchCount = 0
+        self.inputFileCount = 0
+
+    # -------------------------------------------------------------------------
+    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None, 
+                        scoring = 'accuracy'):
+        
+        if (self.jobStartTime == None):
+            self.jobStartTime = datetime.now(pytz.utc)
+
+        useTrainingSplitRandomState: int = self.__get_training_split_random_state__(trainingSplitRandomState)
+
+        print(f"Selecting training and test data - traininSplitRandomState: {useTrainingSplitRandomState}")
+        X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=useTrainingSplitRandomState)
+        
+        print(f"Training using {len(X_train)} files.")
+        model = self.__train_model__(X_train, X_test, y_train, y_test, channels, scoring)
+
+        return model, X_train, X_test, y_train, y_test
+    
+    # -------------------------------------------------------------------------
+    def reportSnapshot(self):
+        timestamp_utc = datetime.now(pytz.utc)
+        elapsed_time = timestamp_utc - self.jobStartTime
+        prettyJson = json.dumps(self.__job__.__dict__, indent=4)
+
+        report = f"---- Training (start) ----\n"
+        report = report + f"start time: {self.jobStartTime.isoformat()}\n"
+        report = report + f"end time: {timestamp_utc.isoformat()}\n"
+        report = report + f"elapsed: {elapsed_time}\n\n"
+        report = report + f"model file: {self.__job__.persistedModel}\n"
+        report = report + f"batch count: {self.inputFileBatchCount}\n"
+        report = report + f"file count: {self.inputFileCount}\n"
+        report = report + f"job: {prettyJson}\n\n"
+        report = report + f"---- Training (end) ----\n"
+
+        return report
+
+    # -------------------------------------------------------------------------
+    def __train_model__(self, X_train, X_test, y_train, y_test, channels, scoring) -> Model:
+        
+        modelDef: ModelAbstractDefinition = self.modelDefType(self.__job__, X_train.shape[2], channels)
+
+        model = modelDef.buildModel()
+        model.compile(optimizer=self.__job__.optimizer, loss=self.__job__.loss, metrics=self.__job__.metrics)
+
+        print("Training the Model...")
+        model.fit(X_train, y_train, batch_size=self.__job__.batchSize, epochs=self.__job__.numEpochs, validation_data=(X_test, y_test))
+
+        print(f"Saving model: {self.__job__.persistedModel}")
+        joblib.dump(model, self.__job__.persistedModel)
+
+        # scores = cross_val_score(model, X_train, y_train, cv=self.__job__.cv, scoring=scoring)
+        # print(f"cross validation scores: {scores}")
+
+        return model
+
+
+# -
+
+trainingProc = BasicModelTrainingProcessor2(job, model_cnn_definition.ModelCnnDefinition)
 model, X_train, X_test, y_train, y_test = trainingProc.process(X, y_encoded, 1)
+
+# +
+# from typing import Any, Callable, Dict, List, Type, Union
+# import keras
+# import numpy as np
+# from scikeras.wrappers import KerasClassifier
+
+# class KerasClassifier2(KerasClassifier):
+
+#     def __init__(
+#         self,
+#         model: Union[None, Callable[..., keras.Model], keras.Model] = None,
+#         *,
+#         build_fn: Union[
+#             None, Callable[..., keras.Model], keras.Model
+#         ] = None,  # for backwards compatibility
+#         warm_start: bool = False,
+#         random_state: Union[int, np.random.RandomState, None] = None,
+#         optimizer: Union[
+#             str, keras.optimizers.Optimizer, Type[keras.optimizers.Optimizer]
+#         ] = "rmsprop",
+#         loss: Union[
+#             Union[str, keras.losses.Loss, Type[keras.losses.Loss], Callable], None
+#         ] = None,
+#         metrics: Union[
+#             List[
+#                 Union[
+#                     str,
+#                     keras.metrics.Metric,
+#                     Type[keras.metrics.Metric],
+#                     Callable,
+#                 ]
+#             ],
+#             None,
+#         ] = None,
+#         batch_size: Union[int, None] = None,
+#         validation_batch_size: Union[int, None] = None,
+#         verbose: int = 1,
+#         callbacks: Union[
+#             List[Union[keras.callbacks.Callback, Type[keras.callbacks.Callback]]],
+#             None,
+#         ] = None,
+#         validation_split: float = 0.0,
+#         shuffle: bool = True,
+#         run_eagerly: bool = False,
+#         epochs: int = 1,
+#         class_weight: Union[Dict[Any, float], str, None] = None,
+#         **kwargs,
+#     ):
+#         super().__init__(
+#             model=model,
+#             build_fn=build_fn,
+#             warm_start=warm_start,
+#             random_state=random_state,
+#             optimizer=optimizer,
+#             loss=loss,
+#             metrics=metrics,
+#             batch_size=batch_size,
+#             validation_batch_size=validation_batch_size,
+#             verbose=verbose,
+#             callbacks=callbacks,
+#             validation_split=validation_split,
+#             shuffle=shuffle,
+#             run_eagerly=run_eagerly,
+#             epochs=epochs,
+#             **kwargs,
+#         )
+#         self.class_weight = class_weight
+
+#     def __sklearn_tags__(self):
+#         print(f'called __sklearn_tags__')
+
+# +
+from scikeras.wrappers import KerasClassifier
+
+kerasModel = KerasClassifier(build_fn=model, batch_size=job.batchSize, epochs=job.numEpochs,
+                             optimizer=job.optimizer, loss=job.loss, metrics=job.metrics)
+
+scores = cross_val_score(kerasModel, X_train, y_train, cv=job.cv)
+print(f"cross validation scores: {scores}")
+
+# -
 
 # ### Test Model
 
