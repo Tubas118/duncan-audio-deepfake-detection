@@ -2,13 +2,14 @@ import joblib
 import json
 import pytz
 from datetime import datetime
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import cross_val_score, train_test_split
 from tensorflow.keras.models import Model
 
 from config.configuration import Job
 from model_definitions.model_abstract_definition import ModelAbstractDefinition
 from processors.abstract_model_training_processor import AbstractModelTrainingProcessor
 
+# =============================================================================
 class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
 
     # -------------------------------------------------------------------------
@@ -24,7 +25,9 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
         self.inputFileCount = 0
 
     # -------------------------------------------------------------------------
-    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None):
+    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None, 
+                        scoring = ['test_score', 'fit_time', 'score_time']):
+        
         if (self.jobStartTime == None):
             self.jobStartTime = datetime.now(pytz.utc)
 
@@ -34,7 +37,7 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
         X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=useTrainingSplitRandomState)
         
         print(f"Training using {len(X_train)} files.")
-        model = self.__train_model__(X_train, X_test, y_train, y_test, channels)
+        model = self.__train_model__(X_train, X_test, y_train, y_test, channels, scoring)
 
         return model, X_train, X_test, y_train, y_test
     
@@ -57,7 +60,8 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
         return report
 
     # -------------------------------------------------------------------------
-    def __train_model__(self, X_train, X_test, y_train, y_test, channels) -> Model:
+    def __train_model__(self, X_train, X_test, y_train, y_test, channels, scoring) -> Model:
+        
         modelDef: ModelAbstractDefinition = self.modelDefType(self.__job__, X_train.shape[2], channels)
 
         model = modelDef.buildModel()
@@ -68,5 +72,8 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
 
         print(f"Saving model: {self.__job__.persistedModel}")
         joblib.dump(model, self.__job__.persistedModel)
+
+        scores = cross_val_score(model, X_train, y_train, cv=self.__job__.cv, scoring=scoring)
+        print(f"cross validation scores: {scores}")
 
         return model

@@ -15,6 +15,10 @@ This README file was written based on an environment with the following versions
   ```
   conda env create -f .\environment.yml
   ```
+  If you need to delete the environment first to ensure nothing gets left, you will need to deactivate the environment then run:
+  ```
+  conda env remove -n audio-deepfake-detection
+  ```
 * After the environment has finished loading, run:
   ```
   conda activate audio-deepfake-detection
