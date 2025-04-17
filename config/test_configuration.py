@@ -11,9 +11,11 @@ import config.configuration as configuration
 
 class TestConfiguration(unittest.TestCase):
 
+    # -------------------------------------------------------------------------
     def setUp(self):
         pass
 
+    # -------------------------------------------------------------------------
     def test_checkDataPathRoot(self):
         # given
         config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
@@ -30,7 +32,7 @@ class TestConfiguration(unittest.TestCase):
         self.assertTrue(job.newModelGenerated)
         print(f"kernel size: {job.kernelSize} - type: {type(job.kernelSize)}")
 
-
+    # -------------------------------------------------------------------------
     def test_loadConfig_noPersistedModelProvided(self):
         # given
         config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
@@ -46,6 +48,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertIsInstance(job.kernelSize, Tuple)
         self.assertIsInstance(job.poolSize, Tuple)
 
+        self.assertEqual(job.cv, 5)     # Testing for default value
+
         assert jobId in job.persistedModel
         assert ".libjob" in job.persistedModel
         assert jobId in job.persistedModelResults
@@ -54,6 +58,7 @@ class TestConfiguration(unittest.TestCase):
         assert "2025-03-16T12-41-11.676368" not in job.persistedModel
         assert "2025-03-16T12-41-11.676368" not in job.persistedModelResults
 
+    # -------------------------------------------------------------------------
     def test_loadConfig_persistedModelProvided(self):
         # given
         config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
@@ -65,6 +70,8 @@ class TestConfiguration(unittest.TestCase):
         self.assertIsNotNone(job.persistedModel)
         self.assertIsNotNone(job.persistedModelResults)
         self.assertFalse(job.newModelGenerated)
+        
+        self.assertEqual(job.cv, 11)    # Test for configured value
 
         assert "ASVspoof-2019-1" in job.persistedModel
         assert ".libjob" in job.persistedModel
@@ -74,6 +81,7 @@ class TestConfiguration(unittest.TestCase):
         assert "2025-03-16T12-41-11.676368" in job.persistedModel
         assert "2025-03-16T12-41-11.676368" in job.persistedModelResults
 
+    # -------------------------------------------------------------------------
     @parameterized.expand([
         ("(2, 3)", (2, 3)),
         ("(3,4)", (3, 4)),
@@ -90,6 +98,7 @@ class TestConfiguration(unittest.TestCase):
         # then
         self.assertIsInstance(tuple, Tuple)
         self.assertEqual(expected, tuple)
+
 
 
 if __name__ == '__main__':
