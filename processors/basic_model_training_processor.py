@@ -2,7 +2,8 @@ import joblib
 import json
 import pytz
 from datetime import datetime
-from sklearn.model_selection import cross_val_score, train_test_split
+from scikeras.wrappers import KerasClassifier
+from sklearn.model_selection import cross_validate, train_test_split
 from tensorflow.keras.models import Model
 
 from config.configuration import Job
@@ -25,8 +26,7 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
         self.inputFileCount = 0
 
     # -------------------------------------------------------------------------
-    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None, 
-                        scoring = ['test_score', 'fit_time', 'score_time']):
+    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None, scoring = None):
         
         if (self.jobStartTime == None):
             self.jobStartTime = datetime.now(pytz.utc)
@@ -37,9 +37,15 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
         X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=useTrainingSplitRandomState)
         
         print(f"Training using {len(X_train)} files.")
-        model = self.__train_model__(X_train, X_test, y_train, y_test, channels, scoring)
+        model = self.__train_model__(X_train, X_test, y_train, y_test, channels)
 
-        return model, X_train, X_test, y_train, y_test
+        job = self.__job__
+        kerasModel = KerasClassifier(model=model, batch_size=job.batchSize, epochs=job.numEpochs,
+                                    optimizer=job.optimizer, loss=job.loss, metrics=job.metrics)
+
+        cross_validation_scores = cross_validate(kerasModel, X_train, y_train, cv=job.cv, scoring=scoring, return_train_score=True)
+
+        return model, X_train, X_test, y_train, y_test, cross_validation_scores
     
     # -------------------------------------------------------------------------
     def reportSnapshot(self):
@@ -60,7 +66,7 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
         return report
 
     # -------------------------------------------------------------------------
-    def __train_model__(self, X_train, X_test, y_train, y_test, channels, scoring) -> Model:
+    def __train_model__(self, X_train, X_test, y_train, y_test, channels) -> Model:
         
         modelDef: ModelAbstractDefinition = self.modelDefType(self.__job__, X_train.shape[2], channels)
 
@@ -72,8 +78,5 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
 
         print(f"Saving model: {self.__job__.persistedModel}")
         joblib.dump(model, self.__job__.persistedModel)
-
-        scores = cross_val_score(model, X_train, y_train, cv=self.__job__.cv, scoring=scoring)
-        print(f"cross validation scores: {scores}")
 
         return model

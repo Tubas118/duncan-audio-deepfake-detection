@@ -1,6 +1,8 @@
+import copy
 import numpy as np
 import pytz
 from datetime import datetime
+import pprint
 from prettytable import PrettyTable
 
 __nextModelEvaluationResultIndex__ = 0
@@ -20,12 +22,14 @@ def resetNextModelEvaluationResultIndex():
 class ModelEvaluationResult:
 
     # -------------------------------------------------------------------------
-    def __init__(self, testAry: np.array, predAry: np.array):
+    def __init__(self, testAry: np.array, predAry: np.array, cross_validation_scores = None):
         if (len(testAry) != len(predAry)):
             raise ValueError("Arrays must be same length")
         
         self.batchId = nextModelEvaluationResultIndex()
         self.timestamp_utc = datetime.now(pytz.utc)
+
+        self.cross_validation_scores = cross_validation_scores
 
         self.batchSize = len(testAry)
         self.testAry: np.array = testAry
@@ -54,16 +58,21 @@ class ModelEvaluationResult:
         indent = "  "
         IGNORE_KEYS = ["testAry", "predAry"]
 
+
         t = PrettyTable(['Key', 'Value'])
         t.align = 'l'
 
         report = f"{indent}--- Results (start) ---\n"
+        values: dict[str, any] = copy.deepcopy(self.__dict__)
+        for ignoreKey in IGNORE_KEYS:
+            del values[ignoreKey]
 
-        for key in self.__dict__:
-            if key not in IGNORE_KEYS:
-                value = self.__dict__.get(key)
-                value = self.__check_formatting__(key, value)
-                t.add_row([key, value])
+        for key in values:
+            value = values.get(key)
+            # if self.__report_raw_value__(value) == False:
+            #     value = pprint.pformat(value, indent=2)
+            value = self.__check_value_formatting__(key, value)
+            t.add_row([key, value])
 
         report = report + f"{t}\n"
 
@@ -73,10 +82,16 @@ class ModelEvaluationResult:
 
 
     # -------------------------------------------------------------------------
-    def __check_formatting__(self, key, value):
+    def __check_value_formatting__(self, key, value):
         workingValue = value
 
-        if (key == 'precision_recall_curve'):
-            workingValue = str(workingValue).replace("),", "),\n")
+        match key:
+            case 'precision_recall_curve':
+                workingValue = str(workingValue).replace("),", "),\n")
+            case 'cross_validation_scores':
+                workingValue = pprint.pformat(workingValue, indent=2)
+            case _:
+                # no action by design
+                ignore = workingValue
 
         return workingValue

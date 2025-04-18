@@ -21,8 +21,9 @@ class PlotPrecisionRecallCurve:
 
     # -------------------------------------------------------------------------
     def plot(self, precision: np.ndarray, recall: np.ndarray, title = DEFAULT_TITLE):
-        plt.fill_between(recall, precision)
+        plt.plot(recall, precision, color='darkorange', lw=2, label='Avg. Precision = %0.2f' % precision[1])
         plt.ylabel("Precision")
         plt.xlabel("Recall")
         plt.title(title)
+        plt.legend(loc="lower left")
         plt.show

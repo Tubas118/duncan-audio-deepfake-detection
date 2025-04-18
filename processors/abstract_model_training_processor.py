@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from config.configuration import Job
 from processors.abstract_model_processor import AbstractModelProcessor
@@ -13,7 +13,7 @@ class AbstractModelTrainingProcessor(AbstractModelProcessor):
         
     # -------------------------------------------------------------------------
     @abstractmethod
-    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None):
+    def process(self, X, y_encoded, channels, test_size = 0.2, trainingSplitRandomState: int = None, scoring = None):
         pass
 
     # -------------------------------------------------------------------------
