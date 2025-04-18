@@ -1,17 +1,18 @@
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.models import Model
-from tensorflow.keras.utils import to_categorical
 
 from config.configuration import Job
 from model_definitions.model_abstract_definition import ModelAbstractDefinition
 
 class ModelCnnDefinition(ModelAbstractDefinition):
 
+    # -------------------------------------------------------------------------
     def __init__(self, job: Job, width, channels):
         super().__init__(job)
         self.width = width
         self.channels = channels
 
+    # -------------------------------------------------------------------------
     def buildModel(self) -> Model:
         print(f"__job__: {self.__job__}")
         input_shape = (self.__job__.numMels, self.width, self.channels)
@@ -33,4 +34,5 @@ class ModelCnnDefinition(ModelAbstractDefinition):
 
         model_output = Dense(self.__job__.numClasses, activation='softmax')(x)
 
-        return Model(inputs=model_input, outputs=model_output)
+        self.lastModel = Model(inputs=model_input, outputs=model_output)
+        return self.lastModel

@@ -13,14 +13,31 @@
 # ---
 
 # +
-from config.configuration import RunDetails
+from config.configuration import BulkRunDetails
 
-# runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
-runDetail = RunDetails('config-mfcc.yml', 'ASVspoof-2019_training_mfcc')
+runDetail = BulkRunDetails('config.yml', 'ASVspoof-2019_training')
 
 notebookName = 'audio-deepfake-detection-bulk-training'
-random_state_lowValue = 1
-random_state_highValue = 200
+
+# +
+# --------------------------------------------------------------
+large_runDetail = BulkRunDetails.DERIVE_BULK_RUN(runDetail,
+                                                 'mel_spectrogram',
+                                                 range(1, 200))
+
+mel_spec_runDetail = BulkRunDetails.DERIVE_BULK_RUN(runDetail,
+                                                    'mel_spectrogram',
+                                                    [186, 133, 147, 69, 105])
+
+mfcc_runDetail = BulkRunDetails.DERIVE_BULK_RUN(runDetail,
+                                                'mfcc',
+                                                mel_spec_runDetail.random_state_array)
+# --------------------------------------------------------------
+
+
+# runDetail = large_runDetail
+runDetail = mel_spec_runDetail
+# runDetail = mfcc_runDetail
 # -
 
 configFilename = runDetail.configFilename
@@ -28,6 +45,7 @@ runJobId = runDetail.jobId
 
 import config.configuration as configuration
 import model_definitions.model_cnn_definition as model_cnn_definition
+from preprocessors.abstract_preprocessor import AbstractPreprocessor
 from preprocessors.preprocessor_factory import PreprocessorFactory
 from notebook_utils import notebookToPython
 from processors.basic_model_training_processor import BasicModelTrainingProcessor
@@ -40,12 +58,17 @@ config = configuration.ConfigLoader(configFilename)
 notebookToPython(notebookName)
 job = config.getJobConfig(runJobId)
 
+if (runDetail.preprocessor != None):
+    job.preprocessor = runDetail.preprocessor
+
+print(f'job.preprocessor={job.preprocessor}')
+
 if (job.newModelGenerated == False):
     raise ValueError("This notebook is meant for training. Select a job without a value for 'persisted-model' set.")
 # -
 
 preproc_factory = PreprocessorFactory()
-preprocessor = preproc_factory.newPreprocessor(job.preprocessor)
+preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor)
 
 X, y_encoded = preprocessor.extract_features_multipleSource(job, job.dataPathSuffix)
 
@@ -55,4 +78,4 @@ bulkTrainingProc = BulkModelTrainingProcessor(job,
                                               BasicModelTrainingProcessor,
                                               BasicModelEvaluationProcessor)
 
-bulkTrainingProc.process(random_state_lowValue, random_state_highValue, X, y_encoded, 1)
+bulkTrainingProc.processAsArray(runDetail.random_state_array, X, y_encoded, 1)

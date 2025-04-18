@@ -22,10 +22,14 @@ class BulkModelTrainingProcessor(AbstractModelProcessor):
         self.reportSnapshotList = []
 
     # -------------------------------------------------------------------------
-    def process(self, random_state_lowValue: int, random_state_highValue: int, X, y_encoded, channels, test_size = 0.2):
+    def processAsRange(self, random_state_lowValue: int, random_state_highValue: int, X, y_encoded, channels, test_size = 0.2):
         if (random_state_highValue < random_state_lowValue):
             raise ValueError(f"random_state_lowValue: {random_state_lowValue}, random_state_highValue: {random_state_highValue} - high value below low value")
         
+        self.process(range(random_state_lowValue, random_state_highValue + 1), X, y_encoded, channels, test_size)
+
+    # -------------------------------------------------------------------------
+    def processAsArray(self, random_state_array, X, y_encoded, channels, test_size = 0.2):
         if (self.jobStartTime == None):
             self.jobStartTime = datetime.now(pytz.utc)
 
@@ -33,8 +37,8 @@ class BulkModelTrainingProcessor(AbstractModelProcessor):
         persistedModelRoot = origPersistedModel.removesuffix(JOB_EXT)
 
         try:
-            for idx in range(random_state_lowValue, random_state_highValue + 1):
-                self.__process_single__(persistedModelRoot, idx, X, y_encoded, channels, test_size)
+            for random_state in random_state_array:
+                self.__process_single__(persistedModelRoot, random_state, X, y_encoded, channels, test_size)
         finally:
             self.__job__.persistedModel = origPersistedModel
 

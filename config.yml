@@ -9,7 +9,9 @@ job-defaults:
   # Assign 'None' to training-split-random-state to get random split. Pass same int for reproducible split.
   training-split-random-state: 3
   labels-execute-to-categorical: true
-  num-classes: 2        # Number of classes (bonafide and spoof)
+  classes:
+    - spoof
+    - bonafide
   sample-rate: 16000
   duration: 5
   num-mels: 128
@@ -29,64 +31,62 @@ jobs:
   ASVspoof-2019_training:
     data-path-suffix: LA/ASVspoof2019_LA_train/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    training-split-random-state: 186
+  ASVspoof-2019_training_epoch-100:
+    data-path-suffix: LA/ASVspoof2019_LA_train/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    training-split-random-state: 186
+    num-epochs: 100
+  ASVspoof-2019_training-mfcc:
+    data-path-suffix: LA/ASVspoof2019_LA_train/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    training-split-random-state: 186
+    preprocessor: mfcc
+  GitLab-training-data:
+    data-path-root: .
+    data-path-suffix: testaudio-sksmta
+    label-filename: testvalues/sksmta.train.trn.txt
   # Validation
-  ASVspoof-2019_random-186_validation:
+  ASVspoof-2019_testing:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-27T20-07-45.848482_original/ASVspoof-2019_training_2025-03-27T20-07-45.848482.libjob
-    input-file-batch-size: 71237
-  # Model #1
-  ASVspoof-2019_2025-03-24-1_large-batch:
+    persisted-model: results/final_epoch__10/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob
+  ASVspoof-2019_testing-1:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
-    input-file-batch-size: 4000
-  ASVspoof-2019_2025-03-24-1_huge-batch:
+    persisted-model: results/2025-04-18T10-25-30.270494_epoch_10/ASVspoof-2019_training_2025-04-18T10-25-30.270494.libjob
+  ASVspoof-2019_testing_epoch-100:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
-    input-file-batch-size: 71237
-  # Model #2
-  ASVspoof-2019_2025-03-24-2_large-batch:
+    persisted-model: results/final_epoch_100/ASVspoof-2019_training_epoch-100_2025-04-13T18-36-22.832711.libjob
+  ASVspoof-2019_testing-mfcc:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/02_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000133.libjob
-    input-file-batch-size: 4000
-  ASVspoof-2019_2025-03-24-2_huge-batch:
+    persisted-model: results/final_epoch__10_mfcc/ASVspoof-2019_training-mfcc_2025-04-13T20-58-59.037165.libjob
+    preprocessor: mfcc
+  GitLab-eval-data:
+    data-path-root: .
+    data-path-suffix: testaudio
+    label-filename: testvalues/LA.cm.train.trn.txt
+    persisted-model: results/2025-04-12T22-43-08.984941_0.0.3_gitlab/GitLab-training-data_2025-04-12T22-43-08.984941.libjob-for-test
+  # Validation (bulk)
+  ASVspoof-2019_training_split133_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/02_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000133.libjob
-    input-file-batch-size: 71237
-  # Model #3
-  ASVspoof-2019_2025-03-24-3_large-batch:
+    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/01_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000133.libjob
+  ASVspoof-2019_training_split105_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/03_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000147.libjob
-    input-file-batch-size: 4000
-  ASVspoof-2019_2025-03-24-3_huge-batch:
+    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/02_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000105.libjob
+  ASVspoof-2019_training_split147_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/03_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000147.libjob
-    input-file-batch-size: 71237
-  # Model #4
-  ASVspoof-2019_2025-03-24-4_large-batch:
+    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/03_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000147.libjob
+  ASVspoof-2019_training_split069_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/04_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000069.libjob
-    input-file-batch-size: 4000
-  ASVspoof-2019_2025-03-24-4_huge-batch:
+    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/04_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000069.libjob
+  ASVspoof-2019_training_split186_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/04_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000069.libjob
-    input-file-batch-size: 71237
-  # Model #5
-  ASVspoof-2019_2025-03-24-5_large-batch:
-    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
-    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/05_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000105.libjob
-    input-file-batch-size: 4000
-  ASVspoof-2019_2025-03-24-5_huge-batch:
-    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
-    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-03-24T22-21-36.689419/05_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000105.libjob
-    input-file-batch-size: 71237
+    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/05_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000186.libjob

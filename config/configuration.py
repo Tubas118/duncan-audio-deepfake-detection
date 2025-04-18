@@ -29,7 +29,8 @@ class Job:
 
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
-        self.inputFileBatchSize: str = source['input-file-batch-size']
+        # IGNORED: self.inputFileBatchSize: str = source['input-file-batch-size']
+        self.inputFileBatchSize = None  # Will add back in later
         self.outputFolder: str = source['output-folder']
         self.dataPathRootRaw: str = source['data-path-root']
         self.dataPathRoot: str = self.fullFilePath(self.dataPathRootRaw)
@@ -38,7 +39,8 @@ class Job:
         self.trainingSplitRandomState: int = source['training-split-random-state']
         self.labelFilename: str = source['label-filename']
         self.executeToCategoricalForLabels = source.get('labels-execute-to-categorical', True)
-        self.numClasses: int = source['num-classes']
+        self.classes = source.get('classes')
+        self.numClasses: int = len(self.classes)
         self.sampleRate: int = source['sample-rate']
         self.duration: int = source['duration']
         self.numMels: int = source['num-mels']
@@ -51,6 +53,7 @@ class Job:
         self.preprocessor: str = source['preprocessor']
         self.batchSize: str = source['batch-size']
         self.numEpochs: str = source['num-epochs']
+        self.cv: int = source.get('cv', 5)
         self.__determine_persistedModelValue__(source, 'persisted-model')
 
         self.__check_for_output_folder__()
@@ -128,3 +131,18 @@ class RunDetails:
     def __init__(self, configFilename: str, jobId: str):
         self.configFilename = configFilename
         self.jobId = jobId
+
+# ======================================================================
+class BulkRunDetails(RunDetails):
+
+    @staticmethod
+    def DERIVE_BULK_RUN(sourceDetails: RunDetails, preprocessor: str = None, random_state_array = None):
+        return BulkRunDetails(sourceDetails.configFilename,
+                              sourceDetails.jobId,
+                              preprocessor,
+                              random_state_array)
+
+    def __init__(self, configFilename: str, jobId: str, preprocessor: str = None, random_state_array = None):
+        super().__init__(configFilename, jobId)
+        self.preprocessor = preprocessor
+        self.random_state_array = random_state_array

@@ -7,7 +7,11 @@ from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Model
 
 from config.configuration import Job
+from model_definitions.model_abstract_definition import ModelAbstractDefinition
+from postprocessors.metrics import Metrics
 from processors.abstract_model_processor import AbstractModelProcessor
+from processors.model_evaluation_result import ModelEvaluationResult
+from utils.safe_len import safe_len
 
 class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
@@ -25,10 +29,11 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         self.jobStartTime = None
         self.inputFileBatchCount = 0
         self.inputFileCount = 0
-        self.score = 0
+        # self.score = 0
+        self.batchResults: list[ModelEvaluationResult] = []
 
     # -------------------------------------------------------------------------
-    def process(self, X_test, y_test):
+    def process(self, X_test, y_test, cross_validation_scores: None) -> ModelEvaluationResult:
         if (self.jobStartTime == None):
             self.jobStartTime = datetime.now(pytz.utc)
 
@@ -36,12 +41,20 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         y_pred_work = np.argmax(y_pred, axis=1)
         y_test_work = np.argmax(y_test, axis=1)
 
-        score = accuracy_score(y_test_work, y_pred_work)
-        self.score = self.score + score
+        results = ModelEvaluationResult(testAry=y_test_work, predAry=y_pred_work, cross_validation_scores=cross_validation_scores)
 
-        self.inputFileBatchCount = self.inputFileBatchCount + 1
-        self.inputFileCount = self.inputFileCount + len(X_test)
-        print(f"  Batches: {self.inputFileBatchCount} - Files: {self.inputFileCount} - Score: {score} - Elements: {len(X_test)}")
+        metrics = Metrics()
+        metrics.evaluateResults(results)
+
+        self.inputFileBatchCount = self.inputFileBatchCount + results.batchSize
+        self.inputFileCount = self.inputFileCount + safe_len(X_test)
+
+
+        print(f"  Batches: {self.inputFileBatchCount} - Files: {self.inputFileCount} - Accuracy Score: {results.accuracy_score} - Elements: {len(X_test)}")
+        self.lastResults = results
+        self.batchResults.append(results)
+
+        return results
 
     # -------------------------------------------------------------------------
     def reportSnapshot(self, initialProcessor: AbstractModelProcessor = None):
@@ -53,7 +66,6 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
 
         timestamp_utc = datetime.now(pytz.utc)
         elapsed_time = timestamp_utc - self.jobStartTime
-        prettyJson = json.dumps(self.__job__.__dict__, indent=4)
 
         report = report + f"---- Testing (start) ----\n"
         report = report + f"start time: {self.jobStartTime.isoformat()}\n"
@@ -62,8 +74,19 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         report = report + f"model file: {self.__job__.persistedModel}\n"
         report = report + f"batch count: {self.inputFileBatchCount}\n"
         report = report + f"file count: {self.inputFileCount}\n"
-        report = report + f"accuracy_score: {(float) (self.score) / self.inputFileBatchCount}\n\n"
-        report = report + f"job: {prettyJson}\n\n"
+
+        if (len(self.batchResults) > 0):
+            report = report + "\n"
+            for batchResult in self.batchResults:
+                report = report + f"{batchResult.reportSnaphot()}\n"
+
+        report = report + "\n"
+        report = report + ModelAbstractDefinition.MODEL_SUMMARY(self.model) + "\n"
+
+        if ("job: {" not in report):
+            prettyJson = json.dumps(self.__job__.__dict__, indent=4)
+            report = report + f"job: {prettyJson}\n\n"
+
         report = report + f"---- Testing (end) ----\n"
 
         return report

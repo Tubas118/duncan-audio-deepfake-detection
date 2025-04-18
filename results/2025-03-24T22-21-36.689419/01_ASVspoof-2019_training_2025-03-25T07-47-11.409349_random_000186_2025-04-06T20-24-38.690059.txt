@@ -1,0 +1,52 @@
+---- Testing (start) ----
+start time: 2025-04-07T01:24:41.069719+00:00
+end time: 2025-04-07T01:24:41.442757+00:00
+elapsed: 0:00:00.373038
+
+model file: results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob
+batch count: 1
+file count: 10
+accuracy_score: 0.8
+
+job: {
+    "jobId": "Compare-Sksmta-eval",
+    "inputFileBatchSize": 1,
+    "outputFolder": "output",
+    "dataPathRootRaw": "./",
+    "dataPathRoot": "./",
+    "dataPathSuffix": "testaudio-sksmta",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 3,
+    "labelFilename": "testvalues/sksmta.train.trn.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "newModelGenerated": false,
+    "persistedModel": "results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186.libjob",
+    "persistedModelResults": "results/2025-03-24T22-21-36.689419/01_ASVspoof-2019_training_2025-03-25T07-47-11.409349_random_000186_2025-04-06T20-24-38.690059.txt"
+}
+
+---- Testing (end) ----
