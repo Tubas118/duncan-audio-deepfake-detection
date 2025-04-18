@@ -33,7 +33,7 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         self.batchResults: list[ModelEvaluationResult] = []
 
     # -------------------------------------------------------------------------
-    def process(self, X_test, y_test) -> ModelEvaluationResult:
+    def process(self, X_test, y_test, cross_validation_scores: None) -> ModelEvaluationResult:
         if (self.jobStartTime == None):
             self.jobStartTime = datetime.now(pytz.utc)
 
@@ -41,7 +41,7 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         y_pred_work = np.argmax(y_pred, axis=1)
         y_test_work = np.argmax(y_test, axis=1)
 
-        results = ModelEvaluationResult(testAry=y_test_work, predAry=y_pred_work)
+        results = ModelEvaluationResult(testAry=y_test_work, predAry=y_pred_work, cross_validation_scores=cross_validation_scores)
 
         metrics = Metrics()
         metrics.evaluateResults(results)
