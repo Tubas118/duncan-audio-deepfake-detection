@@ -1,5 +1,6 @@
-from matplotlib import pyplot as plt
 import numpy as np
+from matplotlib import pyplot as plt
+from sklearn.metrics import RocCurveDisplay
 
 from processors.model_evaluation_result import ModelEvaluationResult
 
@@ -12,8 +13,8 @@ class PlotRocCurve:
     DEFAULT_TITLE = 'Receiver Operating Characteristic'
 
     # -------------------------------------------------------------------------
-    def __init__(self):
-        pass
+    def __init__(self, version = None):
+        self.version = version
 
 
     # -------------------------------------------------------------------------
@@ -23,9 +24,30 @@ class PlotRocCurve:
 
     # -------------------------------------------------------------------------
     def plot(self, fpr: np.array, tpr: np.array, roc_auc: float, title = DEFAULT_TITLE):
+        match self.version:
+            case 1:
+                self.__plot_v1__(fpr, tpr, roc_auc, title)
+            case _:
+                self.__plot__(fpr, tpr, roc_auc, title)
+
+
+    # -------------------------------------------------------------------------
+    def __plot__(self, fpr: np.array, tpr: np.array, roc_auc: float, title = DEFAULT_TITLE):
+        # Plot ROC curve
+        label = f'ROC curve'    # (area = {roc_auc:,.2f})'
+        disp = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc, estimator_name=label)
+        disp.plot(color='darkorange')
+        plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+        plt.xlim([0.0, 1.0])
+        plt.ylim([0.0, 1.05])
+        plt.title(title)
+        plt.show(block=False)
+
+    # -------------------------------------------------------------------------
+    def __plot_v1__(self, fpr: np.array, tpr: np.array, roc_auc: float, title = DEFAULT_TITLE):
         # Plot ROC curve
         plt.figure()
-        plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve (area = %0.2f)' % roc_auc)
+        plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc:,.2f})')
         plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
         plt.xlim([0.0, 1.0])
         plt.ylim([0.0, 1.05])
@@ -33,4 +55,4 @@ class PlotRocCurve:
         plt.ylabel('True Positive Rate')
         plt.title(title)
         plt.legend(loc="lower right")
-        plt.show()
+        plt.show(block=False)
