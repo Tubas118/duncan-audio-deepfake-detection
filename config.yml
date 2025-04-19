@@ -70,23 +70,23 @@ jobs:
     label-filename: testvalues/LA.cm.train.trn.txt
     persisted-model: results/2025-04-12T22-43-08.984941_0.0.3_gitlab/GitLab-training-data_2025-04-12T22-43-08.984941.libjob-for-test
   # Validation (bulk)
-  ASVspoof-2019_training_split133_epoch10:
-    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
-    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/01_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000133.libjob
-  ASVspoof-2019_training_split105_epoch10:
-    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
-    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/02_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000105.libjob
-  ASVspoof-2019_training_split147_epoch10:
-    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
-    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/03_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000147.libjob
   ASVspoof-2019_training_split069_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/04_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000069.libjob
+    persisted-model: results/Tag-0.0.6/2025-04-18T14-23-21.325235_epoch_10_random/01_ASVspoof-2019_training_2025-04-18T14-23-21.325235_random_000069.libjob
+  ASVspoof-2019_training_split147_epoch10:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.6/2025-04-18T14-23-21.325235_epoch_10_random/02_ASVspoof-2019_training_2025-04-18T14-23-21.325235_random_000147.libjob
+  ASVspoof-2019_training_split133_epoch10:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.6/2025-04-18T14-23-21.325235_epoch_10_random/02_ASVspoof-2019_training_2025-04-18T14-23-21.325235_random_000133.libjob
+  ASVspoof-2019_training_split105_epoch10:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.6/2025-04-18T14-23-21.325235_epoch_10_random/02_ASVspoof-2019_training_2025-04-18T14-23-21.325235_random_000105.libjob
   ASVspoof-2019_training_split186_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
-    persisted-model: results/2025-04-14T18-30-23.277027_bulk_epoch__10/05_ASVspoof-2019_training_2025-04-14T18-30-23.277027_random_000186.libjob
+    persisted-model: results/Tag-0.0.6/2025-04-18T14-23-21.325235_epoch_10_random/02_ASVspoof-2019_training_2025-04-18T14-23-21.325235_random_000186.libjob
