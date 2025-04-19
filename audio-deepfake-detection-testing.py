@@ -18,7 +18,7 @@
 from config.configuration import RunDetails
 
 # runDetail = RunDetails('config.yml', 'GitLab-eval-data')
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing-1')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_split069_epoch10')
 
 notebookName = 'audio-deepfake-detection-testing'
 plot_title_suffix = "(Testing)"
@@ -72,7 +72,7 @@ labels = readTrainingLabelsWithJob(job)
 def processArrays(X, y):
     _X = np.array(X)
     _y = np.array(y)
-    evaluationProc.process(_X, _y)
+    evaluationProc.process(_X, _y, None)
 
 
 
@@ -81,6 +81,7 @@ preprocessed_X_test = []
 preprocessed_filenames = []
 preprocessed_labels = []
 MAX_INDEX_PREPROCESS_X_TEST = 5
+TICK_MARK = 10000
 
 X = []
 y = []
@@ -100,9 +101,14 @@ for filename, label in labels.items():
         X = []
         y = []
 
+    if (len(X) % TICK_MARK == 0):
+        print(f"processing... {len(X)} - {filename}")
+
+
+# -
+
 if (len(X) > 0):
     processArrays(X, y)
-# -
 
 # ### Feature extract spectrogram samples
 
