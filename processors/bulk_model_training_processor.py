@@ -48,10 +48,10 @@ class BulkModelTrainingProcessor(AbstractModelProcessor):
         self.__job__.persistedModelResults = self.__job__.newPersistedModelResultsName()
 
         singleTrainingProc: AbstractModelTrainingProcessor = self.trainingProcType(self.__job__, self.modelDefType)
-        model, X_train, X_test, y_train, y_test = singleTrainingProc.process(X, y_encoded, channels, test_size, random_state)
+        model, X_train, X_test, y_train, y_test, cross_validation_scores = singleTrainingProc.process(X, y_encoded, channels, test_size, random_state)
 
         singleEvalProc: BasicModelEvaluationProcessor = self.evalProcType(self.__job__, model)
-        singleEvalProc.process(X_test, y_test)
+        singleEvalProc.process(X_test, y_test, cross_validation_scores)
 
         run_report = singleEvalProc.reportSnapshot(singleTrainingProc)
         self.reportSnapshotList.append(run_report)
