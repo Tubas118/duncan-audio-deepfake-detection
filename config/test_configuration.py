@@ -49,6 +49,7 @@ class TestConfiguration(unittest.TestCase):
         self.assertIsInstance(job.poolSize, Tuple)
 
         self.assertEqual(job.cv, 5)     # Testing for default value
+        self.assertEqual(job.positive_class_index, 0)
 
         assert jobId in job.persistedModel
         assert ".libjob" in job.persistedModel
@@ -72,6 +73,7 @@ class TestConfiguration(unittest.TestCase):
         self.assertFalse(job.newModelGenerated)
         
         self.assertEqual(job.cv, 11)    # Test for configured value
+        self.assertEqual(job.positive_class_index, 1)
 
         assert "ASVspoof-2019-1" in job.persistedModel
         assert ".libjob" in job.persistedModel

@@ -1,11 +1,13 @@
 import os
 from config.configuration import Job
 
+# TODO - Update to pass "job.classes" as a parameter to label reader
 def readTrainingLabelsWithJob(job: Job):
     labelFileName = job.fullJoinFilePath(job.dataPathRoot, job.labelFilename)
     return readLabelsWithJob(labelFileName)
 
 
+# TODO - Update to receive class/label array
 def readLabelsWithJob(labelFileName: str) -> list[str]:
     print(f'Loading {labelFileName}...')
     labels = {}

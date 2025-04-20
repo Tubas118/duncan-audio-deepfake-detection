@@ -3,6 +3,8 @@ import os
 import re
 import yaml
 
+from utils.safe_len import safe_len
+
 JOB_EXT: str = ".libjob"
 RESULTS_EXT: str = ".txt"
 
@@ -41,6 +43,7 @@ class Job:
         self.executeToCategoricalForLabels = source.get('labels-execute-to-categorical', True)
         self.classes = source.get('classes')
         self.numClasses: int = len(self.classes)
+        self.positive_class: str = source.get('positive-class', None)
         self.sampleRate: int = source['sample-rate']
         self.duration: int = source['duration']
         self.numMels: int = source['num-mels']
@@ -57,6 +60,11 @@ class Job:
         self.__determine_persistedModelValue__(source, 'persisted-model')
 
         self.__check_for_output_folder__()
+
+        if (safe_len(self.positive_class) > 0 and safe_len(self.classes) > 0):
+            self.positive_class_index = self.classes.index(self.positive_class)
+        else:
+            self.positive_class_index = None
 
     def fullJoinFilePath(self, path, filename):
         return self.fullFilePath(os.path.join(path, filename))

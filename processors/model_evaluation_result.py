@@ -51,6 +51,8 @@ class ModelEvaluationResult:
         self.roc_auc = None
 
         self.precision_recall_curve = None
+        self.precision_score = None
+        self.recall_score = None
 
 
     # -------------------------------------------------------------------------

@@ -12,6 +12,7 @@ job-defaults:
   classes:
     - spoof
     - bonafide
+  positive-class: spoof
   sample-rate: 16000
   duration: 5
   num-mels: 128
