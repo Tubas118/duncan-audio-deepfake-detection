@@ -96,7 +96,7 @@ jobs:
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
     persisted-model: results/Tag-0.0.6/2025-04-19T15-18-01.836640_epoch_10_random_mfcc/01_ASVspoof-2019_training_2025-04-19T15-18-01.836640_random_000069.libjob
     preprocessor: mfcc
-  ASVspoof-2019_training_mfcc_split86_epoch10:
+  ASVspoof-2019_training_mfcc_split186_epoch10:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
     persisted-model: results/Tag-0.0.6/2025-04-19T15-18-01.836640_epoch_10_random_mfcc/02_ASVspoof-2019_training_2025-04-19T15-18-01.836640_random_000186.libjob
