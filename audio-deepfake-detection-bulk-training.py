@@ -36,8 +36,8 @@ mfcc_runDetail = BulkRunDetails.DERIVE_BULK_RUN(runDetail,
 
 
 # runDetail = large_runDetail
-runDetail = mel_spec_runDetail
-# runDetail = mfcc_runDetail
+# runDetail = mel_spec_runDetail
+runDetail = mfcc_runDetail
 # -
 
 configFilename = runDetail.configFilename
@@ -79,3 +79,6 @@ bulkTrainingProc = BulkModelTrainingProcessor(job,
                                               BasicModelEvaluationProcessor)
 
 bulkTrainingProc.processAsArray(runDetail.random_state_array, X, y_encoded, 1)
+# -
+
+#
