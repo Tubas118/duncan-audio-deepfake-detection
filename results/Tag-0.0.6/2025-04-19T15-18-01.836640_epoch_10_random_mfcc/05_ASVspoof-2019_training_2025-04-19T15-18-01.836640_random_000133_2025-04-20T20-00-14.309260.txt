@@ -1,0 +1,102 @@
+---- Testing (start) ----
+start time: 2025-04-21T02:38:50.197011+00:00
+end time: 2025-04-21T02:43:12.624363+00:00
+elapsed: 0:04:22.427352
+
+model file: results/Tag-0.0.6/2025-04-19T15-18-01.836640_epoch_10_random_mfcc/05_ASVspoof-2019_training_2025-04-19T15-18-01.836640_random_000133.libjob
+batch count: 71237
+file count: 71237
+
+  --- Results (start) ---
++-------------------------+-----------------------------------------------+
+| Key                     | Value                                         |
++-------------------------+-----------------------------------------------+
+| batchId                 | 1                                             |
+| timestamp_utc           | 2025-04-21 02:43:03.878116+00:00              |
+| cross_validation_scores | None                                          |
+| batchSize               | 71237                                         |
+| accuracy_score          | 0.8705307635077277                            |
+| confusion_matrix        | [[56411  7471]                                |
+|                         |  [ 1752  5603]]                               |
+| f1_score                | 0.5485339468402761                            |
+| root_mean_squared_error | 0.35981833818230036                           |
+| roc_fpr                 | [0.      0.11695 1.     ]                     |
+| roc_tpr                 | [0.        0.7617947 1.       ]               |
+| roc_auc                 | 0.8224223479596591                            |
+| precision_recall_curve  | (array([0.10324691, 0.4285605 , 1.        ]), |
+|                         |  array([1.       , 0.7617947, 0.       ]),    |
+|                         |  array([0, 1]))                               |
++-------------------------+-----------------------------------------------+
+  --- Results (end) ---
+
+Model: "functional_1"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ input_layer_1 (InputLayer)      │ (None, 128, 109, 1)    │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_2 (Conv2D)               │ (None, 127, 108, 32)   │           160 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_2 (MaxPooling2D)  │ (None, 63, 54, 32)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_3 (Conv2D)               │ (None, 62, 53, 64)     │         8,256 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_3 (MaxPooling2D)  │ (None, 31, 26, 64)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ flatten_1 (Flatten)             │ (None, 51584)          │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_2 (Dense)                 │ (None, 128)            │     6,602,880 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_1 (Dropout)             │ (None, 128)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_3 (Dense)                 │ (None, 2)              │           258 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 19,834,664 (75.66 MB)
+ Trainable params: 6,611,554 (25.22 MB)
+ Non-trainable params: 0 (0.00 B)
+ Optimizer params: 13,223,110 (50.44 MB)
+
+
+job: {
+    "jobId": "ASVspoof-2019_training_mfcc_split133_epoch10",
+    "inputFileBatchSize": null,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_eval/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 3,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt",
+    "executeToCategoricalForLabels": true,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mfcc",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "cv": 5,
+    "newModelGenerated": false,
+    "persistedModel": "results/Tag-0.0.6/2025-04-19T15-18-01.836640_epoch_10_random_mfcc/05_ASVspoof-2019_training_2025-04-19T15-18-01.836640_random_000133.libjob",
+    "persistedModelResults": "results/Tag-0.0.6/2025-04-19T15-18-01.836640_epoch_10_random_mfcc/05_ASVspoof-2019_training_2025-04-19T15-18-01.836640_random_000133_2025-04-20T20-00-14.309260.txt"
+}
+
+---- Testing (end) ----
