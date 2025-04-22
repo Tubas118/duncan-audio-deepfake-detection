@@ -37,6 +37,45 @@ jobs:
     persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
     cv: 11
     positive-class: bonafide
+  ASVspoof-2019-3_positive-class-none-1:
+    data-path-suffix: testaudio
+    label-filename: testvalues/sksmta.train.trn.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+    positive-class: None
+  ASVspoof-2019-3_positive-class-spoof-1:
+    data-path-suffix: testaudio
+    label-filename: testvalues/sksmta.train.trn.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+    positive-class: spoof
+  ASVspoof-2019-3_positive-class-bonafide-1:
+    data-path-suffix: testaudio
+    label-filename: testvalues/sksmta.train.trn.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+    positive-class: bonafide
+  ASVspoof-2019-3_positive-class-none-2:
+    data-path-suffix: testaudio
+    label-filename: testvalues/sksmta.train.trn.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+    positive-class: None
+    classes:
+      - bonafide
+      - spoof
+  ASVspoof-2019-3_positive-class-spoof-2:
+    data-path-suffix: testaudio
+    label-filename: testvalues/sksmta.train.trn.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+    positive-class: spoof
+    classes:
+      - bonafide
+      - spoof
+  ASVspoof-2019-3_positive-class-bonafide-2:
+    data-path-suffix: testaudio
+    label-filename: testvalues/sksmta.train.trn.txt
+    persisted-model: ASVspoof-2019-1_2025-03-16T12-41-11.676368.libjob
+    positive-class: bonafide
+    classes:
+      - bonafide
+      - spoof
   Check-data-path-root:
     data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
     data-path-suffix: testaudio

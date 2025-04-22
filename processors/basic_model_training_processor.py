@@ -33,7 +33,7 @@ class BasicModelTrainingProcessor(AbstractModelTrainingProcessor):
 
         useTrainingSplitRandomState: int = self.__get_training_split_random_state__(trainingSplitRandomState)
 
-        print(f"Selecting training and test data - traininSplitRandomState: {useTrainingSplitRandomState}")
+        print(f"Selecting training and test data - trainingSplitRandomState: {useTrainingSplitRandomState}")
         X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=test_size, random_state=useTrainingSplitRandomState)
         
         print(f"Training using {len(X_train)} files.")

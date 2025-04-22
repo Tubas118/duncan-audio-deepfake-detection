@@ -49,7 +49,6 @@ class TestConfiguration(unittest.TestCase):
         self.assertIsInstance(job.poolSize, Tuple)
 
         self.assertEqual(job.cv, 5)     # Testing for default value
-        self.assertEqual(job.positive_class_index, 0)
 
         assert jobId in job.persistedModel
         assert ".libjob" in job.persistedModel
@@ -73,7 +72,6 @@ class TestConfiguration(unittest.TestCase):
         self.assertFalse(job.newModelGenerated)
         
         self.assertEqual(job.cv, 11)    # Test for configured value
-        self.assertEqual(job.positive_class_index, 1)
 
         assert "ASVspoof-2019-1" in job.persistedModel
         assert ".libjob" in job.persistedModel
@@ -100,6 +98,43 @@ class TestConfiguration(unittest.TestCase):
         # then
         self.assertIsInstance(tuple, Tuple)
         self.assertEqual(expected, tuple)
+
+    # -------------------------------------------------------------------------
+    @parameterized.expand([
+        ("ASVspoof-2019-3_positive-class-spoof-1", [ "spoof", "bonafide" ]),
+        ("ASVspoof-2019-3_positive-class-bonafide-1", [ "bonafide", "spoof" ]),
+        ("ASVspoof-2019-3_positive-class-none-1", [ "spoof", "bonafide" ])
+    ])
+    @unittest.skip
+    def test_positive_class_determination_positiveRun1(self, jobId, expectedOrder):
+        # given
+        config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
+
+        # when
+        job: configuration.Job = config.getJobConfig(jobId)
+
+        # then
+        self.assertEqual(expectedOrder, job.classes)
+        self.assertEqual(["spoof", "bonafide"], job.originalClassesOrder)
+
+
+    # -------------------------------------------------------------------------
+    @parameterized.expand([
+        ("ASVspoof-2019-3_positive-class-spoof-2", [ "spoof", "bonafide" ]),
+        ("ASVspoof-2019-3_positive-class-bonafide-2", [ "bonafide", "spoof" ]),
+        ("ASVspoof-2019-3_positive-class-none-2", [ "bonafide", "spoof" ])
+    ])
+    @unittest.skip
+    def test_positive_class_determination_positiveRun2(self, jobId, expectedOrder):
+        # given
+        config = configuration.ConfigLoader('testvalues/config-for-unit-test.yml')
+
+        # when
+        job: configuration.Job = config.getJobConfig(jobId)
+
+        # then
+        self.assertEqual(expectedOrder, job.classes)
+        self.assertEqual(["bonafide", "spoof"], job.originalClassesOrder)
 
 
 

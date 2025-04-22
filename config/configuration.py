@@ -1,3 +1,4 @@
+import copy
 import datetime
 import os
 import re
@@ -8,9 +9,10 @@ from utils.safe_len import safe_len
 JOB_EXT: str = ".libjob"
 RESULTS_EXT: str = ".txt"
 
-# ======================================================================
+# =============================================================================
 class ConfigLoader:
 
+    # -------------------------------------------------------------------------
     def __init__(self, configFilename):
         self.configFilename = configFilename
 
@@ -20,15 +22,17 @@ class ConfigLoader:
         self.activeJobId = self.__configLoader['active-job-id']
         self.projectName = self.__configLoader['project-name']
 
+    # -------------------------------------------------------------------------
     def getJobConfig(self, jobId):
         selectedJob = self.__configLoader['job-defaults']
         overlayJob = self.__configLoader['jobs'][jobId]
         selectedJob.update(overlayJob)
         return Job(jobId, selectedJob)
     
-# ======================================================================
+# =============================================================================
 class Job:
 
+    # -------------------------------------------------------------------------
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
         # IGNORED: self.inputFileBatchSize: str = source['input-file-batch-size']
@@ -41,9 +45,11 @@ class Job:
         self.trainingSplitRandomState: int = source['training-split-random-state']
         self.labelFilename: str = source['label-filename']
         self.executeToCategoricalForLabels = source.get('labels-execute-to-categorical', True)
+        # TODO - self.originalClassesOrder = source.get('classes')
+        self.positive_class: str = self.__determine_positive_class__(source)
+        # TODO - self.classes = self.__determine_class_label_order__(self.originalClassesOrder, self.positive_class)
         self.classes = source.get('classes')
         self.numClasses: int = len(self.classes)
-        self.positive_class: str = source.get('positive-class', None)
         self.sampleRate: int = source['sample-rate']
         self.duration: int = source['duration']
         self.numMels: int = source['num-mels']
@@ -61,18 +67,16 @@ class Job:
 
         self.__check_for_output_folder__()
 
-        if (safe_len(self.positive_class) > 0 and safe_len(self.classes) > 0):
-            self.positive_class_index = self.classes.index(self.positive_class)
-        else:
-            self.positive_class_index = None
-
+    # -------------------------------------------------------------------------
     def fullJoinFilePath(self, path, filename):
         return self.fullFilePath(os.path.join(path, filename))
 
+    # -------------------------------------------------------------------------
     def fullFilePath(self, filepath):
         expanded = os.path.expandvars(filepath)
         return expanded.replace("\\", "/")
     
+    # -------------------------------------------------------------------------
     def newPersistedModelResultsName(self, persistedModelRootFilename: str = None, generateTimestamp = False):
             mid_section = ""
 
@@ -89,6 +93,7 @@ class Job:
 
             return rootFilename + mid_section + RESULTS_EXT
 
+    # -------------------------------------------------------------------------
     def __check_for_output_folder__(self):
         if (len(self.outputFolder) > 0):
             self.outputFolder = self.outputFolder.rstrip().lstrip()
@@ -101,6 +106,24 @@ class Job:
                 os.makedirs(self.outputFolder)
                 print("Output folder created.")
 
+    # -------------------------------------------------------------------------
+    def __determine_class_label_order__(self, classes, positive_class):
+        workingClasses = copy.copy(classes)
+        if (positive_class != None and workingClasses[0] != positive_class):
+            swapIndex = workingClasses.index(positive_class)
+            swapValue = workingClasses[swapIndex]
+            workingClasses[swapIndex] = workingClasses[0]
+            workingClasses[0] = swapValue
+        return workingClasses
+
+    # -------------------------------------------------------------------------
+    def __determine_positive_class__(self, source):
+        value = source.get('positive-class', None)
+        if (value == 'None'):
+            value = None
+        return value
+    
+    # -------------------------------------------------------------------------
     def __determine_persistedModelValue__(self, source, keyName: str):
         checkValue: str = source.get(keyName, "")
 
@@ -127,20 +150,21 @@ class Job:
         self.persistedModelResults: str = usePersistedModelResults
         print(f"Assigned model name: {self.persistedModel}")
 
+    # -------------------------------------------------------------------------
     def __to_tuple_2_ints__(self, value: str):
         splitValue = list(filter(None, re.split('[ (,)]', value)))
         num1 = int(splitValue[0])
         num2 = int(splitValue[1])
         return (num1, num2)
 
-# ======================================================================
+# =============================================================================
 class RunDetails:
 
     def __init__(self, configFilename: str, jobId: str):
         self.configFilename = configFilename
         self.jobId = jobId
 
-# ======================================================================
+# =============================================================================
 class BulkRunDetails(RunDetails):
 
     @staticmethod

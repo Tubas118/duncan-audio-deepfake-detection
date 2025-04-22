@@ -49,15 +49,9 @@ class Metrics:
         self.__calculate_roc_auc__(results)
         
         # https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html
-        pos_label = job.positive_class_index
-        if (pos_label != None):
-            results.precision_recall_curve = precision_recall_curve(results.testAry, results.predAry, pos_label=pos_label)
-            results.precision_score = precision_score(results.testAry, results.predAry, pos_label=pos_label)
-            results.recall_score = recall_score(results.testAry, results.predAry, pos_label=pos_label)
-        else:
-            results.precision_recall_curve = precision_recall_curve(results.testAry, results.predAry)
-            results.precision_score = precision_score(results.testAry, results.predAry)
-            results.recall_score = recall_score(results.testAry, results.predAry)
+        results.precision_recall_curve = precision_recall_curve(results.testAry, results.predAry)
+        results.precision_score = precision_score(results.testAry, results.predAry)
+        results.recall_score = recall_score(results.testAry, results.predAry)
 
     # -------------------------------------------------------------------------
     def __calculate_roc_auc__(self, results: ModelEvaluationResult):

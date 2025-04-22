@@ -48,6 +48,17 @@ class TestSafeLen(unittest.TestCase):
         # then
         self.assertEqual(source_len, 0)
 
+    # -------------------------------------------------------------------------
+    def test_list(self):
+        # given
+        source: list[str] = [ "A", "B", "C" ]
+
+        # when
+        source_len = safe_len(source)
+
+        # then
+        self.assertGreater(source_len, 0)
+
 
 
 if __name__ == '__main__':

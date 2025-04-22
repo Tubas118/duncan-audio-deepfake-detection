@@ -9,7 +9,6 @@ directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 from config.configuration import ConfigLoader
 from preprocessors.abstract_preprocessor import AbstractPreprocessor
-from preprocessors.mel_spectrogram import MelSpectrogramPreprocessor
 from preprocessors.preprocessor_factory import PreprocessorFactory
 
 

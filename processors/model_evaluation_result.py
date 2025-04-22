@@ -71,10 +71,9 @@ class ModelEvaluationResult:
 
         for key in values:
             value = values.get(key)
-            # if self.__report_raw_value__(value) == False:
-            #     value = pprint.pformat(value, indent=2)
             value = self.__check_value_formatting__(key, value)
-            t.add_row([key, value])
+            if (type(value) != type(None)):
+                t.add_row([key, value])
 
         report = report + f"{t}\n"
 

@@ -18,14 +18,17 @@
 from config.configuration import RunDetails
 
 # runDetail = RunDetails('config.yml', 'GitLab-eval-data')
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_mfcc_split133_epoch10')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_split069_epoch10')
 
 notebookName = 'audio-deepfake-detection-testing'
 plot_title_suffix = "(Testing)"
-# -
 
+# +
 configFilename = runDetail.configFilename
 runJobId = runDetail.jobId
+
+# TODO - only for easier debugging
+preprocessDataFilename = 'persist-preprocessed-data.pp-bin'
 
 # +
 import joblib
@@ -66,49 +69,93 @@ preprocessor: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preproc
 fullDataPath = job.fullJoinFilePath(job.dataPathRoot, job.dataPathSuffix)
 labels = readTrainingLabelsWithJob(job)
 
-
 # ### Model processing of extracted features
 
+# +
+from utils.safe_len import safe_len
+
+
 def processArrays(X, y):
+    print(f"Processing {safe_len(_X)}")
     _X = np.array(X)
     _y = np.array(y)
     evaluationProc.process(_X, _y, None)
+    print(f"Processed {safe_len(_X)}")
 
-
-
-# +
-preprocessed_X_test = []
-preprocessed_filenames = []
-preprocessed_labels = []
-MAX_INDEX_PREPROCESS_X_TEST = 5
-TICK_MARK = 10000
-
-X = []
-y = []
-
-for filename, label in labels.items():
-    _X, _y = preprocessor.extract_features_singleSource(job, fullDataPath, filename, label)
-    X.append(_X)
-    y.append(_y)
-
-    if (len(preprocessed_X_test) < MAX_INDEX_PREPROCESS_X_TEST):
-        preprocessed_X_test.append(_X)
-        preprocessed_filenames.append(filename)
-        preprocessed_labels.append(label)
-
-    if (job.inputFileBatchSize != None and len(X) >= job.inputFileBatchSize):
-        processArrays(X, y)
-        X = []
-        y = []
-
-    if (len(X) % TICK_MARK == 0):
-        print(f"processing... {len(X)} - {filename}")
 
 
 # -
 
-if (len(X) > 0):
+MAX_INDEX_PREPROCESS_X_TEST = 5
+
+
+# +
+def loadFreshPreprocessedData():
+    TICK_MARK = 10000
+
+    X = []
+    y = []
+    filenames = []
+
+    for filename, label in labels.items():
+        _X, _y = preprocessor.extract_features_singleSource(job, fullDataPath, filename, label)
+        X.append(_X)
+        y.append(_y)
+        filenames.append(filename)
+
+        # if (len(preprocessed_X_test) < MAX_INDEX_PREPROCESS_X_TEST):
+        #     preprocessed_X_test.append(_X)
+        #     preprocessed_filenames.append(filename)
+        #     preprocessed_labels.append(label)
+
+        if (job.inputFileBatchSize != None and len(X) >= job.inputFileBatchSize):
+            processArrays(X, y)
+            X = []
+            y = []
+
+        if (len(X) % TICK_MARK == 0):
+            print(f"processing... {len(X)} - {filename}")
+
+    if (len(X) > 0):
+        processArrays(X, y)
+
+    return X, y, filenames
+
+
+
+# +
+from preprocessors.preprocess_persistance import PreprocessPersistance
+
+
+# Choose between persisted preprocessed data or loading fresh
+if (preprocessDataFilename != None):
+    reloaded = PreprocessPersistance.load(preprocessDataFilename)
+    X = reloaded.X_test
+    y = reloaded.y_test
+    labels = reloaded.true_labels
+    filenames = reloaded.source_filenames
     processArrays(X, y)
+else:
+    X, y, filenames = loadFreshPreprocessedData()
+    
+
+# +
+# # np.argmax(labels.items(), axis=1)
+# persist_filenames = []
+# persist_labels = []
+# for filename, label in labels.items():
+#     persist_filenames.append(filename)
+#     persist_labels.append(label)
+
+
+
+# +
+# from preprocessors.preprocess_persistance import PreprocessPersistance
+
+
+# persist = PreprocessPersistance(X, y, persist_labels, persist_filenames)
+# persist.save(preprocessDataFilename)
+# -
 
 # ### Feature extract spectrogram samples
 
@@ -117,13 +164,13 @@ print(f"Preprocessor: {job.preprocessor}")
 
 plot_spectrogram = PlotSpectrogram()
 
-display_spectrogram_count = len(preprocessed_X_test)
+display_spectrogram_count = len(X)
 if (display_spectrogram_count > MAX_INDEX_PREPROCESS_X_TEST):
     display_spectrogram_count = MAX_INDEX_PREPROCESS_X_TEST
 
 for idx in range(0, display_spectrogram_count):
-    filename = preprocessed_filenames[idx]
-    data = preprocessed_X_test[idx]
+    filename = filenames[idx]
+    data = X[idx]
     title = f"{job.preprocessor}: {filename} ({idx + 1} of {display_spectrogram_count})"
     plot_spectrogram.plot(data, job, title)
 # -
@@ -135,11 +182,11 @@ compareIdx = 0
 fullDataPath = job.fullJoinFilePath(job.dataPathRoot, job.dataPathSuffix)
 
 preproc_noExec_power_to_db: AbstractPreprocessor = preproc_factory.newPreprocessor(job.preprocessor, exec_power_to_db=False)
-X_test_noPowerToDb, _ = preproc_noExec_power_to_db.extract_features_singleSource(job, fullDataPath, preprocessed_filenames[compareIdx], preprocessed_labels[compareIdx])
+X_test_noPowerToDb, _ = preproc_noExec_power_to_db.extract_features_singleSource(job, fullDataPath, filenames[compareIdx], labels[compareIdx])
 
 # +
-filename = preprocessed_filenames[compareIdx]
-plot_spectrogram.plot(preprocessed_X_test[compareIdx], job, f"{job.preprocessor}: {filename} (with power_to_db)")
+filename = filenames[compareIdx]
+plot_spectrogram.plot(X[compareIdx], job, f"{job.preprocessor}: {filename} (with power_to_db)")
 
 plot_spectrogram_noPowerToDb = PlotSpectrogram()
 plot_spectrogram_noPowerToDb.plot(X_test_noPowerToDb, job, f"{job.preprocessor}: {filename} (without power_to_db)")
