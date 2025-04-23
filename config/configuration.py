@@ -1,14 +1,18 @@
+import copy
 import datetime
 import os
 import re
 import yaml
 
+from utils.safe_len import safe_len
+
 JOB_EXT: str = ".libjob"
 RESULTS_EXT: str = ".txt"
 
-# ======================================================================
+# =============================================================================
 class ConfigLoader:
 
+    # -------------------------------------------------------------------------
     def __init__(self, configFilename):
         self.configFilename = configFilename
 
@@ -18,15 +22,17 @@ class ConfigLoader:
         self.activeJobId = self.__configLoader['active-job-id']
         self.projectName = self.__configLoader['project-name']
 
+    # -------------------------------------------------------------------------
     def getJobConfig(self, jobId):
         selectedJob = self.__configLoader['job-defaults']
         overlayJob = self.__configLoader['jobs'][jobId]
         selectedJob.update(overlayJob)
         return Job(jobId, selectedJob)
     
-# ======================================================================
+# =============================================================================
 class Job:
 
+    # -------------------------------------------------------------------------
     def __init__(self, jobId: int, source):
         self.jobId: int = jobId
         # IGNORED: self.inputFileBatchSize: str = source['input-file-batch-size']
@@ -39,6 +45,9 @@ class Job:
         self.trainingSplitRandomState: int = source['training-split-random-state']
         self.labelFilename: str = source['label-filename']
         self.executeToCategoricalForLabels = source.get('labels-execute-to-categorical', True)
+        # TODO - self.originalClassesOrder = source.get('classes')
+        self.positive_class: str = self.__determine_positive_class__(source)
+        # TODO - self.classes = self.__determine_class_label_order__(self.originalClassesOrder, self.positive_class)
         self.classes = source.get('classes')
         self.numClasses: int = len(self.classes)
         self.sampleRate: int = source['sample-rate']
@@ -53,18 +62,25 @@ class Job:
         self.preprocessor: str = source['preprocessor']
         self.batchSize: str = source['batch-size']
         self.numEpochs: str = source['num-epochs']
+        # -- Introduce later (start) --
+        # self.persistPreprocessedData: bool = source.get('persist-preprocessed-data', True)
+        # self.persistPreprocessedDataFilename: str = self.__derive_preprocessed_data_filename__('persist-preprocessed-data-filename', source)
+        # -- Introduce later (end) --
         self.cv: int = source.get('cv', 5)
         self.__determine_persistedModelValue__(source, 'persisted-model')
 
         self.__check_for_output_folder__()
 
+    # -------------------------------------------------------------------------
     def fullJoinFilePath(self, path, filename):
         return self.fullFilePath(os.path.join(path, filename))
 
+    # -------------------------------------------------------------------------
     def fullFilePath(self, filepath):
         expanded = os.path.expandvars(filepath)
         return expanded.replace("\\", "/")
     
+    # -------------------------------------------------------------------------
     def newPersistedModelResultsName(self, persistedModelRootFilename: str = None, generateTimestamp = False):
             mid_section = ""
 
@@ -81,6 +97,7 @@ class Job:
 
             return rootFilename + mid_section + RESULTS_EXT
 
+    # -------------------------------------------------------------------------
     def __check_for_output_folder__(self):
         if (len(self.outputFolder) > 0):
             self.outputFolder = self.outputFolder.rstrip().lstrip()
@@ -93,6 +110,35 @@ class Job:
                 os.makedirs(self.outputFolder)
                 print("Output folder created.")
 
+    # -------------------------------------------------------------------------
+    # -- Introduce later (start) --
+    # def __derive_preprocessed_data_filename__(self, key, source):
+    #     persistPreprocessedDataFilename = source.get(key, None)
+
+    #     if (persistPreprocessedDataFilename == None):
+    #         persistPreprocessedDataFilename = f"ppd-{self.preprocessor}-e{self.numEpochs}-m{self.numMels}-b{self.batchSize}.pp-bin"
+
+    #     return persistPreprocessedDataFilename
+    # -- Introduce later (end) --
+
+    # -------------------------------------------------------------------------
+    def __determine_class_label_order__(self, classes, positive_class):
+        workingClasses = copy.copy(classes)
+        if (positive_class != None and workingClasses[0] != positive_class):
+            swapIndex = workingClasses.index(positive_class)
+            swapValue = workingClasses[swapIndex]
+            workingClasses[swapIndex] = workingClasses[0]
+            workingClasses[0] = swapValue
+        return workingClasses
+
+    # -------------------------------------------------------------------------
+    def __determine_positive_class__(self, source):
+        value = source.get('positive-class', None)
+        if (value == 'None'):
+            value = None
+        return value
+    
+    # -------------------------------------------------------------------------
     def __determine_persistedModelValue__(self, source, keyName: str):
         checkValue: str = source.get(keyName, "")
 
@@ -119,20 +165,21 @@ class Job:
         self.persistedModelResults: str = usePersistedModelResults
         print(f"Assigned model name: {self.persistedModel}")
 
+    # -------------------------------------------------------------------------
     def __to_tuple_2_ints__(self, value: str):
         splitValue = list(filter(None, re.split('[ (,)]', value)))
         num1 = int(splitValue[0])
         num2 = int(splitValue[1])
         return (num1, num2)
 
-# ======================================================================
+# =============================================================================
 class RunDetails:
 
     def __init__(self, configFilename: str, jobId: str):
         self.configFilename = configFilename
         self.jobId = jobId
 
-# ======================================================================
+# =============================================================================
 class BulkRunDetails(RunDetails):
 
     @staticmethod

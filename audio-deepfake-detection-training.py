@@ -17,6 +17,7 @@ from config.configuration import RunDetails
 
 # runDetail = RunDetails('config.yml', 'GitLab-training-data')
 runDetail = RunDetails('config.yml', 'ASVspoof-2019_training')
+# runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_positive-class-spoof')
 # runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_epoch-100')
 
 notebookName = 'audio-deepfake-detection-training'

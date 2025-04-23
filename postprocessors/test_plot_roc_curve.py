@@ -12,7 +12,6 @@ sys.path.append(directory.parent.parent)
 from postprocessors.plot_roc_curve import PlotRocCurve
 from processors.model_evaluation_result import ModelEvaluationResult
 from testvalues.test_data_confusion_matrix_plot import ADC_Y_PRED_2
-from testvalues.test_data_precision_recall_curve import PREC_RECALL_CURVE_1
 
 
 class TestPlotPrecisionRecallCurve(unittest.TestCase):

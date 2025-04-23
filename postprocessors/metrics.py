@@ -1,6 +1,7 @@
 import copy
-from sklearn.metrics import accuracy_score, auc, confusion_matrix, f1_score, precision_recall_curve, roc_curve, root_mean_squared_error
+from sklearn.metrics import accuracy_score, auc, confusion_matrix, f1_score, precision_recall_curve, precision_score, recall_score, roc_curve, root_mean_squared_error
 
+from config.configuration import Job
 from processors.model_evaluation_result import ModelEvaluationResult
 
 
@@ -26,7 +27,7 @@ class Metrics:
         pass
 
     # -------------------------------------------------------------------------
-    def evaluateResults(self, results: ModelEvaluationResult):
+    def evaluateResults(self, results: ModelEvaluationResult, job: Job):
         if results == None:
             raise ValueError("Parameter 'results' must be initialized")
         
@@ -49,6 +50,8 @@ class Metrics:
         
         # https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html
         results.precision_recall_curve = precision_recall_curve(results.testAry, results.predAry)
+        results.precision_score = precision_score(results.testAry, results.predAry)
+        results.recall_score = recall_score(results.testAry, results.predAry)
 
     # -------------------------------------------------------------------------
     def __calculate_roc_auc__(self, results: ModelEvaluationResult):

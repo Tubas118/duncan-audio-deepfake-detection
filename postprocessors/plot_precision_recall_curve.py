@@ -20,18 +20,8 @@ class PlotPrecisionRecallCurve:
         recall = results.precision_recall_curve[1]
         self.plot(precision, recall, title)
 
-    # # -------------------------------------------------------------------------
-    # def plotFromEstimator(self, results: ModelEvaluationResult, title = DEFAULT_TITLE):
-    #     disp = PrecisionRecallDisplay.from_predictions(results.testAry, results.predAry, name="Best")
-    #     disp.ax_.legend()
-    #     disp.plot()
-
     # -------------------------------------------------------------------------
     def plot(self, precision: np.ndarray, recall: np.ndarray, title = DEFAULT_TITLE):
-        # disp = PrecisionRecallDisplay(precision=precision, recall=recall)   #, name="Avg. Precision")
-        # disp.ax_.legend()
-        # disp.plot()
-        # plt.plot(recall, precision, color='darkorange', lw=2, label='Avg. Precision = %0.2f' % precision[1])
         plt.fill_between(recall, precision, alpha=0.2)
         plt.ylabel("Precision")
         plt.xlabel("Recall")

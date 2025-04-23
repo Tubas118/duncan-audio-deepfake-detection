@@ -44,7 +44,7 @@ class BasicModelEvaluationProcessor(AbstractModelProcessor):
         results = ModelEvaluationResult(testAry=y_test_work, predAry=y_pred_work, cross_validation_scores=cross_validation_scores)
 
         metrics = Metrics()
-        metrics.evaluateResults(results)
+        metrics.evaluateResults(results, self.__job__)
 
         self.inputFileBatchCount = self.inputFileBatchCount + results.batchSize
         self.inputFileCount = self.inputFileCount + safe_len(X_test)

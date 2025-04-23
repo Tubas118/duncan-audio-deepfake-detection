@@ -9,6 +9,7 @@ from numpy.testing import assert_array_equal, assert_raises
 directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
+from config.configuration import ConfigLoader, Job
 from postprocessors.metrics import Metrics
 from processors.model_evaluation_result import ModelEvaluationResult
 
@@ -17,7 +18,8 @@ class TestMetrics(unittest.TestCase):
 
     # -------------------------------------------------------------------------
     def setUp(self):
-        pass
+        config = ConfigLoader('testvalues/config-for-unit-test.yml')
+        self.job: Job = config.getJobConfig(config.activeJobId)
 
     # -------------------------------------------------------------------------
     def test_evaluateResults(self):
@@ -32,7 +34,7 @@ class TestMetrics(unittest.TestCase):
 
         # when
         metrics = Metrics()
-        metrics.evaluateResults(results)
+        metrics.evaluateResults(results, self.job)
 
         # then
         print(f'results:\n{results.reportSnaphot()}')
@@ -58,8 +60,8 @@ class TestMetrics(unittest.TestCase):
 
         # when #1
         metrics = Metrics()
-        metrics.evaluateResults(results1)
-        metrics.evaluateResults(results2)
+        metrics.evaluateResults(results1, self.job)
+        metrics.evaluateResults(results2, self.job)
 
         # then #1
         self.__assert_test_pred_arraysNotNone__(results1)
@@ -78,7 +80,7 @@ class TestMetrics(unittest.TestCase):
         self.assertEqual(expectedJoinedPredAry, joinedResults.predAry)
 
         # when #3
-        metrics.evaluateResults(joinedResults)
+        metrics.evaluateResults(joinedResults, self.job)
 
         # then #3
         print(f'results:\n{joinedResults.reportSnaphot()}')

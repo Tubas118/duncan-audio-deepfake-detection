@@ -7,7 +7,7 @@ job-defaults:
   data-path-root: $HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019
   data-extension: .flac
   # Assign 'None' to training-split-random-state to get random split. Pass same int for reproducible split.
-  training-split-random-state: 3
+  training-split-random-state: 186
   labels-execute-to-categorical: true
   classes:
     - spoof
@@ -42,6 +42,11 @@ jobs:
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
     training-split-random-state: 186
     preprocessor: mfcc
+  ASVspoof-2019_training-mfcc_epoch-100:
+    data-path-suffix: LA/ASVspoof2019_LA_train/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt
+    training-split-random-state: 186
+    num-epochs: 100
   GitLab-training-data:
     data-path-root: .
     data-path-suffix: testaudio-sksmta
@@ -51,6 +56,30 @@ jobs:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
     persisted-model: results/final_epoch__10/ASVspoof-2019_training_2025-04-13T13-20-29.862262.libjob
+  ASVspoof-2019_testing_c186:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.7/2025-04-22T18-21-37.731464_random_e10_c/ASVspoof-2019_training_2025-04-22T18-21-37.731464_random_000186.libjob
+  ASVspoof-2019_testing_c069:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.7/2025-04-22T18-21-37.731464_random_e10_c/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000069.libjob
+  ASVspoof-2019_testing_c105:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.7/2025-04-22T18-21-37.731464_random_e10_c/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000105.libjob
+  ASVspoof-2019_testing_c133:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.7/2025-04-22T18-21-37.731464_random_e10_c/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000133.libjob
+  ASVspoof-2019_testing_c147:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.7/2025-04-22T18-21-37.731464_random_e10_c/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000147.libjob
+  ASVspoof-2019_testing_z:
+    data-path-suffix: LA/ASVspoof2019_LA_eval/flac
+    label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt
+    persisted-model: results/Tag-0.0.7/2025-04-22T18-54-52.299229_r186_e10_z/ASVspoof-2019_training_2025-04-22T18-54-52.299229.libjob
   ASVspoof-2019_testing-1:
     data-path-suffix: LA/ASVspoof2019_LA_eval/flac
     label-filename: LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.eval.trl.txt

@@ -18,7 +18,7 @@
 from config.configuration import RunDetails
 
 # runDetail = RunDetails('config.yml', 'GitLab-eval-data')
-runDetail = RunDetails('config.yml', 'ASVspoof-2019_training_mfcc_split133_epoch10')
+runDetail = RunDetails('config.yml', 'ASVspoof-2019_testing_c147')
 
 notebookName = 'audio-deepfake-detection-testing'
 plot_title_suffix = "(Testing)"
@@ -42,6 +42,7 @@ from preprocessors.abstract_preprocessor import AbstractPreprocessor
 from preprocessors.preprocessor_factory import PreprocessorFactory
 from processors.basic_model_evaluation_processor import BasicModelEvaluationProcessor
 from readers.label_reader import readTrainingLabelsWithJob
+from utils.safe_len import safe_len
 
 # +
 config = configuration.ConfigLoader(configFilename)
@@ -70,27 +71,32 @@ labels = readTrainingLabelsWithJob(job)
 # ### Model processing of extracted features
 
 def processArrays(X, y):
+    print(f"Processing {safe_len(X)}")
     _X = np.array(X)
     _y = np.array(y)
     evaluationProc.process(_X, _y, None)
+    print(f"Processed {safe_len(_X)}")
 
 
-
-# +
 preprocessed_X_test = []
 preprocessed_filenames = []
 preprocessed_labels = []
+
 MAX_INDEX_PREPROCESS_X_TEST = 5
+
+# +
 TICK_MARK = 10000
 
 X = []
 y = []
+filenames = []
 
 for filename, label in labels.items():
     _X, _y = preprocessor.extract_features_singleSource(job, fullDataPath, filename, label)
     X.append(_X)
     y.append(_y)
-
+    filenames.append(filename)
+    
     if (len(preprocessed_X_test) < MAX_INDEX_PREPROCESS_X_TEST):
         preprocessed_X_test.append(_X)
         preprocessed_filenames.append(filename)
@@ -104,11 +110,10 @@ for filename, label in labels.items():
     if (len(X) % TICK_MARK == 0):
         print(f"processing... {len(X)} - {filename}")
 
-
-# -
-
 if (len(X) > 0):
     processArrays(X, y)
+
+# -
 
 # ### Feature extract spectrogram samples
 

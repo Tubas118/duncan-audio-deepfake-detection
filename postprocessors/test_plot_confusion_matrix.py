@@ -4,7 +4,6 @@ import path
 import sys
 from matplotlib import pyplot as plt
 from numpy.testing import assert_array_equal
-from sklearn.metrics import accuracy_score
 
 
 # -- from parent directory
@@ -12,8 +11,8 @@ directory = path.Path(__file__).abspath()
 sys.path.append(directory.parent.parent)
 
 from postprocessors.plot_confusion_matrix import PlotConfusionMatrix
-from testvalues.test_data_confusion_matrix_plot import ADC_Y_TRUE_DICT, AUDIO_DEEPFAKE_CLASSES, ADC_Y_PRED_1, ADC_Y_PRED_2
-from utils.common_test_utils import CALCULATE_EXPECTED_SCORE, CONFUSION_MATRIX_CHART_TITLE
+from testvalues.test_data_confusion_matrix_plot import AUDIO_DEEPFAKE_CLASSES, ADC_Y_PRED_1, ADC_Y_PRED_2
+from utils.common_test_utils import CONFUSION_MATRIX_CHART_TITLE
 
 
 CAT_DOG_CLASSES = ['Cat', 'Dog']

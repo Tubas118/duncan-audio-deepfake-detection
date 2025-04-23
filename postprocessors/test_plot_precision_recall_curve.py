@@ -28,6 +28,9 @@ class TestPlotPrecisionRecallCurve(unittest.TestCase):
         # given
         plot_title_suffix = 'unit test'
         PP_TITLE = f"{PlotPrecisionRecallCurve.DEFAULT_TITLE} {plot_title_suffix}"
+
+        # -- y_true and y_pred are only used to initialize ModelEvaluationResult.
+        #       They are not used in the plot.
         y_true = [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
         y_pred = np.argmax(ADC_Y_PRED_2, axis=1)
         results = ModelEvaluationResult(y_true, y_pred)
