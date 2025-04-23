@@ -1,0 +1,119 @@
+---- Training (start) ----
+start time: 2025-04-23T03:19:07.220606+00:00
+end time: 2025-04-23T04:14:26.234540+00:00
+elapsed: 0:55:19.013934
+
+model file: output/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000069.libjob
+batch count: 0
+file count: 0
+job: {
+    "jobId": "ASVspoof-2019_training",
+    "inputFileBatchSize": null,
+    "outputFolder": "output",
+    "dataPathRootRaw": "$HOMEDRIVE$HOMEPATH/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathRoot": "C:/Users/tubas/workspace/Deepfake/data/ASVspoof-2019",
+    "dataPathSuffix": "LA/ASVspoof2019_LA_train/flac",
+    "dataExtension": ".flac",
+    "trainingSplitRandomState": 186,
+    "labelFilename": "LA/ASVspoof2019_LA_cm_protocols/ASVspoof2019.LA.cm.train.trn.txt",
+    "executeToCategoricalForLabels": true,
+    "positive_class": null,
+    "classes": [
+        "spoof",
+        "bonafide"
+    ],
+    "numClasses": 2,
+    "sampleRate": 16000,
+    "duration": 5,
+    "numMels": 128,
+    "maxTimeSteps": 109,
+    "kernelSize": [
+        2,
+        2
+    ],
+    "poolSize": [
+        2,
+        2
+    ],
+    "optimizer": "adam",
+    "loss": "categorical_crossentropy",
+    "metrics": [
+        "accuracy"
+    ],
+    "preprocessor": "mel_spectrogram",
+    "batchSize": 32,
+    "numEpochs": 10,
+    "cv": 5,
+    "newModelGenerated": true,
+    "persistedModel": "output/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000069.libjob",
+    "persistedModelResults": "output/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000069.txt"
+}
+
+---- Training (end) ----
+
+---- Testing (start) ----
+start time: 2025-04-23T04:14:21.495557+00:00
+end time: 2025-04-23T04:14:26.234540+00:00
+elapsed: 0:00:04.738983
+
+model file: output/ASVspoof-2019_training_2025-04-22T20-13-58.606368_random_000069.libjob
+batch count: 5076
+file count: 5076
+
+  --- Results (start) ---
++-------------------------+---------------------------------------------------------------------------------------+
+| Key                     | Value                                                                                 |
++-------------------------+---------------------------------------------------------------------------------------+
+| batchId                 | 3                                                                                     |
+| timestamp_utc           | 2025-04-23 04:14:26.217537+00:00                                                      |
+| cross_validation_scores | { 'fit_time': array([529.08222795, 505.1776588 , 502.66819119, 499.67259908,          |
+|                         |        499.72307706]),                                                                |
+|                         |   'score_time': array([3.45979643, 3.71465874, 4.1357615 , 3.23096561, 3.42802644]),  |
+|                         |   'test_score': array([0.99729131, 0.99876878, 0.99655257, 0.99803004, 0.99630542]),  |
+|                         |   'train_score': array([0.99993844, 0.99993844, 0.99963061, 0.99956905, 0.99784536])} |
+| batchSize               | 5076                                                                                  |
+| accuracy_score          | 0.9860126083530338                                                                    |
+| confusion_matrix        | [[4533   53]                                                                          |
+|                         |  [  18  472]]                                                                         |
+| f1_score                | 0.9300492610837439                                                                    |
+| root_mean_squared_error | 0.11826830364457805                                                                   |
+| roc_fpr                 | [0.         0.01155691 1.        ]                                                    |
+| roc_tpr                 | [0.         0.96326531 1.        ]                                                    |
+| roc_auc                 | 0.9758541968902694                                                                    |
+| precision_recall_curve  | (array([0.0965327 , 0.89904762, 1.        ]),                                         |
+|                         |  array([1.        , 0.96326531, 0.        ]),                                         |
+|                         |  array([0, 1]))                                                                       |
+| precision_score         | 0.8990476190476191                                                                    |
+| recall_score            | 0.963265306122449                                                                     |
++-------------------------+---------------------------------------------------------------------------------------+
+  --- Results (end) ---
+
+Model: "functional_2"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ input_layer_2 (InputLayer)      │ (None, 128, 109, 1)    │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_4 (Conv2D)               │ (None, 127, 108, 32)   │           160 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_4 (MaxPooling2D)  │ (None, 63, 54, 32)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ conv2d_5 (Conv2D)               │ (None, 62, 53, 64)     │         8,256 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ max_pooling2d_5 (MaxPooling2D)  │ (None, 31, 26, 64)     │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ flatten_2 (Flatten)             │ (None, 51584)          │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_4 (Dense)                 │ (None, 128)            │     6,602,880 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dropout_2 (Dropout)             │ (None, 128)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_5 (Dense)                 │ (None, 2)              │           258 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 19,834,664 (75.66 MB)
+ Trainable params: 6,611,554 (25.22 MB)
+ Non-trainable params: 0 (0.00 B)
+ Optimizer params: 13,223,110 (50.44 MB)
+
+
+---- Testing (end) ----

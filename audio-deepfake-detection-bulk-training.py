@@ -21,23 +21,29 @@ notebookName = 'audio-deepfake-detection-bulk-training'
 
 # +
 # --------------------------------------------------------------
+full_split_random_states = [186, 133, 147, 69, 105]
+partial_random_states = [133, 147, 69, 105]
+
+active_random_states = partial_random_states
+
+# --------------------------------------------------------------
 large_runDetail = BulkRunDetails.DERIVE_BULK_RUN(runDetail,
                                                  'mel_spectrogram',
                                                  range(1, 200))
 
 mel_spec_runDetail = BulkRunDetails.DERIVE_BULK_RUN(runDetail,
                                                     'mel_spectrogram',
-                                                    [186, 133, 147, 69, 105])
+                                                    active_random_states)
 
 mfcc_runDetail = BulkRunDetails.DERIVE_BULK_RUN(runDetail,
                                                 'mfcc',
-                                                mel_spec_runDetail.random_state_array)
+                                                active_random_states)
 # --------------------------------------------------------------
 
 
 # runDetail = large_runDetail
-# runDetail = mel_spec_runDetail
-runDetail = mfcc_runDetail
+runDetail = mel_spec_runDetail
+# runDetail = mfcc_runDetail
 # -
 
 configFilename = runDetail.configFilename
