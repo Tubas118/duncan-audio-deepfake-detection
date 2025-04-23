@@ -62,6 +62,10 @@ class Job:
         self.preprocessor: str = source['preprocessor']
         self.batchSize: str = source['batch-size']
         self.numEpochs: str = source['num-epochs']
+        # -- Introduce later (start) --
+        # self.persistPreprocessedData: bool = source.get('persist-preprocessed-data', True)
+        # self.persistPreprocessedDataFilename: str = self.__derive_preprocessed_data_filename__('persist-preprocessed-data-filename', source)
+        # -- Introduce later (end) --
         self.cv: int = source.get('cv', 5)
         self.__determine_persistedModelValue__(source, 'persisted-model')
 
@@ -105,6 +109,17 @@ class Job:
                 print(f"Output folder does not exist. Creating '{self.outputFolder}'.")
                 os.makedirs(self.outputFolder)
                 print("Output folder created.")
+
+    # -------------------------------------------------------------------------
+    # -- Introduce later (start) --
+    # def __derive_preprocessed_data_filename__(self, key, source):
+    #     persistPreprocessedDataFilename = source.get(key, None)
+
+    #     if (persistPreprocessedDataFilename == None):
+    #         persistPreprocessedDataFilename = f"ppd-{self.preprocessor}-e{self.numEpochs}-m{self.numMels}-b{self.batchSize}.pp-bin"
+
+    #     return persistPreprocessedDataFilename
+    # -- Introduce later (end) --
 
     # -------------------------------------------------------------------------
     def __determine_class_label_order__(self, classes, positive_class):
